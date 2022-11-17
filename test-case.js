@@ -9,121 +9,108 @@ var previewJson = {
       id: 'TnCU0f48zL',
       children: [
         {
-          id: '3LycOwEVvU',
-          type: 'text',
-          name: '',
-          x: 5.399176954731565,
-          y: 6.0839410818726485,
-          rotation: 0,
-          opacity: 1,
-          blurEnabled: false,
-          blurRadius: 10,
-          brightnessEnabled: false,
-          brightness: 0,
-          sepiaEnabled: false,
-          grayscaleEnabled: false,
-          shadowEnabled: false,
-          shadowBlur: 5,
-          shadowOffsetX: 0,
-          shadowOffsetY: 0,
-          shadowColor: 'black',
-          shadowOpacity: 1,
-          custom: {
-            articleField: null,
-            dataSource: 'article_field',
-            rules: [
+          "id": "ND_09IxrKk",
+          "type": "text",
+          "name": "",
+          "x": 256,
+          "y": 321.5,
+          "rotation": 0,
+          "opacity": 1,
+          "blurEnabled": false,
+          "blurRadius": 10,
+          "brightnessEnabled": false,
+          "brightness": 0,
+          "sepiaEnabled": false,
+          "grayscaleEnabled": false,
+          "shadowEnabled": false,
+          "shadowBlur": 5,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "shadowColor": "black",
+          "shadowOpacity": 1,
+          "custom": {
+            "articleField": null,
+            "dataSource": "pim_data",
+            "rules": [
               {
-                ruleConditions: {
-                  conditions: {
-                    all: [
+                "ruleConditions": {
+                  "conditions": {
+                    "all": [
                       {
-                        fact: 'article-fact',
-                        operator: 'cus_notEqual',
-                        value: 'fewefg',
-                        path: "$.importFields['itemDescription1']",
-                        dataSource: 'article_field',
-                        articleField: {
-                          name: 'itemDescription1',
-                          parent: 'importFields',
-                          subTitle: 'importFields',
+                        "fact": "article-fact",
+                        "operator": "cus_greaterThanInclusive",
+                        "value": "2",
+                        "path": "$.externalData['PIM'].data['en-US']['vino']['txt_AlcoholContent']",
+                        "dataSource": "pim_data",
+                        "articleField": {
+                          "name": "txt_AlcoholContent",
+                          "parent": "vino",
+                          "subTitle": "vino"
                         },
-                        conditionId: 'ulNaDoj',
-                      },
-                    ],
+                        "conditionId": "r8NlfZA"
+                      }
+                    ]
                   },
-                  event: {
-                    type: 'true',
-                  },
+                  "event": {
+                    "type": "true"
+                  }
                 },
-                ruleActions: [
+                "ruleActions": [
                   {
-                    elementField: 'text',
-                    actionType: 'Article Value',
-                    actionField: {
-                      path: "instoreFields['it-it']['data']['imageFree00']",
-                      articleField: {
-                        name: 'imageFree00',
-                        parent: 'instoreFields',
-                        subTitle: 'instoreFields',
+                    "elementField": "text",
+                    "actionType": "Article Value",
+                    "actionField": {
+                      "path": "externalData['PIM'].data['en-US']['vino']['txt_AlcoholContent']",
+                      "articleField": {
+                        "name": "txt_AlcoholContent",
+                        "parent": "vino",
+                        "subTitle": "vino"
                       },
-                      dataSource: 'article_field',
+                      "dataSource": "pim_data"
                     },
-                    actionValue: '',
-                    prefixValue: '',
-                    sufixValue: '',
-                    substringRange: '',
-                    color: 'rgba(255,255,255,1)',
-                    actionId: 'cL5kVDC',
-                  },
+                    "actionValue": "",
+                    "prefixValue": "",
+                    "sufixValue": "",
+                    "substringRange": "",
+                    "color": "rgba(255,255,255,1)",
+                    "actionId": "zH54Nh7"
+                  }
                 ],
-                isToHideElement: false,
-                ruleName: 'd',
-                ruleId: 'rule_1668057267616',
-                elementId: '3LycOwEVvU',
-                isToApplyFactFilters: false,
-                isToApplyActionFilters: true,
-                factFilters: [],
-                actionFilters: [
-                  {
-                    path: "instoreFields['it-it']['data']['imageFree00']",
-                    articleField: {
-                      name: 'imageFree00',
-                      parent: 'instoreFields',
-                      subTitle: 'instoreFields',
-                    },
-                    dataSource: 'article_field',
-                    function: 'Format Date (DD Month)',
-                    filterId: 'B5fSm_k',
-                  },
-                ],
-              },
-            ],
-            name: 'BrandName',
+                "isToHideElement": false,
+                "ruleName": "rul 1",
+                "ruleId": "rule_1668688617878",
+                "elementId": "ND_09IxrKk",
+                "isToApplyFactFilters": false,
+                "isToApplyActionFilters": false,
+                "factFilters": [],
+                "actionFilters": []
+              }
+            ]
           },
-          visible: true,
-          draggable: true,
-          selectable: true,
-          contentEditable: true,
-          styleEditable: true,
-          alwaysOnTop: false,
-          showInExport: true,
-          text: 'Brandname',
-          placeholder: '',
-          fontSize: 16,
-          fontFamily: 'Cocon-Bold-Font',
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          textDecoration: '',
-          fill: 'black',
-          align: 'center',
-          width: 219,
-          height: 21,
-          verticalAlign: 'middle',
-          strokeWidth: 0,
-          stroke: 'black',
-          lineHeight: 1.2,
-          letterSpacing: 0,
-        },
+          "visible": true,
+          "draggable": true,
+          "selectable": true,
+          "contentEditable": true,
+          "styleEditable": true,
+          "alwaysOnTop": false,
+          "showInExport": true,
+          "text": "CIAO",
+          "placeholder": "",
+          "fontSize": 125,
+          "fontFamily": "Roboto",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "textDecoration": "",
+          "fill": "black",
+          "align": "center",
+          "width": 512,
+          "height": 151,
+          "verticalAlign": "top",
+          "strokeWidth": 0,
+          "stroke": "black",
+          "lineHeight": 1.2,
+          "letterSpacing": 0
+        }
       ],
       width: 'auto',
       height: 'auto',
@@ -241,7 +228,62 @@ var articleJson = {
       },
     },
   },
-  externalData: {},
+  externalData: {
+    PIM: {
+        version: 3,
+        data: {
+            'it-IT' : {
+                locale: "it-IT",
+                isPrimary: false,
+                data: {
+                    vino: {
+                        age: "2323fsv "
+                    },
+                    wine: {
+                        "productDescription": "ghrtre",
+                        "ingredents": "sregwe"
+                    }
+                }
+            },
+            'en-US': {
+                locale: "en-US",
+                isPrimary: true,
+                data: {
+                    vino: {
+                        age: "dasgsdf",
+                        txt_DescrizioneVino: "df",
+                        txt_StatoOrigine: "sdfgsdf",
+                        txt_RegioneOrigine: "dasgf",
+                        txt_AlcoholContent: 23,
+                        rdb_ColoreVino: "keyColoreRosato",
+                        cmb_AbbinamentoCiboVino: [
+                            "keySecondi",
+                            "keyDessert"
+                        ]
+                    },
+                    allergeni: {
+                        chk_Molluschi: true,
+                        chk_Lupini: true
+                    },
+                    wine: {
+                        productDescription: "srthret",
+                        ingredents: "dfsg"
+                    }
+                }
+            },
+            'fr-FR': {
+                locale: "fr-FR",
+                isPrimary: false,
+                data: {
+                    wine: {
+                        productDescription: "ghnyjutyu",
+                        ingredents: "sg"
+                    }
+                }
+            }
+        }
+    }
+},
   systemData: {
     Hash: {
       codes: 1922533703,

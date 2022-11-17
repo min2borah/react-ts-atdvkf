@@ -96,14 +96,8 @@ export const containSubstring = (factValue, val) => {
 };
 
 export const getDate_DD_Month = (dateStr) => {
-  var a = moment(dateStr);
-  console.log('isValid...', a.isValid());
-  console.log('invalidAt', a.invalidAt());
-
   let ndate = new Date(dateStr);
   let mdate = moment(ndate);
-  console.log('ndate...', ndate);
-  console.log('mdate...', mdate);
   let date = mdate.format('DD/MM/YYYY HH:mm:ss');
   var subData = date.split(' ');
   var separator = '';
@@ -156,7 +150,6 @@ export const getDate_DD_Month = (dateStr) => {
       month = 'Dicembre';
       break;
   }
-  console.log(subData2[0] + ' ' + month);
   return subData2[0] + ' ' + month;
 };
 
@@ -294,12 +287,12 @@ export function processFilters(filters, articleData) {
         break;
       case Constants.FILTER_PRICE_FORMAT:
         if (is_a_price(artVal)) {
-          artVal = '"' + filterPriceFormatter(artVal) + '"';
+          artVal = filterPriceFormatter(artVal);
         }
         break;
       case Constants.FILTER_DATE_FORMAT:
         if (isDate(artVal) || moment(artVal).isValid()) {
-          let formatedDate = '"' + getDate_DD_Month(artVal) + '"';
+          let formatedDate = getDate_DD_Month(artVal);
           artVal = formatedDate;
         }
         break;
@@ -317,7 +310,8 @@ export function processFilters(filters, articleData) {
     );
 
     try {
-      eval('article.' + `${filterPathFinal}` + ' = ' + `${artVal}`);
+      // eval("article." + `${filterPathFinal}` + " = " + `${artVal}`);
+      setToValue(article, artVal, filterPathFinal);
     } catch (e) {
       console.log(e);
     }
@@ -330,7 +324,8 @@ export function getArticleFieldValue(articleJson, dataSource, articleField) {
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
     let path = getLocaliazedPath(articleJson, dataSource, articleField);
     try {
-      return eval('articleJson.' + `${path}`);
+      let val = getProp(articleJson, path);
+      return val;
     } catch (error) {
       return null;
     }
@@ -339,11 +334,12 @@ export function getArticleFieldValue(articleJson, dataSource, articleField) {
       articleJson.externalData != null &&
       articleJson.externalData['PIM'] != null &&
       articleJson.externalData['PIM'].data != null &&
-      articleJson.externalData['PIM'].data['en-US'] != null
+      articleJson.externalData['PIM'].data != null
     ) {
       let path = getLocaliazedPath(articleJson, dataSource, articleField);
       try {
-        return eval('articleJson.' + `${path}`);
+        let val = getProp(articleJson, path);
+        return val;
       } catch (error) {
         return null;
       }
@@ -355,28 +351,47 @@ export function getArticleFieldValue(articleJson, dataSource, articleField) {
 export function getLocaliazedPath(articleJson, dataSource, articleField) {
   let path = null;
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
-    if (articleField['parent']) {
-      let parent = camelize(articleField['parent']);
-      if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
-        let defaultLocale = getInstoreFieldPrimaryLocale(articleJson);
-        let currentLocale = defaultLocale;
-        if (articleField.locale) currentLocale = articleField.locale;
-        try {
-          path = getDataFieldPath(articleField, dataSource, currentLocale);
-          if (eval('articleJson.' + `${path}`)) {
-            return path;
-          }
-        } catch (error) {
-          path = getDataFieldPath(articleField, dataSource, defaultLocale);
-        }
-      } else if (parent === Constants.DATA_SOURCE_FIELDS_IMPORTS) {
-        path = getDataFieldPath(articleField, dataSource, null);
-      }
-    } else {
-      path = articleField['articleField'];
+    let parent = camelize(articleField['parent']);
+    if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
+      let defaultLocale = getInstoreFieldPrimaryLocale(articleJson);
+      path = getValidPathWithLocale(
+        defaultLocale,
+        articleField,
+        dataSource,
+        articleJson
+      );
+    } else if (parent === Constants.DATA_SOURCE_FIELDS_IMPORTS) {
+      path = getDataFieldPath(articleField, dataSource, null);
     }
   } else if (dataSource === Constants.DATA_SOURCE_PIM) {
-    path = getDataFieldPath(articleField, dataSource, null);
+    let pimDfltLocale = getPimDataPrimaryLocale(articleJson);
+    path = getValidPathWithLocale(
+      pimDfltLocale,
+      articleField,
+      dataSource,
+      articleJson
+    );
+  }
+  return path;
+}
+
+function getValidPathWithLocale(
+  defaultLocale,
+  articleField,
+  dataSource,
+  articleJson
+) {
+  let path = null;
+  let currentLocale = defaultLocale;
+  if (articleField?.locale) currentLocale = articleField.locale;
+  try {
+    path = getDataFieldPath(articleField, dataSource, currentLocale);
+    let val = getProp(articleJson, path);
+    if (val == undefined) {
+      path = getDataFieldPath(articleField, dataSource, defaultLocale);
+    }
+  } catch (error) {
+    path = getDataFieldPath(articleField, dataSource, defaultLocale);
   }
   return path;
 }
@@ -392,7 +407,7 @@ function getImportDataPath(parent, name) {
 }
 
 function getPimDataPath(parent, name, locale) {
-  var pimExternalData = "externalData['PIM'].data['en-US']";
+  var pimExternalData = "externalData['PIM']['data']['" + locale + "']['data']";
   let path = pimExternalData + "['" + parent + "']" + "['" + name + "']";
   if (!parent) {
     path = pimExternalData + "['" + name + "']";
@@ -421,7 +436,7 @@ export function getDataFieldPath(articleField, dataSource, locale) {
     isEmpty(articleField['parent'])
   ) {
     let name = camelize(articleField['name']);
-    path = getPimDataPath(null, name, locale);
+    return getPimDataPath(null, name, locale);
   } else {
     return articleField;
   }
@@ -440,9 +455,59 @@ export function getInstoreFieldPrimaryLocale(articleJson) {
   return finalKey;
 }
 
+export function getPimDataPrimaryLocale(articleJson) {
+  let finalKey = 'it-IT';
+  if (articleJson.externalData?.PIM?.data) {
+    let localeKeys = Object.keys(articleJson.externalData?.PIM?.data);
+    localeKeys.forEach((key, index) => {
+      if (articleJson.externalData?.PIM?.data[key]['isPrimary']) {
+        finalKey = key;
+      }
+    });
+  }
+  return finalKey;
+}
+
 export function camelize(str) {
   return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
     if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
     return index === 0 ? match.toLowerCase() : match.toUpperCase();
   });
+}
+
+/** Get a nested property from an object without returning any errors.
+ * If the property or property chain doesn't exist, undefined is returned.
+ * Property names with spaces may use either dot or bracket "[]" notation.
+ * Note that bracketed property names without surrounding quotes will fail the lookup.
+ *      e.g. embedded variables are not supported.
+ * @param {object} obj The object to check
+ * @param {string} prop The property or property chain to get (e.g. obj.prop1.prop1a or obj['prop1'].prop2)
+ * @returns {*|undefined} The value of the objects property or undefined if the property doesn't exist
+ */
+function getProp(obj, prop) {
+  if (typeof obj !== 'object') throw 'getProp: obj is not an object';
+  if (typeof prop !== 'string') throw 'getProp: prop is not a string';
+
+  // Replace [] notation with dot notation
+  prop = prop.replace(/\"/g, "'");
+  prop = prop.replace(/\'\]\[\'/g, '.');
+  prop = prop.replace(/\[["'`](.*)["'`]\]/g, '.$1');
+
+  return prop.split('.').reduce(function (prev, curr) {
+    return prev ? prev[curr] : undefined;
+  }, obj || self);
+}
+
+function setToValue(obj, value, path) {
+  if (typeof obj !== 'object') throw 'getProp: obj is not an object';
+  if (typeof path !== 'string') throw 'getProp: prop is not a string';
+
+  // Replace [] notation with dot notation
+  path = path.replace(/\"/g, "'");
+  path = path.replace(/\'\]\[\'/g, '.');
+  let dotpath = path.replace(/\[["'`](.*)["'`]\]/g, '.$1');
+  let i;
+  let pathArr = dotpath.split('.');
+  for (i = 0; i < pathArr.length - 1; i++) obj = obj[pathArr[i]];
+  obj[pathArr[i]] = value;
 }
