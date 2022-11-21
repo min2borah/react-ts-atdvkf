@@ -9,108 +9,108 @@ var previewJson = {
       id: 'TnCU0f48zL',
       children: [
         {
-          "id": "ND_09IxrKk",
-          "type": "text",
-          "name": "",
-          "x": 256,
-          "y": 321.5,
-          "rotation": 0,
-          "opacity": 1,
-          "blurEnabled": false,
-          "blurRadius": 10,
-          "brightnessEnabled": false,
-          "brightness": 0,
-          "sepiaEnabled": false,
-          "grayscaleEnabled": false,
-          "shadowEnabled": false,
-          "shadowBlur": 5,
-          "shadowOffsetX": 0,
-          "shadowOffsetY": 0,
-          "shadowColor": "black",
-          "shadowOpacity": 1,
-          "custom": {
-            "articleField": null,
-            "dataSource": "pim_data",
-            "rules": [
+          id: 'ND_09IxrKk',
+          type: 'text',
+          name: '',
+          x: 256,
+          y: 321.5,
+          rotation: 0,
+          opacity: 1,
+          blurEnabled: false,
+          blurRadius: 10,
+          brightnessEnabled: false,
+          brightness: 0,
+          sepiaEnabled: false,
+          grayscaleEnabled: false,
+          shadowEnabled: false,
+          shadowBlur: 5,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          shadowColor: 'black',
+          shadowOpacity: 1,
+          custom: {
+            articleField: null,
+            dataSource: 'pim_data',
+            rules: [
               {
-                "ruleConditions": {
-                  "conditions": {
-                    "all": [
+                ruleConditions: {
+                  conditions: {
+                    all: [
                       {
-                        "fact": "article-fact",
-                        "operator": "cus_greaterThanInclusive",
-                        "value": "2",
-                        "path": "$.externalData['PIM'].data['en-US']['vino']['txt_AlcoholContent']",
-                        "dataSource": "pim_data",
-                        "articleField": {
-                          "name": "txt_AlcoholContent",
-                          "parent": "vino",
-                          "subTitle": "vino"
+                        fact: 'article-fact',
+                        operator: 'cus_greaterThanInclusive',
+                        value: '2',
+                        path: "$.externalData['PIM'].data['en-US']['vino']['txt_AlcoholContent']",
+                        dataSource: 'pim_data',
+                        articleField: {
+                          name: 'txt_AlcoholContent',
+                          parent: 'vino',
+                          subTitle: 'vino',
                         },
-                        "conditionId": "r8NlfZA"
-                      }
-                    ]
-                  },
-                  "event": {
-                    "type": "true"
-                  }
-                },
-                "ruleActions": [
-                  {
-                    "elementField": "text",
-                    "actionType": "Article Value",
-                    "actionField": {
-                      "path": "externalData['PIM'].data['en-US']['vino']['txt_AlcoholContent']",
-                      "articleField": {
-                        "name": "txt_AlcoholContent",
-                        "parent": "vino",
-                        "subTitle": "vino"
+                        conditionId: 'r8NlfZA',
                       },
-                      "dataSource": "pim_data"
+                    ],
+                  },
+                  event: {
+                    type: 'true',
+                  },
+                },
+                ruleActions: [
+                  {
+                    elementField: 'text',
+                    actionType: 'Article Value',
+                    actionField: {
+                      path: "externalData['PIM'].data['en-US']['vino']['txt_AlcoholContent']",
+                      articleField: {
+                        name: 'txt_AlcoholContent',
+                        parent: 'vino',
+                        subTitle: 'vino',
+                      },
+                      dataSource: 'pim_data',
                     },
-                    "actionValue": "",
-                    "prefixValue": "",
-                    "sufixValue": "",
-                    "substringRange": "",
-                    "color": "rgba(255,255,255,1)",
-                    "actionId": "zH54Nh7"
-                  }
+                    actionValue: '',
+                    prefixValue: '',
+                    sufixValue: '',
+                    substringRange: '',
+                    color: 'rgba(255,255,255,1)',
+                    actionId: 'zH54Nh7',
+                  },
                 ],
-                "isToHideElement": false,
-                "ruleName": "rul 1",
-                "ruleId": "rule_1668688617878",
-                "elementId": "ND_09IxrKk",
-                "isToApplyFactFilters": false,
-                "isToApplyActionFilters": false,
-                "factFilters": [],
-                "actionFilters": []
-              }
-            ]
+                isToHideElement: false,
+                ruleName: 'rul 1',
+                ruleId: 'rule_1668688617878',
+                elementId: 'ND_09IxrKk',
+                isToApplyFactFilters: false,
+                isToApplyActionFilters: false,
+                factFilters: [],
+                actionFilters: [],
+              },
+            ],
           },
-          "visible": true,
-          "draggable": true,
-          "selectable": true,
-          "contentEditable": true,
-          "styleEditable": true,
-          "alwaysOnTop": false,
-          "showInExport": true,
-          "text": "CIAO",
-          "placeholder": "",
-          "fontSize": 125,
-          "fontFamily": "Roboto",
-          "fontStyle": "normal",
-          "fontWeight": "normal",
-          "textDecoration": "",
-          "fill": "black",
-          "align": "center",
-          "width": 512,
-          "height": 151,
-          "verticalAlign": "top",
-          "strokeWidth": 0,
-          "stroke": "black",
-          "lineHeight": 1.2,
-          "letterSpacing": 0
-        }
+          visible: true,
+          draggable: true,
+          selectable: true,
+          contentEditable: true,
+          styleEditable: true,
+          alwaysOnTop: false,
+          showInExport: true,
+          text: 'CIAO',
+          placeholder: '',
+          fontSize: 125,
+          fontFamily: 'Roboto',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          textDecoration: '',
+          fill: 'black',
+          align: 'center',
+          width: 512,
+          height: 151,
+          verticalAlign: 'top',
+          strokeWidth: 0,
+          stroke: 'black',
+          lineHeight: 1.2,
+          letterSpacing: 0,
+        },
       ],
       width: 'auto',
       height: 'auto',
@@ -230,59 +230,56 @@ var articleJson = {
   },
   externalData: {
     PIM: {
-        version: 3,
-        data: {
-            'it-IT' : {
-                locale: "it-IT",
-                isPrimary: false,
-                data: {
-                    vino: {
-                        age: "2323fsv "
-                    },
-                    wine: {
-                        "productDescription": "ghrtre",
-                        "ingredents": "sregwe"
-                    }
-                }
+      version: 3,
+      data: {
+        'it-IT': {
+          locale: 'it-IT',
+          isPrimary: false,
+          data: {
+            vino: {
+              age: '2323fsv ',
             },
-            'en-US': {
-                locale: "en-US",
-                isPrimary: true,
-                data: {
-                    vino: {
-                        age: "dasgsdf",
-                        txt_DescrizioneVino: "df",
-                        txt_StatoOrigine: "sdfgsdf",
-                        txt_RegioneOrigine: "dasgf",
-                        txt_AlcoholContent: 23,
-                        rdb_ColoreVino: "keyColoreRosato",
-                        cmb_AbbinamentoCiboVino: [
-                            "keySecondi",
-                            "keyDessert"
-                        ]
-                    },
-                    allergeni: {
-                        chk_Molluschi: true,
-                        chk_Lupini: true
-                    },
-                    wine: {
-                        productDescription: "srthret",
-                        ingredents: "dfsg"
-                    }
-                }
+            wine: {
+              productDescription: 'ghrtre',
+              ingredents: 'sregwe',
             },
-            'fr-FR': {
-                locale: "fr-FR",
-                isPrimary: false,
-                data: {
-                    wine: {
-                        productDescription: "ghnyjutyu",
-                        ingredents: "sg"
-                    }
-                }
-            }
-        }
-    }
+          },
+        },
+        'en-US': {
+          locale: 'en-US',
+          isPrimary: true,
+          data: {
+            vino: {
+              age: 'dasgsdf',
+              txt_DescrizioneVino: 'df',
+              txt_StatoOrigine: 'sdfgsdf',
+              txt_RegioneOrigine: 'dasgf',
+              txt_AlcoholContent: 23,
+              rdb_ColoreVino: 'keyColoreRosato',
+              cmb_AbbinamentoCiboVino: ['keySecondi', 'keyDessert'],
+            },
+            allergeni: {
+              chk_Molluschi: true,
+              chk_Lupini: true,
+            },
+            wine: {
+              productDescription: 'srthret',
+              ingredents: 'dfsg',
+            },
+          },
+        },
+        'fr-FR': {
+          locale: 'fr-FR',
+          isPrimary: false,
+          data: {
+            wine: {
+              productDescription: 'ghnyjutyu',
+              ingredents: 'sg',
+            },
+          },
+        },
+      },
+    },
   },
   systemData: {
     Hash: {
@@ -296,112 +293,111 @@ var articleJson = {
   Id: '6321f33c830105063be2d9c3',
 };
 
-var scenario =  {
-  "scenarioUniqueCode": "dc042c0b-72b7-46fe-8de6-f717f2b4ea50",
-  "name": "BASE",
-  "description": "",
-  "state": 1,
-  "orderIndex": 1,
-  "rules": [
-      {
-          "ruleCode": "bf57c215-48a9-4e7b-8c54-19c2f474119b",
-          "name": "",
-          "isToApplyFilters": false,
-          "filters": null,
-          "ruleConditions": {
-              "conditions": {
-                  "all": [
-                      {
-                          "fact": "article-fact",
-                          "operator": "greaterThanCurrentDate",
-                          "value": "2022-10-17T15:12:21Z",
-                          "path": "",
-                          "dataSource": "article_field",
-                          "articleField": "",
-                          "conditionId": "nB0LF_3"
-                      }
-                  ]
-              },
-              "event": {
-                  "type": "true"
-              }
-          },
-          "creationDate": "10/26/2022 15:28:36",
-          "lastUpdateDate": "11/21/2022 07:58:04"
-      }
+var scenario = {
+  scenarioUniqueCode: 'dc042c0b-72b7-46fe-8de6-f717f2b4ea50',
+  name: 'BASE',
+  description: '',
+  state: 1,
+  orderIndex: 1,
+  rules: [
+    {
+      ruleCode: 'bf57c215-48a9-4e7b-8c54-19c2f474119b',
+      name: '',
+      isToApplyFilters: false,
+      filters: null,
+      ruleConditions: {
+        conditions: {
+          all: [
+            {
+              fact: 'article-fact',
+              operator: 'greaterThanCurrentDate',
+              value: '2022-10-17T15:12:21Z',
+              path: '',
+              dataSource: 'article_field',
+              articleField: '',
+              conditionId: 'nB0LF_3',
+            },
+          ],
+        },
+        event: {
+          type: 'true',
+        },
+      },
+      creationDate: '10/26/2022 15:28:36',
+      lastUpdateDate: '11/21/2022 07:58:04',
+    },
   ],
-  "templates": [
-      {
-          "name": "",
-          "device": "VIP Standard",
-          "applicationType": "CONTENT_ON_DEMAND",
-          "width": 1280,
-          "height": 720,
-          "orientation": 0,
-          "templateUniqueCode": "88f13f15-e948-42db-b0ac-0149a07028d1",
-          "creationDate": "10/26/2022 15:28:43",
-          "lastUpdateDate": "10/26/2022 15:28:43"
-      },
-      {
-          "name": "",
-          "device": "VIP Custom Resolution",
-          "applicationType": "CONTENT_ON_DEMAND",
-          "width": 1024,
-          "height": 768,
-          "orientation": 0,
-          "templateUniqueCode": "fbd63fa8-f963-44f1-84b6-f21314d3909d",
-          "creationDate": "10/26/2022 15:44:27",
-          "lastUpdateDate": "10/26/2022 15:44:27"
-      },
-      {
-          "name": "",
-          "device": "LN0290BN@R_007",
-          "applicationType": "ESL",
-          "width": 384,
-          "height": 168,
-          "orientation": 0,
-          "templateUniqueCode": "7c25059f-435d-468f-83e5-ad0deccfa0c4",
-          "creationDate": "10/31/2022 06:21:34",
-          "lastUpdateDate": "10/31/2022 06:21:33"
-      },
-      {
-          "name": "",
-          "device": "LN0266BN@R_004",
-          "applicationType": "ESL",
-          "width": 360,
-          "height": 184,
-          "orientation": 0,
-          "templateUniqueCode": "fd0b79d2-e538-443b-b348-b0c4cd44d8e5",
-          "creationDate": "11/02/2022 14:47:04",
-          "lastUpdateDate": "11/02/2022 14:47:04"
-      },
-      {
-          "name": "",
-          "device": "LN0420BN@R_009",
-          "applicationType": "ESL",
-          "width": 400,
-          "height": 300,
-          "orientation": 0,
-          "templateUniqueCode": "ceeebbd1-373b-4266-a038-4160f93d619f",
-          "creationDate": "11/02/2022 15:32:35",
-          "lastUpdateDate": "11/02/2022 15:32:35"
-      },
-      {
-          "name": "",
-          "device": "VIP Standard",
-          "applicationType": "SLIDE_SHOW",
-          "width": 1280,
-          "height": 720,
-          "orientation": 0,
-          "templateUniqueCode": "07c04384-3eef-4aea-b00d-7ac213d0d99a",
-          "creationDate": "11/03/2022 07:54:35",
-          "lastUpdateDate": "11/03/2022 07:54:34"
-      }
+  templates: [
+    {
+      name: '',
+      device: 'VIP Standard',
+      applicationType: 'CONTENT_ON_DEMAND',
+      width: 1280,
+      height: 720,
+      orientation: 0,
+      templateUniqueCode: '88f13f15-e948-42db-b0ac-0149a07028d1',
+      creationDate: '10/26/2022 15:28:43',
+      lastUpdateDate: '10/26/2022 15:28:43',
+    },
+    {
+      name: '',
+      device: 'VIP Custom Resolution',
+      applicationType: 'CONTENT_ON_DEMAND',
+      width: 1024,
+      height: 768,
+      orientation: 0,
+      templateUniqueCode: 'fbd63fa8-f963-44f1-84b6-f21314d3909d',
+      creationDate: '10/26/2022 15:44:27',
+      lastUpdateDate: '10/26/2022 15:44:27',
+    },
+    {
+      name: '',
+      device: 'LN0290BN@R_007',
+      applicationType: 'ESL',
+      width: 384,
+      height: 168,
+      orientation: 0,
+      templateUniqueCode: '7c25059f-435d-468f-83e5-ad0deccfa0c4',
+      creationDate: '10/31/2022 06:21:34',
+      lastUpdateDate: '10/31/2022 06:21:33',
+    },
+    {
+      name: '',
+      device: 'LN0266BN@R_004',
+      applicationType: 'ESL',
+      width: 360,
+      height: 184,
+      orientation: 0,
+      templateUniqueCode: 'fd0b79d2-e538-443b-b348-b0c4cd44d8e5',
+      creationDate: '11/02/2022 14:47:04',
+      lastUpdateDate: '11/02/2022 14:47:04',
+    },
+    {
+      name: '',
+      device: 'LN0420BN@R_009',
+      applicationType: 'ESL',
+      width: 400,
+      height: 300,
+      orientation: 0,
+      templateUniqueCode: 'ceeebbd1-373b-4266-a038-4160f93d619f',
+      creationDate: '11/02/2022 15:32:35',
+      lastUpdateDate: '11/02/2022 15:32:35',
+    },
+    {
+      name: '',
+      device: 'VIP Standard',
+      applicationType: 'SLIDE_SHOW',
+      width: 1280,
+      height: 720,
+      orientation: 0,
+      templateUniqueCode: '07c04384-3eef-4aea-b00d-7ac213d0d99a',
+      creationDate: '11/03/2022 07:54:35',
+      lastUpdateDate: '11/03/2022 07:54:34',
+    },
   ],
-  "creationDate": "10/26/2022 15:28:36",
-  "lastUpdateDate": "11/21/2022 07:58:04"
-}
-
+  creationDate: '10/26/2022 15:28:36',
+  lastUpdateDate: '11/21/2022 07:58:04',
+};
 export const runPreviewtest = () => {
   validateElementRules(previewJson, articleJson)
     .then((resultJson) => {})
