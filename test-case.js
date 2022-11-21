@@ -1,4 +1,4 @@
-import { validateElementRules } from './rule-engine.js';
+import { validateElementRules, validateScenarioRules } from './rule-engine.js';
 
 var previewJson = {
   width: 1024,
@@ -283,7 +283,7 @@ var articleJson = {
             }
         }
     }
-},
+  },
   systemData: {
     Hash: {
       codes: 1922533703,
@@ -295,74 +295,126 @@ var articleJson = {
   },
   Id: '6321f33c830105063be2d9c3',
 };
-// ruleEngine.ValidateScenario( {
-//     "scenarioUniqueCode": "e65e4f91-be13-4641-bf94-94f6c5d67c8d",
-//     "name": "Base2",
-//     "description": "",
-//     "state": 1,
-//     "orderIndex": 1,
-//     "rules": [{
-//       "ruleCode": "4339c8ac-1491-42c2-bfe0-550758d0f5b3",
-//       "name": "",
-//       "isToApplyFilters": false,
-//       "filters": null,
-//       "ruleConditions": {
-//         "conditions": {
-//           "all": [{
-//             "fact": "article-fact",
-//             "operator": "lessThanCurrentDate",
-//             "value": "2022-11-01T16:17:59Z",
-//             "path": "",
-//             "dataSource": "article_field",
-//             "articleField": "",
-//             "conditionId": "c09R5ww"
-//           }]
-//         },
-//         "event": {
-//           "type": "true"
-//         }
-//       },
-//       "creationDate": "10/28/2022 15:18:31",
-//       "lastUpdateDate": "11/03/2022 07:28:28"
-//     }],
-//     "templates": [{
-//       "name": "",
-//       "device": "VIP Standard",
-//       "applicationType": "CONTENT_ON_DEMAND",
-//       "width": 1280,
-//       "height": 720,
-//       "orientation": 0,
-//       "templateUniqueCode": "1521c85c-9fe6-4057-957f-87a8faf74bd1",
-//       "creationDate": "10/28/2022 15:19:18",
-//       "lastUpdateDate": "10/28/2022 15:19:17"
-//     }, {
-//       "name": "",
-//       "device": "LN0290BN@R_007",
-//       "applicationType": "ESL",
-//       "width": 384,
-//       "height": 168,
-//       "orientation": 0,
-//       "templateUniqueCode": "df49db4d-a8cc-4e8f-bffd-59385f8b5972",
-//       "creationDate": "11/02/2022 17:12:13",
-//       "lastUpdateDate": "11/02/2022 17:12:12"
-//     }, {
-//       "name": "",
-//       "device": "VIP Custom Resolution",
-//       "applicationType": "CONTENT_ON_DEMAND",
-//       "width": 1024,
-//       "height": 768,
-//       "orientation": 0,
-//       "templateUniqueCode": "ddce8753-e51a-4475-bcf9-33325be19ccd",
-//       "creationDate": "11/04/2022 17:05:22",
-//       "lastUpdateDate": "11/04/2022 17:05:22"
-//     }],
-//     "creationDate": "10/28/2022 15:18:31",
-//     "lastUpdateDate": "11/03/2022 07:28:28"
-//   } ,null ,[])
 
-export const runtest = () => {
+var scenario =  {
+  "scenarioUniqueCode": "dc042c0b-72b7-46fe-8de6-f717f2b4ea50",
+  "name": "BASE",
+  "description": "",
+  "state": 1,
+  "orderIndex": 1,
+  "rules": [
+      {
+          "ruleCode": "bf57c215-48a9-4e7b-8c54-19c2f474119b",
+          "name": "",
+          "isToApplyFilters": false,
+          "filters": null,
+          "ruleConditions": {
+              "conditions": {
+                  "all": [
+                      {
+                          "fact": "article-fact",
+                          "operator": "greaterThanCurrentDate",
+                          "value": "2022-10-17T15:12:21Z",
+                          "path": "",
+                          "dataSource": "article_field",
+                          "articleField": "",
+                          "conditionId": "nB0LF_3"
+                      }
+                  ]
+              },
+              "event": {
+                  "type": "true"
+              }
+          },
+          "creationDate": "10/26/2022 15:28:36",
+          "lastUpdateDate": "11/21/2022 07:58:04"
+      }
+  ],
+  "templates": [
+      {
+          "name": "",
+          "device": "VIP Standard",
+          "applicationType": "CONTENT_ON_DEMAND",
+          "width": 1280,
+          "height": 720,
+          "orientation": 0,
+          "templateUniqueCode": "88f13f15-e948-42db-b0ac-0149a07028d1",
+          "creationDate": "10/26/2022 15:28:43",
+          "lastUpdateDate": "10/26/2022 15:28:43"
+      },
+      {
+          "name": "",
+          "device": "VIP Custom Resolution",
+          "applicationType": "CONTENT_ON_DEMAND",
+          "width": 1024,
+          "height": 768,
+          "orientation": 0,
+          "templateUniqueCode": "fbd63fa8-f963-44f1-84b6-f21314d3909d",
+          "creationDate": "10/26/2022 15:44:27",
+          "lastUpdateDate": "10/26/2022 15:44:27"
+      },
+      {
+          "name": "",
+          "device": "LN0290BN@R_007",
+          "applicationType": "ESL",
+          "width": 384,
+          "height": 168,
+          "orientation": 0,
+          "templateUniqueCode": "7c25059f-435d-468f-83e5-ad0deccfa0c4",
+          "creationDate": "10/31/2022 06:21:34",
+          "lastUpdateDate": "10/31/2022 06:21:33"
+      },
+      {
+          "name": "",
+          "device": "LN0266BN@R_004",
+          "applicationType": "ESL",
+          "width": 360,
+          "height": 184,
+          "orientation": 0,
+          "templateUniqueCode": "fd0b79d2-e538-443b-b348-b0c4cd44d8e5",
+          "creationDate": "11/02/2022 14:47:04",
+          "lastUpdateDate": "11/02/2022 14:47:04"
+      },
+      {
+          "name": "",
+          "device": "LN0420BN@R_009",
+          "applicationType": "ESL",
+          "width": 400,
+          "height": 300,
+          "orientation": 0,
+          "templateUniqueCode": "ceeebbd1-373b-4266-a038-4160f93d619f",
+          "creationDate": "11/02/2022 15:32:35",
+          "lastUpdateDate": "11/02/2022 15:32:35"
+      },
+      {
+          "name": "",
+          "device": "VIP Standard",
+          "applicationType": "SLIDE_SHOW",
+          "width": 1280,
+          "height": 720,
+          "orientation": 0,
+          "templateUniqueCode": "07c04384-3eef-4aea-b00d-7ac213d0d99a",
+          "creationDate": "11/03/2022 07:54:35",
+          "lastUpdateDate": "11/03/2022 07:54:34"
+      }
+  ],
+  "creationDate": "10/26/2022 15:28:36",
+  "lastUpdateDate": "11/21/2022 07:58:04"
+}
+
+export const runPreviewtest = () => {
   validateElementRules(previewJson, articleJson)
     .then((resultJson) => {})
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const runScenariotest = () => {
+  validateScenarioRules(scenario, null, null)
+    .then((resultJson) => {
+      console.log(resultJson);
+    })
     .catch((err) => {
       console.log(err);
     });

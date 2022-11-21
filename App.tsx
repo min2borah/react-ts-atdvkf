@@ -1,10 +1,11 @@
 import * as React from 'react';
 import './style.css';
-import { runtest } from './test-case.js';
+import { runPreviewtest, runScenariotest } from './test-case.js';
 
 export default function App() {
   React.useEffect(() => {
-    runtest();
+    // runPreviewtest();
+    runScenariotest();
   }, []);
 
   return (
