@@ -4,8 +4,8 @@ import { runPreviewtest, runScenariotest } from './test-case.js';
 
 export default function App() {
   React.useEffect(() => {
-    // runPreviewtest();
-    runScenariotest();
+    runPreviewtest();
+    // runScenariotest();
   }, []);
 
   return (

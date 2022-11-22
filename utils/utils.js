@@ -331,10 +331,9 @@ export function getArticleFieldValue(articleJson, dataSource, articleField) {
     }
   } else if (dataSource === Constants.DATA_SOURCE_PIM) {
     if (
-      articleJson.externalData != null &&
-      articleJson.externalData['PIM'] != null &&
-      articleJson.externalData['PIM'].data != null &&
-      articleJson.externalData['PIM'].data != null
+      articleJson.externalData &&
+      articleJson.externalData['PIM'] &&
+      articleJson.externalData['PIM'].data
     ) {
       let path = getLocaliazedPath(articleJson, dataSource, articleField);
       try {
@@ -351,17 +350,21 @@ export function getArticleFieldValue(articleJson, dataSource, articleField) {
 export function getLocaliazedPath(articleJson, dataSource, articleField) {
   let path = null;
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
-    let parent = camelize(articleField['parent']);
-    if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
-      let defaultLocale = getInstoreFieldPrimaryLocale(articleJson);
-      path = getValidPathWithLocale(
-        defaultLocale,
-        articleField,
-        dataSource,
-        articleJson
-      );
-    } else if (parent === Constants.DATA_SOURCE_FIELDS_IMPORTS) {
-      path = getDataFieldPath(articleField, dataSource, null);
+    if(!isEmpty(articleField["parent"])){
+      let parent = camelize(articleField['parent']);
+      if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
+        let defaultLocale = getInstoreFieldPrimaryLocale(articleJson);
+        path = getValidPathWithLocale(
+          defaultLocale,
+          articleField,
+          dataSource,
+          articleJson
+        );
+      } else if (parent === Constants.DATA_SOURCE_FIELDS_IMPORTS) {
+        path = getDataFieldPath(articleField, dataSource, null);
+      }
+    }else{
+      path = articleField["articleField"]
     }
   } else if (dataSource === Constants.DATA_SOURCE_PIM) {
     let pimDfltLocale = getPimDataPrimaryLocale(articleJson);
@@ -383,7 +386,7 @@ function getValidPathWithLocale(
 ) {
   let path = null;
   let currentLocale = defaultLocale;
-  if (articleField?.locale) currentLocale = articleField.locale;
+  if (articleField  && articleField.locale) currentLocale = articleField.locale;
   try {
     path = getDataFieldPath(articleField, dataSource, currentLocale);
     let val = getProp(articleJson, path);
@@ -457,10 +460,14 @@ export function getInstoreFieldPrimaryLocale(articleJson) {
 
 export function getPimDataPrimaryLocale(articleJson) {
   let finalKey = 'it-IT';
-  if (articleJson.externalData?.PIM?.data) {
-    let localeKeys = Object.keys(articleJson.externalData?.PIM?.data);
+  if (
+    articleJson.externalData &&
+    articleJson.externalData['PIM']  &&
+    articleJson.externalData['PIM'].data 
+  ) {
+    let localeKeys = Object.keys(articleJson.externalData.PIM.data);
     localeKeys.forEach((key, index) => {
-      if (articleJson.externalData?.PIM?.data[key]['isPrimary']) {
+      if (articleJson.externalData.PIM.data[key]['isPrimary']) {
         finalKey = key;
       }
     });
@@ -469,10 +476,15 @@ export function getPimDataPrimaryLocale(articleJson) {
 }
 
 export function camelize(str) {
-  return str?.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-    if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
-    return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
+  if(!isEmpty(str)){
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+      if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+      return index === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+  }else{
+    return str;
+  }
+  
 }
 
 /** Get a nested property from an object without returning any errors.
