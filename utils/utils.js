@@ -350,7 +350,7 @@ export function getArticleFieldValue(articleJson, dataSource, articleField) {
 export function getLocaliazedPath(articleJson, dataSource, articleField) {
   let path = null;
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
-    if(!isEmpty(articleField["parent"])){
+    if (!isEmpty(articleField['parent'])) {
       let parent = camelize(articleField['parent']);
       if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
         let defaultLocale = getInstoreFieldPrimaryLocale(articleJson);
@@ -363,8 +363,8 @@ export function getLocaliazedPath(articleJson, dataSource, articleField) {
       } else if (parent === Constants.DATA_SOURCE_FIELDS_IMPORTS) {
         path = getDataFieldPath(articleField, dataSource, null);
       }
-    }else{
-      path = articleField["articleField"]
+    } else {
+      path = articleField['articleField'];
     }
   } else if (dataSource === Constants.DATA_SOURCE_PIM) {
     let pimDfltLocale = getPimDataPrimaryLocale(articleJson);
@@ -386,7 +386,7 @@ function getValidPathWithLocale(
 ) {
   let path = null;
   let currentLocale = defaultLocale;
-  if (articleField  && articleField.locale) currentLocale = articleField.locale;
+  if (articleField && articleField.locale) currentLocale = articleField.locale;
   try {
     path = getDataFieldPath(articleField, dataSource, currentLocale);
     let val = getProp(articleJson, path);
@@ -446,7 +446,7 @@ export function getDataFieldPath(articleField, dataSource, locale) {
 }
 
 export function getInstoreFieldPrimaryLocale(articleJson) {
-  let finalKey = 'it-it';
+  let finalKey = 'it-IT';
   if (articleJson.instoreFields) {
     let localeKeys = Object.keys(articleJson.instoreFields);
     localeKeys.forEach((key, index) => {
@@ -462,8 +462,8 @@ export function getPimDataPrimaryLocale(articleJson) {
   let finalKey = 'it-IT';
   if (
     articleJson.externalData &&
-    articleJson.externalData['PIM']  &&
-    articleJson.externalData['PIM'].data 
+    articleJson.externalData['PIM'] &&
+    articleJson.externalData['PIM'].data
   ) {
     let localeKeys = Object.keys(articleJson.externalData.PIM.data);
     localeKeys.forEach((key, index) => {
@@ -476,15 +476,14 @@ export function getPimDataPrimaryLocale(articleJson) {
 }
 
 export function camelize(str) {
-  if(!isEmpty(str)){
+  if (!isEmpty(str)) {
     return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
       if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
       return index === 0 ? match.toLowerCase() : match.toUpperCase();
     });
-  }else{
+  } else {
     return str;
   }
-  
 }
 
 /** Get a nested property from an object without returning any errors.
