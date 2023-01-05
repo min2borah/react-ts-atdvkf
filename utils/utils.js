@@ -1,6 +1,10 @@
 import * as Constants from './Constants.js';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
+import 'moment/locale/fr';
+import 'moment/locale/it';
+import 'moment/locale/de';
+import 'moment/locale/es';
 
 export const is_a_number = (value) => {
   const re = RegExp('[+-]?([0-9]*[.])?[0-9]+');
@@ -95,62 +99,32 @@ export const containSubstring = (factValue, val) => {
   );
 };
 
-export const getDate_DD_Month = (dateStr) => {
-  let ndate = new Date(dateStr);
-  let mdate = moment(ndate);
-  let date = mdate.format('DD/MM/YYYY HH:mm:ss');
-  var subData = date.split(' ');
-  var separator = '';
-  if (subData[0].includes('/')) {
-    separator = '/';
+export const getDate_DD_Month = (dateStr, locale = null) => {
+  let mdate = moment(dateStr, [
+    moment.ISO_8601,
+    moment.RFC_2822,
+    moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
+    moment.HTML5_FMT.DATETIME_LOCAL_MS,
+    moment.HTML5_FMT.DATETIME_LOCAL,
+    'DD',
+    'MM',
+    'YYYY',
+    'DD-MM',
+    'DD-MM-YYYY',
+    'MM-DD-YYYY',
+    'YYYY-DD-MM',
+    'YYYY-MM-DD',
+    'DD/MM/YYYY',
+    'YYYY/DD/MM',
+  ]);
+  if (!mdate.isValid()) mdate = moment(new Date(dateStr));
+  if (mdate.isValid()) {
+    let lang = 'it';
+    if (locale) lang = locale;
+    return mdate.locale(lang).format('DD MMMM');
+  } else {
+    return dateStr;
   }
-  if (subData[0].includes('-')) {
-    separator = '-';
-  }
-  if (separator === '') {
-    return date;
-  }
-  var subData2 = subData[0].split(separator);
-  var month = '';
-  switch (parseInt(subData2[1])) {
-    case 1:
-      month = 'Gennaio';
-      break;
-    case 2:
-      month = 'Febbraio';
-      break;
-    case 3:
-      month = 'Marzo';
-      break;
-    case 4:
-      month = 'Aprile';
-      break;
-    case 5:
-      month = 'Maggio';
-      break;
-    case 6:
-      month = 'Giugno';
-      break;
-    case 7:
-      month = 'Luglio';
-      break;
-    case 8:
-      month = 'Agosto';
-      break;
-    case 9:
-      month = 'Settembre';
-      break;
-    case 10:
-      month = 'Ottobre';
-      break;
-    case 11:
-      month = 'Novembre';
-      break;
-    case 12:
-      month = 'Dicembre';
-      break;
-  }
-  return subData2[0] + ' ' + month;
 };
 
 export const isDate = (date) => {
@@ -291,10 +265,8 @@ export function processFilters(filters, articleData) {
         }
         break;
       case Constants.FILTER_DATE_FORMAT:
-        if (isDate(artVal) || moment(artVal).isValid()) {
-          let formatedDate = getDate_DD_Month(artVal);
-          artVal = formatedDate;
-        }
+        let formatedDate = getDate_DD_Month(artVal);
+        artVal = formatedDate;
         break;
       case Constants.FILTER_INTEGER_PART:
         artVal = filterIntegerPart(artVal);
