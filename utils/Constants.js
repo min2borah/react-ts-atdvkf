@@ -19,6 +19,8 @@ export const RuleEngineDefaultOperators = {
 };
 export const OPR_LENGTH_GREATER_EQUAL = 'Length >=';
 export const OPR_LENGTH_SMALLER_EQUAL = 'Length <=';
+export const OPR_LENGTH_EQUAL = 'Length ===';
+export const OPR_LENGTH_NOT_EQUAL = 'Length !==';
 export const OPR_IS_EMPTY = 'isEmpty';
 export const OPR_IS_IN_BETWEEN = 'inBetween';
 export const OPR_NOT_IN_BETWEEN = 'notInBetween';

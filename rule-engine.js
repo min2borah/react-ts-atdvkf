@@ -123,6 +123,16 @@ async function validateRules(
     }
   );
 
+  engine.addOperator(constants.OPR_LENGTH_EQUAL, (factValue, jsonValue) => {
+    if (!utils.is_a_number(jsonValue)) return false;
+    return factValue?.toString().length === parseInt(jsonValue);
+  });
+
+  engine.addOperator(constants.OPR_LENGTH_NOT_EQUAL, (factValue, jsonValue) => {
+    if (!utils.is_a_number(jsonValue)) return false;
+    return factValue?.toString().length !== parseInt(jsonValue);
+  });
+
   engine.addOperator(constants.OPR_IS_EMPTY, (factValue, jsonValue) => {
     return utils.isEmpty(factValue);
   });
