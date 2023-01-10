@@ -458,7 +458,10 @@ function performActionsOnElement(isToHide, elem, ruleActions, article) {
         } else {
           elem[action.elementField] = action.color;
         }
-      } else if (action.elementField == constants.ELEMENT_DECIMAL_SUPER) {
+      } else if (
+        action.elementField == constants.ELEMENT_DECIMAL_SUPER ||
+        action.elementField == 'codeType'
+      ) {
         elem.custom[action.elementField] = action.actionValue;
       } else {
         setArticleFieldValue(action, elem, article);
@@ -497,6 +500,11 @@ function setArticleFieldValue(action, elem, article) {
             elem.type === 'qrcode_placeholder')
         ) {
           elem['custom']['codeValue'] = `${val}`;
+        } else if (
+          action.elementField == 'codeType' &&
+          elem.type === 'barcode_placeholder'
+        ) {
+          elem['custom']['codeType'] = `${val}`;
         } else {
           elem[action.elementField] =
             action.elementField == 'text' ? val.toString() : val;
