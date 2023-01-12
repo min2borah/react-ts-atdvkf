@@ -206,13 +206,13 @@ export function filterIntegerPart(value) {
 export function filterDecimalPart(value) {
   if (is_a_number(value)) {
     let floatValue = Number.parseFloat(value).toFixed(3);
-    let validValue = filterInsignificentZeros(floatValue);
+    let validValue = Number(filterInsignificentZeros(floatValue)).toFixed(2);
     let numPart = String(validValue).split('.');
     if (numPart.length > 1) {
       let [whole, decimal] = numPart;
-      return Number(decimal);
+      return decimal;
     } else {
-      return 0;
+      return Number(0).toFixed(2).toString();
     }
   } else {
     return value;

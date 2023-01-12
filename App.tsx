@@ -8,7 +8,7 @@ export default function App() {
     // runPreviewtest();
     // runScenariotest();
   }, []);
-  const dateStr = utils.getDate_DD_Month('12');
+  const dateStr = utils.filterDecimalPart('11.01');
 
   return (
     <div>
