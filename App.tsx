@@ -4,9 +4,14 @@ import { runPreviewtest, runScenariotest } from './test-case.js';
 import * as utils from './utils/utils.js';
 
 export default function App() {
+  let runed = false;
+   
   React.useEffect(() => {
-    // runPreviewtest();
-    // runScenariotest();
+    if(!runed){
+      runed = true;
+      runPreviewtest();
+      // runScenariotest();
+    }
   }, []);
   const dateStr = utils.filterDecimalPart('11.01');
 

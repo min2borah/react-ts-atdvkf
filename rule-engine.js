@@ -308,7 +308,7 @@ async function validateRules(
     var outEvent = {};
     if (rule.ruleActions) outEvent.ruleActions = [...rule.ruleActions];
     outEvent.defaultAction = null;
-    if (rule.isToHideElement) outEvent.isToHideElement = rule.isToHideElement;
+    outEvent.isToHideElement = rule.isToHideElement;
     if (elementIndex != null) outEvent.elementIndex = elementIndex;
     if (pageIndex != null) outEvent.pageIndex = pageIndex;
     if (groupElements && groupElements.length > 0)
@@ -577,13 +577,12 @@ export function validatePageRules(previewJson, article, tag) {
 
   const pageRuleOnSuccess = (event, almanac) => {
     const outEvent = event.params;
-    if (outEvent.isToHideElement) {
-      pototnoObj.pages[outEvent.pageIndex].isToHide = true;
-    }
+    pototnoObj.pages[outEvent.pageIndex].isToHide = outEvent.isToHideElement;
   };
 
   const pageRuleOnFailure = (event, almanac) => {
-    // perform on rule fail
+    const outEvent = event.params;
+    pototnoObj.pages[outEvent.pageIndex].isToHide = !outEvent.isToHideElement;
   };
 
   const fact = { article: article };
