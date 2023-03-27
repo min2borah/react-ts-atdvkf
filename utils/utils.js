@@ -100,23 +100,7 @@ export const containSubstring = (factValue, val) => {
 };
 
 export const getDate_DD_Month = (dateStr, locale = null) => {
-  let mdate = moment(dateStr, [
-    moment.ISO_8601,
-    moment.RFC_2822,
-    moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
-    moment.HTML5_FMT.DATETIME_LOCAL_MS,
-    moment.HTML5_FMT.DATETIME_LOCAL,
-    'DD',
-    'MM',
-    'YYYY',
-    'DD-MM',
-    'DD-MM-YYYY',
-    'MM-DD-YYYY',
-    'YYYY-DD-MM',
-    'YYYY-MM-DD',
-    'DD/MM/YYYY',
-    'YYYY/DD/MM',
-  ]);
+  let mdate = moment(dateStr, Constants.SUPPORTED_DATE_FORMATS);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
   if (mdate.isValid()) {
     let lang = 'it';

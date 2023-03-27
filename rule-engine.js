@@ -13,7 +13,8 @@ async function validateRules(
   ruleOnFailure,
   groupElements,
   scenarioCode,
-  tags
+  tags,
+  deviceType
 ) {
   const engine = new Engine();
 
@@ -343,11 +344,21 @@ async function validateRules(
       const ruleObj = convertToRuleEngineObject(rule, indx);
       //--- needed for supporting older templates -- can be removed in future after complete flow
       if (ruleObj.conditions.hasOwnProperty('all')) {
+        if (deviceType && deviceType?.toLowerCase() == 'esl') {
+          ruleObj.conditions.all = ruleObj.conditions.all.filter(
+            (x) => x.operator !== constants.OPR_TAG
+          );
+        }
         ruleObj.conditions.all.forEach((actionField) => {
           convertPathToCamelcase(actionField, fact.article);
         });
       }
       if (ruleObj.conditions.hasOwnProperty('any')) {
+        if (deviceType && deviceType?.toLowerCase() == 'esl') {
+          ruleObj.conditions.any = ruleObj.conditions.any.filter(
+            (x) => x.operator !== constants.OPR_TAG
+          );
+        }
         ruleObj.conditions.any.forEach((actionField) => {
           convertPathToCamelcase(actionField, fact.article);
         });
@@ -394,6 +405,7 @@ function convertJsonValueToFactValueType(jsonValue, factValue) {
   }
   return valu;
 }
+
 function convertJsonValueToFactValueTypeArray(jsonValue, factValue) {
   var valu = [];
   const splArr = jsonValue.split(',');
@@ -568,7 +580,7 @@ function setArticleFieldValue(action, elem, article) {
   }
 }
 
-export function validatePageRules(previewJson, article, tag) {
+export function validatePageRules(previewJson, article, tag, deviceType) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
     RULE_RESPONSE_COUNT: 0,
@@ -602,7 +614,8 @@ export function validatePageRules(previewJson, article, tag) {
           pageRuleOnFailure,
           null,
           null,
-          tag
+          tag,
+          deviceType
         ).then((result) => {
           RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -628,7 +641,7 @@ export function validatePageRules(previewJson, article, tag) {
   });
 }
 
-export function validateGroupRules(previewJson, article, tag) {
+export function validateGroupRules(previewJson, article, tag, deviceType) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
     RULE_RESPONSE_COUNT: 0,
@@ -684,7 +697,8 @@ export function validateGroupRules(previewJson, article, tag) {
             groupRuleOnFailure,
             group.elements,
             null,
-            tag
+            tag,
+            deviceType
           ).then((result) => {
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
               RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -708,7 +722,7 @@ export function validateGroupRules(previewJson, article, tag) {
   });
 }
 
-export function validateElementRules(previewJson, article, tag) {
+export function validateElementRules(previewJson, article, tag, deviceType) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
     RULE_RESPONSE_COUNT: 0,
@@ -775,7 +789,8 @@ export function validateElementRules(previewJson, article, tag) {
             ruleOnFailure,
             null,
             null,
-            tag
+            tag,
+            deviceType
           ).then((result) => {
             if (result.events.length == 0) {
               performDefaultActions(result);
@@ -806,7 +821,7 @@ export function validateElementRules(previewJson, article, tag) {
   });
 }
 
-export function validateScenarioRules(scenarioJson, article, tag) {
+export function validateScenarioRules(scenarioJson, tag, deviceType) {
   const ruleOnSuccess = (event, almanac) => {
     // perform on rule success
   };
@@ -814,9 +829,9 @@ export function validateScenarioRules(scenarioJson, article, tag) {
   const ruleOnFailure = (event, almanac) => {
     // perform on rule fail
   };
-  let art = article && article != null ? article : {};
+  //let art = (article && article != null) ? article : {};
 
-  const fact = { article: art };
+  const fact = { article: {} };
 
   return new Promise((resolve, reject) => {
     if (scenarioJson?.rules.length > 0) {
@@ -830,7 +845,8 @@ export function validateScenarioRules(scenarioJson, article, tag) {
         ruleOnFailure,
         null,
         scenarioJson.scenarioUniqueCode,
-        tag
+        tag,
+        deviceType
       ).then((result) => {
         if (result.events.length > 0) {
           isAllRuleSucceed = true;

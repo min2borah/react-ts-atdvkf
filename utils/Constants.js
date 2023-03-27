@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const RULE_FACT_ARTICLE = 'article-fact';
 export const RULE_ACTION_PLAIN_TEXT = 'Plain Text';
 export const RULE_ACTION_ARTICLE_VALUE = 'Article Value';
@@ -72,3 +74,31 @@ export const DATA_SOURCE_FIELDS_IMPORTS = 'importFields';
 export const DATA_SOURCE_FIELDS_INSTORE = 'instoreFields';
 export const DATA_SOURCE_FIELDS_DATE = 'current_date';
 export const DATA_SOURCE_FIELDS_TIME = 'current_time';
+
+export const DataSchemaDataType = Object.freeze({
+  ALFA: 1,
+  NUMERIC: 2,
+  CURRENCY: 3,
+  DATE: 4,
+  BIT: 5,
+  DATETIME: 6,
+  TIME: 7,
+});
+
+export const SUPPORTED_DATE_FORMATS = [
+  moment.ISO_8601,
+  moment.RFC_2822,
+  moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
+  moment.HTML5_FMT.DATETIME_LOCAL_MS,
+  moment.HTML5_FMT.DATETIME_LOCAL,
+  'DD',
+  'MM',
+  'YYYY',
+  'DD-MM',
+  'DD-MM-YYYY',
+  'MM-DD-YYYY',
+  'YYYY-DD-MM',
+  'YYYY-MM-DD',
+  'DD/MM/YYYY',
+  'YYYY/DD/MM',
+];
