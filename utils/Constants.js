@@ -64,6 +64,8 @@ export const FILTER_PRICE_FORMAT = 'Format currency (€)';
 export const FILTER_DATE_FORMAT = 'Format Date (DD Month)';
 export const FILTER_INTEGER_PART = 'Take Integer Part';
 export const FILTER_DECIMAL_PART = 'Take Decimal Part';
+export const FILTER_DECIMAL_PART_2_DIGIT = 'Take Decimal Part (2 Digits)';
+export const FILTER_DECIMAL_PART_3_DIGIT = 'Take Decimal Part (3 Digits)';
 
 export const ELEMENT_DECIMAL_SUPER = 'decimalSuperScript';
 

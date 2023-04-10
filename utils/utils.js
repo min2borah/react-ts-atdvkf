@@ -187,16 +187,19 @@ export function filterIntegerPart(value) {
   }
 }
 
-export function filterDecimalPart(value) {
+export function filterDecimalPart(value, isForThreeDigit = false) {
   if (is_a_number(value)) {
+    let digit = isForThreeDigit ? 3 : 2;
     let floatValue = Number.parseFloat(value).toFixed(3);
-    let validValue = Number(filterInsignificentZeros(floatValue)).toFixed(2);
+    let validValue = Number(filterInsignificentZeros(floatValue)).toFixed(
+      digit
+    );
     let numPart = String(validValue).split('.');
     if (numPart.length > 1) {
       let [whole, decimal] = numPart;
       return decimal;
     } else {
-      return Number(0).toFixed(2).toString();
+      return Number(0).toFixed(digit).toString();
     }
   } else {
     return value;
@@ -257,6 +260,12 @@ export function processFilters(filters, articleData) {
         break;
       case Constants.FILTER_DECIMAL_PART:
         artVal = filterDecimalPart(artVal);
+        break;
+      case Constants.FILTER_DECIMAL_PART_2_DIGIT:
+        artVal = filterDecimalPart(artVal);
+        break;
+      case Constants.FILTER_DECIMAL_PART_3_DIGIT:
+        artVal = filterDecimalPart(artVal, true);
         break;
     }
     let filterPathFinal = getLocaliazedPath(
