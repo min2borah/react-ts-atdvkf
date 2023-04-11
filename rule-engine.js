@@ -300,8 +300,12 @@ async function validateRules(
     }
   );
 
-  engine.addOperator(constants.OPR_TAG, (factValue, jsonValue) => {
-    return tags && tags.indexOf(jsonValue) != -1;
+  engine.addOperator(constants.OPR_TAG_CONTAIN, (factValue, jsonValue) => {
+    return tags && tags.indexOf(jsonValue) !== -1;
+  });
+
+  engine.addOperator(constants.OPR_TAG_NOT_CONTAIN, (factValue, jsonValue) => {
+    return tags && tags.indexOf(jsonValue) === -1;
   });
 
   const convertToRuleEngineObject = (rule, indx) => {
@@ -342,11 +346,15 @@ async function validateRules(
   const processEngine = async () => {
     conditions.forEach((rule, indx) => {
       const ruleObj = convertToRuleEngineObject(rule, indx);
-      //--- needed for supporting older templates -- can be removed in future after complete flow
+      let isToAddRule = true;
       if (ruleObj.conditions.hasOwnProperty('all')) {
+        isToAddRule =
+          ruleObj.conditions.all.filter((x) => x.operator == '').length == 0;
         if (deviceType && deviceType?.toLowerCase() == 'esl') {
           ruleObj.conditions.all = ruleObj.conditions.all.filter(
-            (x) => x.operator !== constants.OPR_TAG
+            (x) =>
+              x.operator !== constants.OPR_TAG_CONTAIN &&
+              x.operator !== constants.OPR_TAG_NOT_CONTAIN
           );
         }
         ruleObj.conditions.all.forEach((actionField) => {
@@ -354,17 +362,24 @@ async function validateRules(
         });
       }
       if (ruleObj.conditions.hasOwnProperty('any')) {
+        ruleObj.conditions.any = ruleObj.conditions.any.filter(
+          (x) => x.operator !== ''
+        ); // remove any condition without operator
         if (deviceType && deviceType?.toLowerCase() == 'esl') {
           ruleObj.conditions.any = ruleObj.conditions.any.filter(
-            (x) => x.operator !== constants.OPR_TAG
+            (x) =>
+              x.operator !== constants.OPR_TAG_CONTAIN &&
+              x.operator !== constants.OPR_TAG_NOT_CONTAIN
           );
         }
         ruleObj.conditions.any.forEach((actionField) => {
           convertPathToCamelcase(actionField, fact.article);
         });
+        isToAddRule = ruleObj.conditions.any.length > 0;
       }
-      //-----
-      engine.addRule(ruleObj);
+      if (isToAddRule) {
+        engine.addRule(ruleObj);
+      }
     });
 
     try {
