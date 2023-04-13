@@ -355,109 +355,54 @@ var articleJson = {
 };
 
 var scenario = {
-  scenarioUniqueCode: 'dc042c0b-72b7-46fe-8de6-f717f2b4ea50',
-  name: 'BASE',
-  description: '',
-  state: 1,
-  orderIndex: 1,
-  rules: [
-    {
-      ruleCode: 'bf57c215-48a9-4e7b-8c54-19c2f474119b',
-      name: '',
-      isToApplyFilters: false,
-      filters: null,
-      ruleConditions: {
-        conditions: {
-          all: [
-            {
-              fact: 'article-fact',
-              operator: 'greaterThanCurrentDate',
-              value: '2022-10-17T15:12:21Z',
-              path: '',
-              dataSource: 'article_field',
-              articleField: '',
-              conditionId: 'nB0LF_3',
-            },
-          ],
-        },
-        event: {
-          type: 'true',
-        },
-      },
-      creationDate: '10/26/2022 15:28:36',
-      lastUpdateDate: '11/21/2022 07:58:04',
-    },
+  "scenarioUniqueCode": "43ebdbc0-acea-481e-b4b4-aac1fb0e1901",
+  "name": "easter",
+  "description": "test",
+  "state": 1,
+  "orderIndex": 2,
+  "rules": [
+      {
+          "ruleCode": "cee276a4-5274-4822-b09f-a268a29bfc32",
+          "name": "easter",
+          "isToApplyFilters": false,
+          "filters": null,
+          "ruleConditions": {
+              "conditions": {
+                  "all": [
+                      {
+                          "fact": "article-fact",
+                          "operator": "currentDateInBetweenDate",
+                          "value": "2023-03-25T18:30:00.000Z#,#2023-04-15T11:56:02.000Z",
+                          "path": "",
+                          "dataSource": "date_time",
+                          "articleField": "",
+                          "conditionId": "egStQiw"
+                      }
+                  ]
+              },
+              "event": {
+                  "type": "true"
+              }
+          },
+          "creationDate": "04/13/2023 11:58:34",
+          "lastUpdateDate": "04/13/2023 11:58:34"
+      }
   ],
-  templates: [
-    {
-      name: '',
-      device: 'VIP Standard',
-      applicationType: 'CONTENT_ON_DEMAND',
-      width: 1280,
-      height: 720,
-      orientation: 0,
-      templateUniqueCode: '88f13f15-e948-42db-b0ac-0149a07028d1',
-      creationDate: '10/26/2022 15:28:43',
-      lastUpdateDate: '10/26/2022 15:28:43',
-    },
-    {
-      name: '',
-      device: 'VIP Custom Resolution',
-      applicationType: 'CONTENT_ON_DEMAND',
-      width: 1024,
-      height: 768,
-      orientation: 0,
-      templateUniqueCode: 'fbd63fa8-f963-44f1-84b6-f21314d3909d',
-      creationDate: '10/26/2022 15:44:27',
-      lastUpdateDate: '10/26/2022 15:44:27',
-    },
-    {
-      name: '',
-      device: 'LN0290BN@R_007',
-      applicationType: 'ESL',
-      width: 384,
-      height: 168,
-      orientation: 0,
-      templateUniqueCode: '7c25059f-435d-468f-83e5-ad0deccfa0c4',
-      creationDate: '10/31/2022 06:21:34',
-      lastUpdateDate: '10/31/2022 06:21:33',
-    },
-    {
-      name: '',
-      device: 'LN0266BN@R_004',
-      applicationType: 'ESL',
-      width: 360,
-      height: 184,
-      orientation: 0,
-      templateUniqueCode: 'fd0b79d2-e538-443b-b348-b0c4cd44d8e5',
-      creationDate: '11/02/2022 14:47:04',
-      lastUpdateDate: '11/02/2022 14:47:04',
-    },
-    {
-      name: '',
-      device: 'LN0420BN@R_009',
-      applicationType: 'ESL',
-      width: 400,
-      height: 300,
-      orientation: 0,
-      templateUniqueCode: 'ceeebbd1-373b-4266-a038-4160f93d619f',
-      creationDate: '11/02/2022 15:32:35',
-      lastUpdateDate: '11/02/2022 15:32:35',
-    },
-    {
-      name: '',
-      device: 'VIP Standard',
-      applicationType: 'SLIDE_SHOW',
-      width: 1280,
-      height: 720,
-      orientation: 0,
-      templateUniqueCode: '07c04384-3eef-4aea-b00d-7ac213d0d99a',
-      creationDate: '11/03/2022 07:54:35',
-      lastUpdateDate: '11/03/2022 07:54:34',
-    },
+  "templates": [
+      {
+          "name": "",
+          "device": "Tablet",
+          "applicationType": "CONTENT_ON_DEMAND",
+          "width": 1280,
+          "height": 800,
+          "orientation": 0,
+          "templateUniqueCode": "5dbc3079-c7c0-4fa5-a6f0-2db9807850ba",
+          "creationDate": "04/13/2023 11:58:40",
+          "lastUpdateDate": "04/13/2023 11:58:40"
+      }
   ],
-  creationDate: '10/26/2022 15:28:36',
-  lastUpdateDate: '11/21/2022 07:58:04',
+  "creationDate": "04/13/2023 11:58:34",
+  "lastUpdateDate": "04/13/2023 11:58:34"
 };
 
 var tags = ['Tag1', 'Tag2', 'Macelleria'];

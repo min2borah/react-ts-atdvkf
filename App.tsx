@@ -9,8 +9,8 @@ export default function App() {
   React.useEffect(() => {
     if(!runed){
       runed = true;
-      runPreviewtest();
-      // runScenariotest();
+      // runPreviewtest();
+      runScenariotest();
     }
   }, []);
   const dateStr = utils.filterDecimalPart('11.01');

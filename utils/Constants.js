@@ -1,6 +1,8 @@
-import moment from 'moment';
+import moment from "moment";
 
 export const RULE_FACT_ARTICLE = "article-fact";
+export const RULE_FACT_TEMPLATE = "template-fact";
+
 export const RULE_ACTION_PLAIN_TEXT = "Plain Text";
 export const RULE_ACTION_ARTICLE_VALUE = "Article Value";
 export const RULE_ACTION_SUBSTRING = "Substring";
@@ -44,7 +46,8 @@ export const OPR_GREATER_THAN_CURRENT_DATE = "greaterThanCurrentDate";
 export const OPR_LESS_EQUAL_CURRENT_DATE = "lessThanInclusiveCurrentDate";
 export const OPR_LESS_THAN_CURRENT_DATE = "lessThanCurrentDate";
 export const OPR_CURRENT_DATE_IN_BETWEEN_DATE = "currentDateInBetweenDate";
-export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE = "currentDateNotInBetweenDate";
+export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE =
+  "currentDateNotInBetweenDate";
 export const OPR_EQUAL_CURRENT_DATE = "equalToCurrentDate";
 export const OPR_NOT_EQUAL_CURRENT_DATE = "notEqualToCurrentDate";
 
@@ -76,15 +79,16 @@ export const DATA_SOURCE_FIELDS_IMPORTS = "importFields";
 export const DATA_SOURCE_FIELDS_INSTORE = "instoreFields";
 export const DATA_SOURCE_FIELDS_DATE = "current_date";
 export const DATA_SOURCE_FIELDS_TIME = "current_time";
+export const DATA_SOURCE_ARTICLE_COUNT = "article_count";
 
 export const DataSchemaDataType = Object.freeze({
-  ALFA  : 1,
-  NUMERIC : 2,
-  CURRENCY : 3,
-  DATE : 4,
-  BIT : 5,
-  DATETIME : 6,
-  TIME : 7
+  ALFA: 1,
+  NUMERIC: 2,
+  CURRENCY: 3,
+  DATE: 4,
+  BIT: 5,
+  DATETIME: 6,
+  TIME: 7
 });
 
 export const SUPPORTED_DATE_FORMATS = [
@@ -93,14 +97,14 @@ export const SUPPORTED_DATE_FORMATS = [
   moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
   moment.HTML5_FMT.DATETIME_LOCAL_MS,
   moment.HTML5_FMT.DATETIME_LOCAL,
-  'DD',
-  'MM',
-  'YYYY',
-  'DD-MM',
-  'DD-MM-YYYY',
-  'MM-DD-YYYY',
-  'YYYY-DD-MM',
-  'YYYY-MM-DD',
-  'DD/MM/YYYY',
-  'YYYY/DD/MM',
+  "DD",
+  "MM",
+  "YYYY",
+  "DD-MM",
+  "DD-MM-YYYY",
+  "MM-DD-YYYY",
+  "YYYY-DD-MM",
+  "YYYY-MM-DD",
+  "DD/MM/YYYY",
+  "YYYY/DD/MM"
 ];
