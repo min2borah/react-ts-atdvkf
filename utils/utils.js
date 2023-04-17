@@ -22,7 +22,7 @@ export function is_a_price(str) {
 export function isEmptyValue(val) {
   if (!val) {
     return true;
-  } else if (!val.trim()) {
+  } else if (typeof val === 'string' && val.trim() === '') {
     return true;
   }
   return false;

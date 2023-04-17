@@ -687,7 +687,7 @@ export function validatePageRules(previewJson, article, tag, deviceType) {
       if (page.custom?.rules) {
         RULE_GLOBLE_VALUES.RULE_REQUEST_COUNT =
           RULE_GLOBLE_VALUES.RULE_REQUEST_COUNT + 1;
-        const isMultipleArticleCanvas = page.custom.articleCount > 1;
+        const isMultipleArticleCanvas = page.custom?.articleCount > 1;
 
         let pageConds = page.custom.rules;
         validateRules(
