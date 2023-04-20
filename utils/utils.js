@@ -549,3 +549,12 @@ function getValidArticle(articleJson, articleIndex, isMultipleArticleCanvas) {
   }
   return articleJson;
 }
+
+export function convertUTCToLocalDate(date) {
+  if (!date) {
+    return date
+  }
+  date = new Date(date)
+  date = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+  return date
+}
