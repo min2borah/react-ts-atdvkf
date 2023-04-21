@@ -201,7 +201,7 @@ async function validateRules(
     var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
     let sDate = utils.convertUTCToLocalDate(split[0]);
     let eDate = utils.convertUTCToLocalDate(split[1]);
-    return moment(factValue).isBetween(sDate, eDate, 'day');
+    return moment(factValue).isBetween(sDate, eDate, 'day', '[]');
   });
 
   engine.addOperator(
@@ -210,7 +210,7 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      return !moment(factValue).isBetween(sDate, eDate, 'day');
+      return !moment(factValue).isBetween(sDate, eDate, 'day', '[]');
     }
   );
 
@@ -261,7 +261,7 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      return moment().isBetween(sDate, eDate, 'day');
+      return moment().isBetween(sDate, eDate, 'day', '[]');
     }
   );
 
@@ -271,7 +271,7 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      return !moment().isBetween(sDate, eDate, 'day');
+      return !moment().isBetween(sDate, eDate, 'day', '[]');
     }
   );
 
