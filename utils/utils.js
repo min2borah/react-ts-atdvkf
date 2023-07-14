@@ -1,13 +1,13 @@
-import * as Constants from "./Constants.js";
-import cloneDeep from "lodash/cloneDeep";
-import moment from "moment";
-import "moment/locale/fr";
-import "moment/locale/it";
-import "moment/locale/de";
-import "moment/locale/es";
+import * as Constants from './Constants.js';
+import cloneDeep from 'lodash/cloneDeep';
+import moment from 'moment';
+import 'moment/locale/fr';
+import 'moment/locale/it';
+import 'moment/locale/de';
+import 'moment/locale/es';
 
 export const is_a_number = (value) => {
-  const re = RegExp("[+-]?([0-9]*[.])?[0-9]+");
+  const re = RegExp('[+-]?([0-9]*[.])?[0-9]+');
   if (re.test(value)) {
     return !isNaN(Number(value));
   }
@@ -15,7 +15,7 @@ export const is_a_number = (value) => {
 };
 
 export function is_a_price(str) {
-  var value = str.toString().replace(",", ".").replace(" ", "");
+  var value = str.toString().replace(',', '.').replace(' ', '');
   return is_a_number(value);
 }
 
@@ -40,7 +40,7 @@ function isContains(str1, str2) {
 
 export const isInBetween = (factValue, value) => {
   if (factValue && value) {
-    const arrValues = value.trim().split(",");
+    const arrValues = value.trim().split(',');
     if (arrValues && arrValues.length > 1 && is_a_number(factValue)) {
       const v1 = arrValues[0].trim();
       const v2 = arrValues[1].trim();
@@ -56,7 +56,7 @@ export const isInBetween = (factValue, value) => {
 };
 
 export const substringRange = (range) => {
-  const arrValues = range.trim().split(",");
+  const arrValues = range.trim().split(',');
   if (arrValues && arrValues.length === 1) {
     const v1 = arrValues[0].trim();
     let val = is_a_number(v1) ? parseInt(v1) : 0;
@@ -78,7 +78,7 @@ export const substringRange = (range) => {
 
 export const notInBetween = (factValue, value) => {
   if (factValue && value) {
-    const arrValues = value.trim().split(",");
+    const arrValues = value.trim().split(',');
     if (arrValues && arrValues.length > 1 && is_a_number(factValue)) {
       const v1 = arrValues[0].trim();
       const v2 = arrValues[1].trim();
@@ -103,16 +103,16 @@ export const getDate_DD_Month = (dateStr, locale = null) => {
   let mdate = moment(dateStr, Constants.SUPPORTED_DATE_FORMATS);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
   if (mdate.isValid()) {
-    let lang = "it";
+    let lang = 'it';
     if (locale) lang = locale;
-    return mdate.locale(lang).format("DD MMMM");
+    return mdate.locale(lang).format('DD MMMM');
   } else {
     return dateStr;
   }
 };
 
 export const isDate = (date) => {
-  var subData = date.split(" ");
+  var subData = date.split(' ');
   var patternSlash = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
   var patternDash = /^([0-9]{2})-([0-9]{2})-([0-9]{4})$/;
   return patternSlash.test(subData[0]) || patternDash.test(subData[0]);
@@ -120,34 +120,34 @@ export const isDate = (date) => {
 
 export function filterInsignificentZeros(priceText) {
   var replcTxt = `${priceText}`;
-  var spltArr = `${priceText}`.split(",");
+  var spltArr = `${priceText}`.split(',');
   if (spltArr.length > 1) {
-    replcTxt = spltArr[0].replace(".", "") + "." + spltArr[1];
+    replcTxt = spltArr[0].replace('.', '') + '.' + spltArr[1];
   }
   const rxInsignificant = /^[\s0]+|(?<=\..*)[\s0.]+$|\.0+$|\.$/gm;
-  var filteredText = replcTxt.replace(rxInsignificant, "");
+  var filteredText = replcTxt.replace(rxInsignificant, '');
   var convertTxt = filteredText; //.replace('.',',')
-  if (convertTxt.charAt(0) === ",") {
-    convertTxt = "0" + convertTxt;
+  if (convertTxt.charAt(0) === ',') {
+    convertTxt = '0' + convertTxt;
   }
-  var arr = convertTxt.split(",");
+  var arr = convertTxt.split(',');
   if (arr.length > 1) {
     if (arr[1].length === 1) {
-      convertTxt = convertTxt + "0";
+      convertTxt = convertTxt + '0';
     }
   }
   return convertTxt;
 }
 
 export function filterPriceFormatter(priceText) {
-  var formatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
+  var formatter = new Intl.NumberFormat('it-IT', {
+    style: 'currency',
+    currency: 'EUR',
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   });
   var price = formatter.format(parseFloat(priceText));
-  price = price.replace("€", "");
+  price = price.replace('€', '');
   return price;
 }
 
@@ -167,7 +167,7 @@ export function filterDecimalPart(value, isForThreeDigit = false) {
     let validValue = Number(filterInsignificentZeros(floatValue)).toFixed(
       digit
     );
-    let numPart = String(validValue).split(".");
+    let numPart = String(validValue).split('.');
     if (numPart.length > 1) {
       let [whole, decimal] = numPart;
       return decimal;
@@ -182,7 +182,7 @@ export function processFilters(filters, articleData, isMultipleArticleCanvas) {
   var article = cloneDeep(articleData);
 
   filters.forEach((filter, idx) => {
-    var artVal = "";
+    var artVal = '';
     if (filter.dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
       try {
         let vl = getArticleFieldValue(
@@ -298,8 +298,8 @@ export function getArticleFieldValue(
   } else if (dataSource === Constants.DATA_SOURCE_PIM) {
     if (
       updatedArticleJson.externalData &&
-      updatedArticleJson.externalData["PIM"] &&
-      updatedArticleJson.externalData["PIM"].data
+      updatedArticleJson.externalData['PIM'] &&
+      updatedArticleJson.externalData['PIM'].data
     ) {
       let path = getLocaliazedPath(
         updatedArticleJson,
@@ -317,7 +317,7 @@ export function getArticleFieldValue(
       }
     }
   }
-  return "";
+  return '';
 }
 
 export function getLocaliazedPath(
@@ -342,12 +342,12 @@ export function getLocaliazedPath(
 
   let path = null;
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
-    if (!isEmpty(articleField["parent"])) {
-      let parent = camelize(articleField["parent"]);
+    if (!isEmpty(articleField['parent'])) {
+      let parent = camelize(articleField['parent']);
       if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
         let defaultLocale = getInstoreFieldPrimaryLocale(updatedArticleJson);
         path =
-          (appendPrefixIndex ? `[${validIndex}].` : "") +
+          (appendPrefixIndex ? `[${validIndex}].` : '') +
           getValidPathWithLocale(
             defaultLocale,
             articleField,
@@ -356,18 +356,18 @@ export function getLocaliazedPath(
           );
       } else if (parent === Constants.DATA_SOURCE_FIELDS_IMPORTS) {
         path =
-          (appendPrefixIndex ? `[${validIndex}].` : "") +
+          (appendPrefixIndex ? `[${validIndex}].` : '') +
           getDataFieldPath(articleField, dataSource, null);
       }
     } else {
       path =
-        (appendPrefixIndex ? `[${validIndex}].` : "") +
-        articleField["articleField"];
+        (appendPrefixIndex ? `[${validIndex}].` : '') +
+        articleField['articleField'];
     }
   } else if (dataSource === Constants.DATA_SOURCE_PIM) {
     let pimDefaultLocale = getPimDataPrimaryLocale(updatedArticleJson);
     path =
-      (appendPrefixIndex ? `[${validIndex}].` : "") +
+      (appendPrefixIndex ? `[${validIndex}].` : '') +
       getValidPathWithLocale(
         pimDefaultLocale,
         articleField,
@@ -421,9 +421,9 @@ function getPimDataPath(parent, name, locale) {
 }
 
 export function getDataFieldPath(articleField, dataSource, locale) {
-  if (!isEmpty(articleField["parent"]) && !isEmpty(articleField["name"])) {
-    let parent = camelize(articleField["parent"]);
-    let name = camelize(articleField["name"]);
+  if (!isEmpty(articleField['parent']) && !isEmpty(articleField['name'])) {
+    let parent = camelize(articleField['parent']);
+    let name = camelize(articleField['name']);
     let path = null;
     if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
       if (parent === Constants.DATA_SOURCE_FIELDS_INSTORE) {
@@ -437,10 +437,10 @@ export function getDataFieldPath(articleField, dataSource, locale) {
     return path;
   } else if (
     dataSource === Constants.DATA_SOURCE_PIM &&
-    !isEmpty(articleField["name"]) &&
-    isEmpty(articleField["parent"])
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
   ) {
-    let name = camelize(articleField["name"]);
+    let name = camelize(articleField['name']);
     return getPimDataPath(null, name, locale);
   } else {
     return articleField;
@@ -448,11 +448,11 @@ export function getDataFieldPath(articleField, dataSource, locale) {
 }
 
 export function getInstoreFieldPrimaryLocale(articleJson) {
-  let finalKey = "it-IT";
+  let finalKey = 'it-IT';
   if (articleJson.instoreFields) {
     let localeKeys = Object.keys(articleJson.instoreFields);
     localeKeys.forEach((key, index) => {
-      if (articleJson.instoreFields[key]["isPrimary"]) {
+      if (articleJson.instoreFields[key]['isPrimary']) {
         finalKey = localeKeys[index];
       }
     });
@@ -461,15 +461,15 @@ export function getInstoreFieldPrimaryLocale(articleJson) {
 }
 
 export function getPimDataPrimaryLocale(articleJson) {
-  let finalKey = "it-IT";
+  let finalKey = 'it-IT';
   if (
     articleJson.externalData &&
-    articleJson.externalData["PIM"] &&
-    articleJson.externalData["PIM"].data
+    articleJson.externalData['PIM'] &&
+    articleJson.externalData['PIM'].data
   ) {
     let localeKeys = Object.keys(articleJson.externalData.PIM.data);
     localeKeys.forEach((key, index) => {
-      if (articleJson.externalData.PIM.data[key]["isPrimary"]) {
+      if (articleJson.externalData.PIM.data[key]['isPrimary']) {
         finalKey = key;
       }
     });
@@ -480,7 +480,7 @@ export function getPimDataPrimaryLocale(articleJson) {
 export function camelize(str) {
   if (!isEmpty(str)) {
     return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-      if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+      if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
       return index === 0 ? match.toLowerCase() : match.toUpperCase();
     });
   } else {
@@ -498,16 +498,16 @@ export function camelize(str) {
  * @returns {*|undefined} The value of the objects property or undefined if the property doesn't exist
  */
 function getProp(obj, prop) {
-  if (typeof obj !== "object") throw "getProp: obj is not an object";
-  if (typeof prop !== "string") throw "getProp: prop is not a string";
+  if (typeof obj !== 'object') throw 'getProp: obj is not an object';
+  if (typeof prop !== 'string') throw 'getProp: prop is not a string';
   // Replace [] notation with dot notation
   prop = prop.replace(/\"/g, "'");
-  prop = prop.replace(/\'\]\[\'/g, ".");
-  prop = prop.replace(/\[["'`](.*)["'`]\]/g, ".$1");
-  prop = prop.replace(/\[(\d+)\]/g, ".$1");
+  prop = prop.replace(/\'\]\[\'/g, '.');
+  prop = prop.replace(/\[["'`](.*)["'`]\]/g, '.$1');
+  prop = prop.replace(/\[(\d+)\]/g, '.$1');
 
-  var propArr = prop.split(".").filter(function (item) {
-    return item !== "";
+  var propArr = prop.split('.').filter(function (item) {
+    return item !== '';
   });
 
   return propArr.reduce(function (prev, curr) {
@@ -516,13 +516,13 @@ function getProp(obj, prop) {
 }
 
 function setToValue(obj, value, path) {
-  if (typeof obj !== "object") throw "getProp: obj is not an object";
-  if (typeof path !== "string") throw "getProp: prop is not a string";
+  if (typeof obj !== 'object') throw 'getProp: obj is not an object';
+  if (typeof path !== 'string') throw 'getProp: prop is not a string';
 
   // Replace [] notation with dot notation
   path = path.replace(/\"/g, "'");
-  path = path.replace(/\'\]\[\'/g, ".");
-  let dotpath = path.replace(/\[["'`](.*)["'`]\]/g, ".$1");
+  path = path.replace(/\'\]\[\'/g, '.');
+  let dotpath = path.replace(/\[["'`](.*)["'`]\]/g, '.$1');
   let pathArr = dotpath.split(/\.|\[|\]/);
 
   let objRef = obj;
@@ -538,7 +538,7 @@ function setToValue(obj, value, path) {
 function getValidArticle(articleJson, articleIndex, isMultipleArticleCanvas) {
   if (Array.isArray(articleJson)) {
     if (isMultipleArticleCanvas && articleIndex && articleIndex >= 0) {
-      if (typeof articleJson[articleIndex - 1] !== "undefined") {
+      if (typeof articleJson[articleIndex - 1] !== 'undefined') {
         return articleJson[articleIndex - 1];
       } else {
         return null;
@@ -552,9 +552,9 @@ function getValidArticle(articleJson, articleIndex, isMultipleArticleCanvas) {
 
 export function convertUTCToLocalDate(date) {
   if (!date) {
-    return date
+    return date;
   }
-  date = new Date(date)
-  date = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-  return date
+  date = new Date(date);
+  date = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  return date;
 }

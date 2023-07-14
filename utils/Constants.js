@@ -5,7 +5,7 @@ export const RULE_FACT_TEMPLATE = "template-fact";
 
 export const RULE_ACTION_PLAIN_TEXT = "Plain Text";
 export const RULE_ACTION_ARTICLE_VALUE = "Article Value";
-export const RULE_ACTION_MULTI_ARTICLE_VALUE = "Multi Article Value";
+export const RULE_ACTION_MULTI_ARTICLE_VALUE = "Multiple Bind Field";
 export const RULE_ACTION_SUBSTRING = "Substring";
 export const RULE_TYPE_ALL = "all";
 export const RULE_TYPES_ANY = "any";
@@ -53,6 +53,7 @@ export const OPR_EQUAL_CURRENT_DATE = "equalToCurrentDate";
 export const OPR_NOT_EQUAL_CURRENT_DATE = "notEqualToCurrentDate";
 
 export const TIME_FORMAT = "HH:mm:ss";
+export const DATE_FORMAT = "DD:MM:YYYY";
 export const OPR_EQUAL_TIME = "equalToTime";
 export const OPR_EQUAL_CURRENT_TIME = "equalToCurrentTime";
 export const OPR_GREATER_EQUAL_TIME = "greaterThanInclusiveTime";
