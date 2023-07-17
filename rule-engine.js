@@ -1,8 +1,8 @@
-import { Engine } from "json-rules-engine";
-import * as constants from "./utils/Constants.js";
-import * as utils from "./utils/utils.js";
-import moment from "moment";
-import cloneDeep from "lodash/cloneDeep";
+import { Engine } from 'json-rules-engine';
+import * as constants from './utils/Constants.js';
+import * as utils from './utils/utils.js';
+import moment from 'moment-timezone';
+import cloneDeep from 'lodash/cloneDeep';
 
 async function validateRules(
   fact,
@@ -15,29 +15,32 @@ async function validateRules(
   scenarioCode,
   tags,
   deviceType,
-  isMultipleArticleCanvas
+  isMultipleArticleCanvas,
+  timezone,
+  customTags
 ) {
   const engine = new Engine();
 
   engine.addFact(constants.RULE_FACT_ARTICLE, async function (params, almanac) {
-    let article = await almanac.factValue("article");
+    let article = await almanac.factValue('article');
 
     if (params.isToApplyFactFilters && params.filters) {
       article = utils.processFilters(
         params.filters,
         article,
-        isMultipleArticleCanvas
+        isMultipleArticleCanvas,
+        timezone
       );
     }
     return article;
   });
 
-  engine.addFact(constants.RULE_FACT_TEMPLATE, async function (
-    params,
-    almanac
-  ) {
-    return await almanac.factValue("template");
-  });
+  engine.addFact(
+    constants.RULE_FACT_TEMPLATE,
+    async function (params, almanac) {
+      return await almanac.factValue('template');
+    }
+  );
 
   //custom operators
   engine.addOperator(
@@ -56,6 +59,7 @@ async function validateRules(
       return factValue !== valu;
     }
   );
+
   engine.addOperator(
     constants.RuleEngineDefaultOperators.GREATER_THAN,
     (factValue, jsonValue) => {
@@ -63,6 +67,7 @@ async function validateRules(
       return factValue > valu;
     }
   );
+
   engine.addOperator(
     constants.RuleEngineDefaultOperators.GREATER_THAN_EQUAL,
     (factValue, jsonValue) => {
@@ -70,6 +75,7 @@ async function validateRules(
       return factValue >= valu;
     }
   );
+
   engine.addOperator(
     constants.RuleEngineDefaultOperators.LESS_THAN,
     (factValue, jsonValue) => {
@@ -77,6 +83,7 @@ async function validateRules(
       return factValue < valu;
     }
   );
+
   engine.addOperator(
     constants.RuleEngineDefaultOperators.LESS_THAN_EQUAL,
     (factValue, jsonValue) => {
@@ -125,7 +132,7 @@ async function validateRules(
       if (!utils.is_a_number(jsonValue)) return false;
       if (utils.isEmpty(factValue)) {
         return 0 <= parseInt(jsonValue);
-      }else{
+      } else {
         return factValue?.toString().length <= parseInt(jsonValue);
       }
     }
@@ -137,7 +144,7 @@ async function validateRules(
       if (!utils.is_a_number(jsonValue)) return false;
       if (utils.isEmpty(factValue)) {
         return 0 >= parseInt(jsonValue);
-      }else{
+      } else {
         return factValue?.toString().length >= parseInt(jsonValue);
       }
     }
@@ -147,7 +154,7 @@ async function validateRules(
     if (!utils.is_a_number(jsonValue)) return false;
     if (utils.isEmpty(factValue)) {
       return 0 === parseInt(jsonValue);
-    }else{
+    } else {
       return factValue?.toString().length === parseInt(jsonValue);
     }
   });
@@ -156,7 +163,7 @@ async function validateRules(
     if (!utils.is_a_number(jsonValue)) return false;
     if (utils.isEmpty(factValue)) {
       return 0 !== parseInt(jsonValue);
-    }else{
+    } else {
       return factValue?.toString().length !== parseInt(jsonValue);
     }
   });
@@ -179,13 +186,13 @@ async function validateRules(
       return utils.containSubstring(factValue, jsonValue);
     }
   );
-  
+
   engine.addOperator(constants.OPR_EQUAL_DATE, (factValue, jsonValue) => {
     let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
     let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
-    return d1.isSame(d2, "day");
+    return d1.isSame(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_NOT_EQUAL_DATE, (factValue, jsonValue) => {
@@ -193,7 +200,7 @@ async function validateRules(
     let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
-    return !(d1.isSame(d2, "day"));
+    return !d1.isSame(d2, 'day');
   });
 
   engine.addOperator(
@@ -203,7 +210,7 @@ async function validateRules(
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrAfter(d2, "day");
+      return d1.isSameOrAfter(d2, 'day');
     }
   );
   engine.addOperator(
@@ -213,7 +220,7 @@ async function validateRules(
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isAfter(d2, "day");
+      return d1.isAfter(d2, 'day');
     }
   );
 
@@ -222,7 +229,7 @@ async function validateRules(
     let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
-    return d1.isSameOrBefore(d2, "day");
+    return d1.isSameOrBefore(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_LESS_THAN_DATE, (factValue, jsonValue) => {
@@ -230,7 +237,7 @@ async function validateRules(
     let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
-    return d1.isBefore(d2, "day");
+    return d1.isBefore(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_IN_BETWEEN_DATE, (factValue, jsonValue) => {
@@ -239,7 +246,7 @@ async function validateRules(
     let eDate = utils.convertUTCToLocalDate(split[1]);
     let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
-    return d1.isBetween(sDate, eDate, "day", "[]");
+    return d1.isBetween(sDate, eDate, 'day', '[]');
   });
 
   engine.addOperator(
@@ -250,85 +257,79 @@ async function validateRules(
       let eDate = utils.convertUTCToLocalDate(split[1]);
       let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return !(d1.isBetween(sDate, eDate, "day", "[]"));
+      return !d1.isBetween(sDate, eDate, 'day', '[]');
     }
   );
 
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSame(d2, "day");
+      return d1.isSame(d2, 'day');
     }
   );
 
   engine.addOperator(
     constants.OPR_NOT_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return !(d1.isSame(d2, "day"));
+      return !d1.isSame(d2, 'day');
     }
   );
 
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrAfter(d2, "day");
+      return d1.isSameOrAfter(d2, 'day');
     }
   );
 
   engine.addOperator(
     constants.OPR_GREATER_THAN_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isAfter(d2, "day");
+      return d1.isAfter(d2, 'day');
     }
   );
 
   engine.addOperator(
     constants.OPR_LESS_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrBefore(d2, "day");
+      return d1.isSameOrBefore(d2, 'day');
     }
   );
 
   engine.addOperator(
     constants.OPR_LESS_THAN_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isBefore(d2, "day");
+      return d1.isBefore(d2, 'day');
     }
   );
 
@@ -338,11 +339,10 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return d1.isBetween(sDate, eDate, "day", "[]");
+      return d1.isBetween(sDate, eDate, 'day', '[]');
     }
   );
 
@@ -352,11 +352,10 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return !d1.isBetween(sDate, eDate, "day", "[]");
+      return !d1.isBetween(sDate, eDate, 'day', '[]');
     }
   );
 
@@ -371,8 +370,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
@@ -403,8 +401,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
@@ -416,8 +413,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed);
+      const today = moment(timezone).format();
       let d1Str = moment(today).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
@@ -431,8 +427,26 @@ async function validateRules(
   });
 
   engine.addOperator(constants.OPR_TAG_NOT_CONTAIN, (factValue, jsonValue) => {
-    return tags && tags.indexOf(jsonValue) === -1;
+    return tags == undefined || tags == null || tags?.indexOf(jsonValue) === -1;
   });
+
+  engine.addOperator(
+    constants.OPR_CUSTOM_TAG_CONTAIN,
+    (factValue, jsonValue) => {
+      return customTags && customTags.indexOf(jsonValue) !== -1;
+    }
+  );
+
+  engine.addOperator(
+    constants.OPR_CUSTOM_TAG_NOT_CONTAIN,
+    (factValue, jsonValue) => {
+      return (
+        customTags == undefined ||
+        customTags == null ||
+        customTags?.indexOf(jsonValue) === -1
+      );
+    }
+  );
 
   const convertToRuleEngineObject = (rule, indx) => {
     var ruleObj = { ...rule.ruleConditions };
@@ -474,10 +488,10 @@ async function validateRules(
     conditions.forEach((rule, indx) => {
       const ruleObj = convertToRuleEngineObject(rule, indx);
       let isToAddRule = true;
-      if (ruleObj.conditions.hasOwnProperty("all")) {
+      if (ruleObj.conditions.hasOwnProperty('all')) {
         isToAddRule =
-          ruleObj.conditions.all.filter((x) => x.operator == "").length == 0;
-        if (deviceType && deviceType?.toLowerCase() === "esl") {
+          ruleObj.conditions.all.filter((x) => x.operator == '').length == 0;
+        if (deviceType && deviceType?.toLowerCase() === 'esl') {
           ruleObj.conditions.all = ruleObj.conditions.all.filter(
             (x) =>
               x.operator !== constants.OPR_TAG_CONTAIN &&
@@ -493,10 +507,10 @@ async function validateRules(
           );
         });
       }
-      if (ruleObj.conditions.hasOwnProperty("any")) {
-        if (deviceType && deviceType?.toLowerCase() === "esl") {
+      if (ruleObj.conditions.hasOwnProperty('any')) {
+        if (deviceType && deviceType?.toLowerCase() === 'esl') {
           ruleObj.conditions.any = ruleObj.conditions.any.filter(
-            (x) => x.operator !== ""
+            (x) => x.operator !== ''
           ); // remove any condition without operator
           ruleObj.conditions.any = ruleObj.conditions.any.filter(
             (x) =>
@@ -524,11 +538,11 @@ async function validateRules(
       const relst = {
         pageIndex: pageIndex,
         elementIndex: elementIndex,
-        events: results.events
+        events: results.events,
       };
       return relst;
     } catch (e) {
-      console.error("Problem occured when processing the rules", e);
+      console.error('Problem occured when processing the rules', e);
       return await Promise.reject({ error: e.message });
     }
   };
@@ -540,19 +554,19 @@ function convertJsonValueToFactValueType(jsonValue, factValue) {
   var value = jsonValue;
   const objType = typeof factValue;
   switch (objType) {
-    case "string":
+    case 'string':
       value = String(jsonValue);
       break;
 
-    case "number":
+    case 'number':
       value = Number(jsonValue);
       break;
 
-    case "boolean":
-      if (jsonValue === "true") value = true;
-      if (jsonValue === "false") value = false;
-      if (jsonValue === "1") value = true;
-      if (jsonValue === "0") value = false;
+    case 'boolean':
+      if (jsonValue === 'true') value = true;
+      if (jsonValue === 'false') value = false;
+      if (jsonValue === '1') value = true;
+      if (jsonValue === '0') value = false;
       break;
     default:
       break;
@@ -562,27 +576,27 @@ function convertJsonValueToFactValueType(jsonValue, factValue) {
 
 function convertJsonValueToFactValueTypeArray(jsonValue, factValue) {
   var valu = [];
-  const splArr = jsonValue.split(",");
+  const splArr = jsonValue.split(',');
   const objType = typeof factValue;
   switch (objType) {
-    case "string":
+    case 'string':
       splArr.forEach((element) => {
         valu.push(String(element).trim());
       });
       break;
 
-    case "number":
+    case 'number':
       splArr.forEach((element) => {
         valu.push(Number(element));
       });
       break;
 
-    case "boolean":
+    case 'boolean':
       splArr.forEach((element) => {
-        if (element === "true") valu.push(true);
-        else if (element === "false") valu.push(false);
-        else if (element === "1") valu.push(true);
-        else if (element === "0") valu.push(true);
+        if (element === 'true') valu.push(true);
+        else if (element === 'false') valu.push(false);
+        else if (element === '1') valu.push(true);
+        else if (element === '0') valu.push(true);
         else valu.push(element);
       });
       break;
@@ -607,7 +621,7 @@ function convertPathToCamelcase(
     isMultipleArticleCanvas
   );
   if (localizedPath) {
-    actionField.path = "$" + localizedPath;
+    actionField.path = '$' + localizedPath;
   }
 }
 
@@ -623,14 +637,14 @@ function performActionsOnElement(
   } else {
     ruleActions.forEach((action, idx) => {
       if (
-        action.elementField === "fill" ||
-        action.elementField === "colorsReplace" ||
-        action.elementField === "backgroundColor"
+        action.elementField === 'fill' ||
+        action.elementField === 'colorsReplace' ||
+        action.elementField === 'backgroundColor'
       ) {
-        if (action.elementField === "colorsReplace") {
+        if (action.elementField === 'colorsReplace') {
           const keys = Object.keys(elem[action.elementField]);
           if (keys.length === 0) {
-            elem[action.elementField]["rgb(0, 161, 255)"] = action.color;
+            elem[action.elementField]['rgb(0, 161, 255)'] = action.color;
           } else {
             keys.map((key) => {
               elem[action.elementField][key] = action.color;
@@ -641,7 +655,7 @@ function performActionsOnElement(
         }
       } else if (
         action.elementField === constants.ELEMENT_DECIMAL_SUPER ||
-        action.elementField === "codeType"
+        action.elementField === 'codeType'
       ) {
         elem.custom[action.elementField] = action.actionValue;
       } else {
@@ -662,36 +676,36 @@ function evaluateArticleValue(action, article, isMultipleArticleCanvas) {
     );
     return value;
   } catch (err) {
-    return "";
+    return '';
   }
 }
 
 function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
   switch (action.actionType) {
     case constants.RULE_ACTION_PLAIN_TEXT:
-      if (utils.is_a_number(elem[action.elementField])) {
-        if (utils.is_a_number(action.actionValue)) {
-          let val = parseFloat(action.actionValue);
-          elem[action.elementField] =
-            action.elementField == "text" ? val.toString() : val;
-        }
+      var val = action.actionValue;
+      if (
+        action.elementField == 'code' &&
+        (elem.type === 'barcode_placeholder' ||
+          elem.type === 'qrcode_placeholder')
+      ) {
+        elem['custom']['codeValue'] = `${val}`;
+      } else if (
+        action.elementField == 'codeType' &&
+        elem.type === 'barcode_placeholder'
+      ) {
+        elem['custom']['codeType'] = `${val}`;
       } else {
-        var val = action.actionValue;
         if (
-          action.elementField == "code" &&
-          (elem.type === "barcode_placeholder" ||
-            elem.type === "qrcode_placeholder")
+          utils.is_a_number(elem[action.elementField]) ||
+          utils.is_a_number(elem[action.actionValue])
         ) {
-          elem["custom"]["codeValue"] = `${val}`;
-        } else if (
-          action.elementField == "codeType" &&
-          elem.type === "barcode_placeholder"
-        ) {
-          elem["custom"]["codeType"] = `${val}`;
-        } else {
-          elem[action.elementField] =
-            action.elementField == "text" ? val.toString() : val;
+          if (utils.is_a_number(action.actionValue)) {
+            val = parseFloat(action.actionValue);
+          }
         }
+        elem[action.elementField] =
+          action.elementField == 'text' ? val.toString() : val;
       }
       break;
     case constants.RULE_ACTION_ARTICLE_VALUE:
@@ -703,18 +717,18 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
         );
         if (artVal != undefined && artVal != null) {
           if (
-            (elem.type == "image" || elem.type == "custom_image") &&
-            action.elementField == "src" &&
-            artVal != ""
+            (elem.type == 'image' || elem.type == 'custom_image') &&
+            action.elementField == 'src' &&
+            artVal != ''
           ) {
             elem[action.elementField] = artVal;
-            elem["custom"]["dataSource"] = action["actionField"]["dataSource"];
+            elem['custom']['dataSource'] = action['actionField']['dataSource'];
           } else if (
-            action.elementField == "code" &&
-            (elem.type === "barcode_placeholder" ||
-              elem.type === "qrcode_placeholder")
+            action.elementField == 'code' &&
+            (elem.type === 'barcode_placeholder' ||
+              elem.type === 'qrcode_placeholder')
           ) {
-            elem["custom"]["codeValue"] =
+            elem['custom']['codeValue'] =
               action.prefixValue + `${artVal}` + action.sufixValue;
           } else {
             elem[action.elementField] =
@@ -727,32 +741,32 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
       break;
     case constants.RULE_ACTION_MULTI_ARTICLE_VALUE:
       try {
-        let artVal = "";
-        action.multiValueActions.forEach((mulAction , idx)=>{
+        let artVal = '';
+        action.multiValueActions.forEach((mulAction, idx) => {
           let mulartVal = evaluateArticleValue(
             mulAction,
             article,
             isMultipleArticleCanvas
           );
           artVal = artVal + mulartVal;
-          if(idx !== (action.multiValueActions.length - 1)){
+          if (idx !== action.multiValueActions.length - 1) {
             artVal = artVal + action.separator;
           }
-        })
+        });
         if (artVal != undefined && artVal != null) {
           if (
-            (elem.type == "image" || elem.type == "custom_image") &&
-            action.elementField == "src" &&
-            artVal != ""
+            (elem.type == 'image' || elem.type == 'custom_image') &&
+            action.elementField == 'src' &&
+            artVal != ''
           ) {
             elem[action.elementField] = artVal;
-            elem["custom"]["dataSource"] = action["actionField"]["dataSource"];
+            elem['custom']['dataSource'] = action['actionField']['dataSource'];
           } else if (
-            action.elementField == "code" &&
-            (elem.type === "barcode_placeholder" ||
-              elem.type === "qrcode_placeholder")
+            action.elementField == 'code' &&
+            (elem.type === 'barcode_placeholder' ||
+              elem.type === 'qrcode_placeholder')
           ) {
-            elem["custom"]["codeValue"] =
+            elem['custom']['codeValue'] =
               action.prefixValue + `${artVal}` + action.sufixValue;
           } else {
             elem[action.elementField] =
@@ -779,14 +793,14 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
               : str.substring(rangeArr[0]);
           let preSufStr = action.prefixValue + substr + action.sufixValue;
           if (
-            action.elementField == "code" &&
-            (elem.type === "barcode_placeholder" ||
-              elem.type === "qrcode_placeholder")
+            action.elementField == 'code' &&
+            (elem.type === 'barcode_placeholder' ||
+              elem.type === 'qrcode_placeholder')
           ) {
-            elem["custom"]["codeValue"] = `${preSufStr}`;
+            elem['custom']['codeValue'] = `${preSufStr}`;
           } else {
             elem[action.elementField] =
-              action.elementField == "text" ? preSufStr.toString() : preSufStr;
+              action.elementField == 'text' ? preSufStr.toString() : preSufStr;
           }
         }
       } catch (err) {
@@ -797,10 +811,17 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
   }
 }
 
-export function validatePageRules(previewJson, article, tag, deviceType) {
+export function validatePageRules(
+  previewJson,
+  article,
+  tag,
+  deviceType,
+  timezone,
+  customTags
+) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
-    RULE_RESPONSE_COUNT: 0
+    RULE_RESPONSE_COUNT: 0,
   };
   var pototnoObj = cloneDeep(previewJson);
 
@@ -818,13 +839,13 @@ export function validatePageRules(previewJson, article, tag, deviceType) {
     width: pototnoObj.width,
     height: pototnoObj.height,
     pages: [],
-    background: pototnoObj.background
+    background: pototnoObj.background,
   };
 
   pototnoObj.pages.forEach((page) => {
     let pageObj = {
       id: page.id,
-      articleCount: Array.isArray(article) ? article.length : 1
+      articleCount: Array.isArray(article) ? article.length : 1,
     };
     customObject.pages.push(pageObj);
   });
@@ -850,7 +871,9 @@ export function validatePageRules(previewJson, article, tag, deviceType) {
           null,
           tag,
           deviceType,
-          isMultipleArticleCanvas
+          isMultipleArticleCanvas,
+          timezone,
+          customTags
         ).then((result) => {
           RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -876,10 +899,17 @@ export function validatePageRules(previewJson, article, tag, deviceType) {
   });
 }
 
-export function validateGroupRules(previewJson, article, tag, deviceType) {
+export function validateGroupRules(
+  previewJson,
+  article,
+  tag,
+  deviceType,
+  timezone,
+  customTags
+) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
-    RULE_RESPONSE_COUNT: 0
+    RULE_RESPONSE_COUNT: 0,
   };
   var pototnoObj = cloneDeep(previewJson);
 
@@ -892,7 +922,8 @@ export function validateGroupRules(previewJson, article, tag, deviceType) {
       filteredArticleData = utils.processFilters(
         outEvent.filters,
         article,
-        outEvent.isMultipleArticleCanvas
+        outEvent.isMultipleArticleCanvas,
+        timezone
       );
     }
     elements.forEach((elemntId, indx) => {
@@ -922,13 +953,13 @@ export function validateGroupRules(previewJson, article, tag, deviceType) {
     width: pototnoObj.width,
     height: pototnoObj.height,
     pages: [],
-    background: pototnoObj.background
+    background: pototnoObj.background,
   };
 
   pototnoObj.pages.forEach((page) => {
     let pageObj = {
       id: page.id,
-      articleCount: Array.isArray(article) ? article.length : 1
+      articleCount: Array.isArray(article) ? article.length : 1,
     };
     customObject.pages.push(pageObj);
   });
@@ -955,7 +986,9 @@ export function validateGroupRules(previewJson, article, tag, deviceType) {
             null,
             tag,
             deviceType,
-            isMultipleArticleCanvas
+            isMultipleArticleCanvas,
+            timezone,
+            customTags
           ).then((result) => {
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
               RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -979,10 +1012,17 @@ export function validateGroupRules(previewJson, article, tag, deviceType) {
   });
 }
 
-export function validateElementRules(previewJson, article, tag, deviceType) {
+export function validateElementRules(
+  previewJson,
+  article,
+  tag,
+  deviceType,
+  timezone,
+  customTags
+) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
-    RULE_RESPONSE_COUNT: 0
+    RULE_RESPONSE_COUNT: 0,
   };
   var pototnoObj = cloneDeep(previewJson);
 
@@ -990,13 +1030,13 @@ export function validateElementRules(previewJson, article, tag, deviceType) {
     width: pototnoObj.width,
     height: pototnoObj.height,
     pages: [],
-    background: pototnoObj.background
+    background: pototnoObj.background,
   };
 
   pototnoObj.pages.forEach((page) => {
     let pageObj = {
       id: page.id,
-      articleCount: Array.isArray(article) ? article.length : 1
+      articleCount: Array.isArray(article) ? article.length : 1,
     };
     customObject.pages.push(pageObj);
   });
@@ -1015,7 +1055,8 @@ export function validateElementRules(previewJson, article, tag, deviceType) {
       filteredArticleData = utils.processFilters(
         outEvent.filters,
         article,
-        outEvent.isMultipleArticleCanvas
+        outEvent.isMultipleArticleCanvas,
+        timezone
       );
     }
     performActionsOnElement(
@@ -1070,7 +1111,9 @@ export function validateElementRules(previewJson, article, tag, deviceType) {
             null,
             tag,
             deviceType,
-            isMultipleArticleCanvas
+            isMultipleArticleCanvas,
+            timezone,
+            customTags
           ).then((result) => {
             if (result.events.length === 0) {
               performDefaultActions(result, isMultipleArticleCanvas);
@@ -1101,7 +1144,7 @@ export function validateElementRules(previewJson, article, tag, deviceType) {
   });
 }
 
-export function validateScenarioRules(scenarioJson, tag, deviceType) {
+export function validateScenarioRules(scenarioJson, tag, deviceType, timezone) {
   const ruleOnSuccess = (event, almanac) => {
     // perform on rule success
   };
@@ -1126,19 +1169,20 @@ export function validateScenarioRules(scenarioJson, tag, deviceType) {
         null,
         scenarioJson.scenarioUniqueCode,
         tag,
-        deviceType
+        deviceType,
+        timezone
       ).then((result) => {
         if (result.events.length > 0) {
           isAllRuleSucceed = true;
         }
         let data = {
           isValid: isAllRuleSucceed,
-          scenarioCode: result.events[0]?.params?.scenarioCode
+          scenarioCode: result.events[0]?.params?.scenarioCode,
         };
         resolve(data);
       });
     } else {
-      reject("invalid scenario");
+      reject('invalid scenario');
     }
   });
 }

@@ -1,10 +1,6 @@
 import * as Constants from './Constants.js';
 import cloneDeep from 'lodash/cloneDeep';
-import moment from 'moment';
-import 'moment/locale/fr';
-import 'moment/locale/it';
-import 'moment/locale/de';
-import 'moment/locale/es';
+import moment from 'moment-timezone';
 
 export const is_a_number = (value) => {
   const re = RegExp('[+-]?([0-9]*[.])?[0-9]+');
@@ -99,13 +95,17 @@ export const containSubstring = (factValue, val) => {
   );
 };
 
-export const getDate_DD_Month = (dateStr, locale = null) => {
-  let mdate = moment(dateStr, Constants.SUPPORTED_DATE_FORMATS);
+export const getDate_DD_Month = (dateStr, timezone, locale = null) => {
+  let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
   if (mdate.isValid()) {
     let lang = 'it';
-    if (locale) lang = locale;
-    return mdate.locale(lang).format('DD MMMM');
+    let dtStr = mdate.format('DD MMMM');
+    if (locale) {
+      lang = locale;
+      dtStr = mdate.locale(lang).format('DD MMMM');
+    }
+    return dtStr;
   } else {
     return dateStr;
   }
@@ -178,7 +178,12 @@ export function filterDecimalPart(value, isForThreeDigit = false) {
     return value;
   }
 }
-export function processFilters(filters, articleData, isMultipleArticleCanvas) {
+export function processFilters(
+  filters,
+  articleData,
+  isMultipleArticleCanvas,
+  timezone
+) {
   var article = cloneDeep(articleData);
 
   filters.forEach((filter, idx) => {
@@ -229,7 +234,7 @@ export function processFilters(filters, articleData, isMultipleArticleCanvas) {
         }
         break;
       case Constants.FILTER_DATE_FORMAT:
-        let formatedDate = getDate_DD_Month(artVal);
+        let formatedDate = getDate_DD_Month(artVal, timezone);
         artVal = formatedDate;
         break;
       case Constants.FILTER_INTEGER_PART:
