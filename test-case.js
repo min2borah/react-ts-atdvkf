@@ -6,226 +6,155 @@ import {
 } from './rule-engine.js';
 
 var previewJson = {
-  width: 1280,
-  height: 720,
-  fonts: [],
-  pages: [
+  "width": 360,
+  "height": 184,
+  "fonts": [],
+  "pages": [
     {
-      id: '5-4NH6QP6x',
-      children: [
+      "id": "QuYgdAg2fl",
+      "children": [
         {
-          id: 'Cp59avDHLh',
-          type: 'text',
-          name: '',
-          opacity: 1,
-          animations: [],
-          custom: {
-            rules: [
+          "id": "xXB4Rxml_m",
+          "type": "text",
+          "name": "",
+          "opacity": 1,
+          "custom": {
+            "articleField": null,
+            "dataSource": "article_field",
+            "parameters": "",
+            "filters": [],
+            "rules": [
               {
-                ruleConditions: {
-                  conditions: {
-                    all: [
+                "ruleConditions": {
+                  "conditions": {
+                    "all": [
                       {
-                        fact: 'article-fact',
-                        operator: 'cus_notEqual',
-                        value: '',
-                        path: "$.importFields['itemDescription1']",
-                        dataSource: 'article_field',
-                        articleField: {
-                          name: 'itemDescription1',
-                          parent: 'importFields',
-                          subTitle: 'importFields',
-                          dataType: 1,
-                          dbPath: 'importFields.itemDescription1',
-                        },
-                        articleIndex: 1,
-                        conditionId: 'f169PHo',
-                      },
-                    ],
+                        "fact": "article-fact",
+                        "operator": "lessThanInclusiveCurrentTime",
+                        "value": "2023-07-16T16:15:00.000Z",
+                        "path": "",
+                        "dataSource": "date_time",
+                        "articleField": null,
+                        "articleIndex": null,
+                        "conditionId": "E1X7XVM"
+                      }
+                    ]
                   },
-                  event: {
-                    type: 'true',
-                  },
+                  "event": {
+                    "type": "true"
+                  }
                 },
-                ruleActions: [
+                "ruleActions": [
                   {
-                    elementField: 'text',
-                    actionType: 'Multi Article Value',
-                    actionField: {
-                      path: '',
-                      articleField: '',
-                      dataSource: 'article_field',
-                      articleIndex: null,
+                    "elementField": "text",
+                    "actionType": "Article Value",
+                    "actionField": {
+                      "path": "importFields['stopDate']",
+                      "articleField": {
+                        "name": "stopDate",
+                        "parent": "importFields",
+                        "subTitle": "importFields",
+                        "dataType": 4,
+                        "dbPath": "importFields.stopDate"
+                      },
+                      "dataSource": "article_field",
+                      "articleIndex": null
                     },
-                    actionValue: '',
-                    prefixValue: '',
-                    sufixValue: '',
-                    substringRange: '',
-                    color: 'rgba(255,255,255,1)',
-                    actionId: 'BctsAat',
-                    separator: ' / ',
-                    multiValueActions: [
-                      {
-                        elementField: '',
-                        actionType: 'Plain Text',
-                        actionField: {
-                          path: "importFields['stock']",
-                          articleField: {
-                            name: 'stock',
-                            parent: 'importFields',
-                            subTitle: 'importFields',
-                            dataType: 3,
-                            dbPath: 'importFields.stock',
-                          },
-                          dataSource: 'article_field',
-                          articleIndex: 1,
-                        },
-                        actionValue: '',
-                        prefixValue: '',
-                        sufixValue: '',
-                        substringRange: '',
-                        color: 'rgba(255,255,255,1)',
-                        actionId: 'Oud-TUq',
-                      },
-                      {
-                        elementField: '',
-                        actionType: 'Plain Text',
-                        actionField: {
-                          path: "importFields['stock']",
-                          articleField: {
-                            name: 'stock',
-                            parent: 'importFields',
-                            subTitle: 'importFields',
-                            dataType: 3,
-                            dbPath: 'importFields.stock',
-                          },
-                          dataSource: 'article_field',
-                          articleIndex: 2,
-                        },
-                        actionValue: '',
-                        prefixValue: '',
-                        sufixValue: '',
-                        substringRange: '',
-                        color: 'rgba(255,255,255,1)',
-                        actionId: 'HVQPuez',
-                      },
-                      {
-                        elementField: '',
-                        actionType: 'Plain Text',
-                        actionField: {
-                          path: "importFields['stock']",
-                          articleField: {
-                            name: 'stock',
-                            parent: 'importFields',
-                            subTitle: 'importFields',
-                            dataType: 3,
-                            dbPath: 'importFields.stock',
-                          },
-                          dataSource: 'article_field',
-                          articleIndex: 3,
-                        },
-                        actionValue: '',
-                        prefixValue: '',
-                        sufixValue: '',
-                        substringRange: '',
-                        color: 'rgba(255,255,255,1)',
-                        actionId: 'VPk83Xz',
-                      },
-                      {
-                        elementField: '',
-                        actionType: 'Plain Text',
-                        actionField: {
-                          path: "importFields['stock']",
-                          articleField: {
-                            name: 'stock',
-                            parent: 'importFields',
-                            subTitle: 'importFields',
-                            dataType: 3,
-                            dbPath: 'importFields.stock',
-                          },
-                          dataSource: 'article_field',
-                          articleIndex: 4,
-                        },
-                        actionValue: '',
-                        prefixValue: '',
-                        sufixValue: '',
-                        substringRange: '',
-                        color: 'rgba(255,255,255,1)',
-                        actionId: 'lfP5c0D',
-                      },
-                    ],
-                  },
+                    "actionValue": "earlier",
+                    "prefixValue": "",
+                    "sufixValue": "",
+                    "substringRange": "",
+                    "color": "rgba(255,255,255,1)",
+                    "actionId": "ZCEqPkK"
+                  }
                 ],
-                isToHideElement: false,
-                ruleName: 'multi indx',
-                ruleId: 'rule_1683526796433',
-                elementId: 'Cp59avDHLh',
-                isToApplyFactFilters: false,
-                isToApplyActionFilters: false,
-                factFilters: [],
-                actionFilters: [],
-              },
-            ],
+                "isToHideElement": false,
+                "ruleName": "t1",
+                "ruleId": "rule_1689490311675",
+                "elementId": "xXB4Rxml_m",
+                "isToApplyFactFilters": false,
+                "isToApplyActionFilters": true,
+                "factFilters": [],
+                "actionFilters": [
+                  {
+                    "filterId": "47vxJ22",
+                    "articleIndex": null,
+                    "dataSource": "article_field",
+                    "path": "importFields['stopDate']",
+                    "articleField": {
+                      "name": "stopDate",
+                      "parent": "importFields",
+                      "subTitle": "importFields",
+                      "dataType": 4,
+                      "dbPath": "importFields.stopDate"
+                    },
+                    "function": "Format Date (DD Month)"
+                  }
+                ]
+              }
+            ]
           },
-          visible: true,
-          selectable: true,
-          removable: true,
-          alwaysOnTop: false,
-          showInExport: true,
-          x: 320,
-          y: 320,
-          width: 640,
-          height: 97,
-          rotation: 0,
-          blurEnabled: false,
-          blurRadius: 10,
-          brightnessEnabled: false,
-          brightness: 0,
-          sepiaEnabled: false,
-          grayscaleEnabled: false,
-          shadowEnabled: false,
-          shadowBlur: 5,
-          shadowOffsetX: 0,
-          shadowOffsetY: 0,
-          shadowColor: 'black',
-          shadowOpacity: 1,
-          draggable: true,
-          resizable: true,
-          contentEditable: true,
-          styleEditable: true,
-          text: 'Body text',
-          placeholder: '',
-          fontSize: 80,
-          fontFamily: 'Roboto',
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          textDecoration: '',
-          fill: 'black',
-          align: 'center',
-          verticalAlign: 'middle',
-          strokeWidth: 0,
-          stroke: 'black',
-          lineHeight: 1.2,
-          letterSpacing: 0,
-          backgroundEnabled: false,
-          backgroundColor: '#7ED321',
-          backgroundOpacity: 1,
-          backgroundCornerRadius: 0.5,
-          backgroundPadding: 0.5,
-        },
+          "visible": true,
+          "selectable": true,
+          "removable": true,
+          "alwaysOnTop": false,
+          "showInExport": true,
+          "x": 149.63234109630196,
+          "y": 23.841624350171408,
+          "width": 86.7699401363768,
+          "height": 90,
+          "rotation": 0,
+          "animations": [],
+          "blurEnabled": false,
+          "blurRadius": 10,
+          "brightnessEnabled": false,
+          "brightness": 0,
+          "sepiaEnabled": false,
+          "grayscaleEnabled": false,
+          "shadowEnabled": false,
+          "shadowBlur": 5,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "shadowColor": "black",
+          "shadowOpacity": 1,
+          "draggable": true,
+          "resizable": true,
+          "contentEditable": true,
+          "styleEditable": true,
+          "text": "6",
+          "placeholder": "",
+          "fontSize": 73.76400403218715,
+          "fontFamily": "Arial Narrow Bold",
+          "fontStyle": "normal",
+          "fontWeight": "bold",
+          "textDecoration": "",
+          "fill": "black",
+          "align": "right",
+          "verticalAlign": "middle",
+          "strokeWidth": 0,
+          "stroke": "black",
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "backgroundEnabled": false,
+          "backgroundColor": "#7ED321",
+          "backgroundOpacity": 1,
+          "backgroundCornerRadius": 0.5,
+          "backgroundPadding": 0.5
+        }
       ],
-      width: 'auto',
-      height: 'auto',
-      background: 'white',
-      bleed: 0,
-      custom: {
-        pageType: 'DYNAMIC',
-        articleCount: 4,
+      "width": "auto",
+      "height": "auto",
+      "background": "white",
+      "bleed": 0,
+      "custom": {
+        "pageType": "DYNAMIC",
+        "eslPageIndex": 1
       },
-    },
+      "duration": 5000
+    }
   ],
-  unit: 'px',
-  dpi: 72,
+  "unit": "px",
+  "dpi": 72
 };
 
 var articleJson = [
@@ -757,7 +686,7 @@ var scenario = {
 var tags = ['Tag1', 'Tag2', 'Macelleria'];
 
 export const runPreviewtest = () => {
-  validateElementRules(previewJson, articleJson, tags)
+  validateElementRules(previewJson, articleJson, tags, "vip","Europe/Rome")
     .then((resultJson) => {
       console.log(resultJson);
     })
@@ -773,5 +702,6 @@ export const runScenariotest = () => {
     })
     .catch((err) => {
       console.log(err);
-    });
+    }); 
+    
 };

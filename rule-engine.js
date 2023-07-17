@@ -20,6 +20,9 @@ async function validateRules(
   customTags
 ) {
   const engine = new Engine();
+  if(timezone == undefined || timezone == null){
+    timezone = "Europe/Rome";
+  }
 
   engine.addFact(constants.RULE_FACT_ARTICLE, async function (params, almanac) {
     let article = await almanac.factValue('article');
@@ -264,8 +267,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
@@ -276,8 +279,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_NOT_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
@@ -288,8 +291,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
@@ -300,8 +303,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_THAN_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
@@ -312,8 +315,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
@@ -324,8 +327,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_THAN_CURRENT_DATE,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
@@ -339,8 +342,8 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       return d1.isBetween(sDate, eDate, 'day', '[]');
     }
@@ -352,8 +355,8 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.DATE_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       return !d1.isBetween(sDate, eDate, 'day', '[]');
     }
@@ -370,8 +373,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.TIME_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
@@ -401,8 +404,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.TIME_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
@@ -413,8 +416,8 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
-      const today = moment(timezone).format();
-      let d1Str = moment(today).format(constants.TIME_FORMAT);
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
