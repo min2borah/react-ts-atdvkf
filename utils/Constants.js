@@ -79,11 +79,15 @@ export const ELEMENT_DECIMAL_SUPER = 'decimalSuperScript';
 export const DATA_SOURCE_ARTICLE_FIELD = 'article_field';
 export const DATA_SOURCE_PIM = 'pim_data';
 export const DATA_SOURCE_DATE_TIME = 'date_time';
+export const DATA_SOURCE_TAGS = 'tags';
+export const DATA_SOURCE_ARTICLE_COUNT = 'article_count';
 export const DATA_SOURCE_FIELDS_IMPORTS = 'importFields';
 export const DATA_SOURCE_FIELDS_INSTORE = 'instoreFields';
 export const DATA_SOURCE_FIELDS_DATE = 'current_date';
 export const DATA_SOURCE_FIELDS_TIME = 'current_time';
-export const DATA_SOURCE_ARTICLE_COUNT = 'article_count';
+export const DATA_SOURCE_FIELDS_DEVICE_TAG = 'device_tag';
+export const DATA_SOURCE_FIELDS_CUSTOM_TAG = 'custom_tag';
+
 
 export const DataSchemaDataType = Object.freeze({
   ALFA: 1,

@@ -97,7 +97,7 @@ export const containSubstring = (factValue, val) => {
 
 export const getDate_DD_Month = (dateStr, timezone, locale = null) => {
   if (timezone == undefined || timezone == null) {
-    timezone = 'Europe/Rome';
+    timezone = moment.tz.guess();;
   }
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));

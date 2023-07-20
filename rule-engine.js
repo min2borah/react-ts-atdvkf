@@ -19,9 +19,10 @@ async function validateRules(
   timezone,
   customTags
 ) {
+  console.log("rule-validation timezone .... ", timezone);
   const engine = new Engine();
   if(timezone == undefined || timezone == null){
-    timezone = "Europe/Rome";
+    timezone = moment.tz.guess();
   }
 
   engine.addFact(constants.RULE_FACT_ARTICLE, async function (params, almanac) {
