@@ -1,6 +1,10 @@
 import * as Constants from './Constants.js';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment-timezone';
+import 'moment/locale/fr';
+import 'moment/locale/it';
+import 'moment/locale/de';
+import 'moment/locale/en-gb';
 
 export const is_a_number = (value) => {
   const re = RegExp('[+-]?([0-9]*[.])?[0-9]+');
@@ -97,18 +101,18 @@ export const containSubstring = (factValue, val) => {
 
 export const getDate_DD_Month = (dateStr, timezone, locale = null) => {
   if (timezone == undefined || timezone == null) {
-    timezone = moment.tz.guess();;
+    timezone = moment.tz.guess();
   }
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
   if (mdate.isValid()) {
-    let lang = 'it';
-    let dtStr = mdate.format('DD MMMM');
+    let lang = navigator.language || navigator.userLanguage;
     if (locale) {
       lang = locale;
-      dtStr = mdate.locale(lang).format('DD MMMM');
     }
-    return dtStr;
+    let lng = lang.split('-')[0];
+    let dt = mdate.locale(lng).format('DD MMMM');
+    return dt;
   } else {
     return dateStr;
   }
