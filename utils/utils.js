@@ -4,6 +4,8 @@ import moment from 'moment-timezone';
 import 'moment/locale/fr';
 import 'moment/locale/it';
 import 'moment/locale/de';
+import 'moment/locale/es';
+import 'moment/locale/en-in';
 import 'moment/locale/en-gb';
 
 export const is_a_number = (value) => {
@@ -101,17 +103,18 @@ export const containSubstring = (factValue, val) => {
 
 export const getDate_DD_Month = (dateStr, timezone, locale = null) => {
   if (timezone == undefined || timezone == null) {
-    timezone = moment.tz.guess();
+    timezone = moment.tz.guess();;
   }
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
   if (mdate.isValid()) {
-    let lang = navigator.language || navigator.userLanguage;
+    let lang = navigator.language || navigator.userLanguage; 
     if (locale) {
       lang = locale;
     }
-    let lng = lang.split('-')[0];
+    let lng = lang.split("-")[0];
     let dt = mdate.locale(lng).format('DD MMMM');
+    console.log(".................",dt);
     return dt;
   } else {
     return dateStr;
@@ -189,7 +192,8 @@ export function processFilters(
   filters,
   articleData,
   isMultipleArticleCanvas,
-  timezone
+  timezone,
+  locale
 ) {
   var article = cloneDeep(articleData);
 
@@ -241,7 +245,7 @@ export function processFilters(
         }
         break;
       case Constants.FILTER_DATE_FORMAT:
-        let formatedDate = getDate_DD_Month(artVal, timezone);
+        let formatedDate = getDate_DD_Month(artVal, timezone, locale);
         artVal = formatedDate;
         break;
       case Constants.FILTER_INTEGER_PART:

@@ -17,9 +17,9 @@ async function validateRules(
   deviceType,
   isMultipleArticleCanvas,
   timezone,
-  customTags
+  customTags,
+  locale
 ) {
-  console.log("rule-validation timezone .... ", timezone);
   const engine = new Engine();
   if(timezone == undefined || timezone == null){
     timezone = moment.tz.guess();
@@ -33,7 +33,8 @@ async function validateRules(
         params.filters,
         article,
         isMultipleArticleCanvas,
-        timezone
+        timezone,
+        locale
       );
     }
     return article;
@@ -909,7 +910,8 @@ export function validateGroupRules(
   tag,
   deviceType,
   timezone,
-  customTags
+  customTags,
+  locale
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -927,7 +929,8 @@ export function validateGroupRules(
         outEvent.filters,
         article,
         outEvent.isMultipleArticleCanvas,
-        timezone
+        timezone,
+        locale
       );
     }
     elements.forEach((elemntId, indx) => {
@@ -992,7 +995,8 @@ export function validateGroupRules(
             deviceType,
             isMultipleArticleCanvas,
             timezone,
-            customTags
+            customTags,
+            locale
           ).then((result) => {
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
               RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -1022,7 +1026,8 @@ export function validateElementRules(
   tag,
   deviceType,
   timezone,
-  customTags
+  customTags,
+  locale
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1060,7 +1065,8 @@ export function validateElementRules(
         outEvent.filters,
         article,
         outEvent.isMultipleArticleCanvas,
-        timezone
+        timezone,
+        locale
       );
     }
     performActionsOnElement(
@@ -1117,7 +1123,8 @@ export function validateElementRules(
             deviceType,
             isMultipleArticleCanvas,
             timezone,
-            customTags
+            customTags,
+            locale
           ).then((result) => {
             if (result.events.length === 0) {
               performDefaultActions(result, isMultipleArticleCanvas);

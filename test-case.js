@@ -6,85 +6,61 @@ import {
 } from './rule-engine.js';
 
 var previewJson = {
-    "width": 1280,
-    "height": 720,
-    "fonts": [],
-    "pages": [
-      {
-        "id": "TnCU0f48zL",
-        "children": [
-          {
-            "id": "9cPSF89Ge5",
-            "type": "text",
-            "name": "",
-            "opacity": 1,
-            "custom": {
-              "dataSource": "article_field",
-              "articleField": null,
-              "filters": [],
-              "rules": [
-                {
-                  "ruleConditions": {
-                    "conditions": {
-                      "all": [
-                        {
-                          "fact": "article-fact",
-                          "operator": "cus_notEqual",
-                          "value": "",
-                          "path": "$.importFields['masterCode']",
-                          "dataSource": "article_field",
-                          "articleField": {
-                            "name": "masterCode",
-                            "parent": "importFields",
-                            "subTitle": "importFields",
-                            "dataType": 1,
-                            "dbPath": "importFields.masterCode"
-                          },
-                          "articleIndex": null,
-                          "conditionId": "CsP1ySp"
-                        }
-                      ]
-                    },
-                    "event": {
-                      "type": "true"
-                    }
-                  },
-                  "ruleActions": [
-                    {
-                      "elementField": "text",
-                      "actionType": "Article Value",
-                      "actionField": {
-                        "path": "importFields['stopDate']",
+  "width": 1280,
+  "height": 720,
+  "fonts": [],
+  "pages": [
+    {
+      "id": "TnCU0f48zL",
+      "children": [
+        {
+          "id": "9cPSF89Ge5",
+          "type": "text",
+          "name": "",
+          "opacity": 1,
+          "custom": {
+            "dataSource": "article_field",
+            "articleField": {
+              "name": "stopDate",
+              "parent": "importFields",
+              "subTitle": "importFields",
+              "dataType": 4
+            },
+            "filters": [
+              "Format Date (DD Month)"
+            ],
+            "rules": [
+              {
+                "ruleConditions": {
+                  "conditions": {
+                    "all": [
+                      {
+                        "fact": "article-fact",
+                        "operator": "cus_notEqual",
+                        "value": "",
+                        "path": "$.importFields['masterCode']",
+                        "dataSource": "article_field",
                         "articleField": {
-                          "name": "stopDate",
+                          "name": "masterCode",
                           "parent": "importFields",
                           "subTitle": "importFields",
-                          "dataType": 4,
-                          "dbPath": "importFields.stopDate"
+                          "dataType": 1,
+                          "dbPath": "importFields.masterCode"
                         },
-                        "dataSource": "article_field",
-                        "articleIndex": null
-                      },
-                      "actionValue": "",
-                      "prefixValue": "",
-                      "sufixValue": "",
-                      "substringRange": "",
-                      "color": "rgba(255,255,255,1)",
-                      "actionId": "cMT6W9B"
-                    }
-                  ],
-                  "isToHideElement": false,
-                  "ruleName": "r1",
-                  "ruleId": "rule_1689863163119",
-                  "elementId": "9cPSF89Ge5",
-                  "isToApplyFactFilters": false,
-                  "isToApplyActionFilters": true,
-                  "factFilters": [],
-                  "actionFilters": [
-                    {
-                      "filterId": "XgqKaXY",
-                      "articleIndex": null,
-                      "dataSource": "article_field",
+                        "articleIndex": null,
+                        "conditionId": "6SGo0ht"
+                      }
+                    ]
+                  },
+                  "event": {
+                    "type": "true"
+                  }
+                },
+                "ruleActions": [
+                  {
+                    "elementField": "text",
+                    "actionType": "Article Value",
+                    "actionField": {
                       "path": "importFields['stopDate']",
                       "articleField": {
                         "name": "stopDate",
@@ -93,70 +69,101 @@ var previewJson = {
                         "dataType": 4,
                         "dbPath": "importFields.stopDate"
                       },
-                      "function": "Format Date (DD Month)"
-                    }
-                  ]
-                }
-              ]
-            },
-            "visible": true,
-            "selectable": true,
-            "removable": true,
-            "alwaysOnTop": false,
-            "showInExport": true,
-            "x": 320,
-            "y": 320,
-            "width": 640,
-            "height": 193,
-            "rotation": 0,
-            "animations": [],
-            "blurEnabled": false,
-            "blurRadius": 10,
-            "brightnessEnabled": false,
-            "brightness": 0,
-            "sepiaEnabled": false,
-            "grayscaleEnabled": false,
-            "shadowEnabled": false,
-            "shadowBlur": 5,
-            "shadowOffsetX": 0,
-            "shadowOffsetY": 0,
-            "shadowColor": "black",
-            "shadowOpacity": 1,
-            "draggable": true,
-            "resizable": true,
-            "contentEditable": true,
-            "styleEditable": true,
-            "text": "Test Summer - template count",
-            "placeholder": "",
-            "fontSize": 80,
-            "fontFamily": "Roboto",
-            "fontStyle": "normal",
-            "fontWeight": "normal",
-            "textDecoration": "",
-            "fill": "black",
-            "align": "center",
-            "verticalAlign": "middle",
-            "strokeWidth": 0,
-            "stroke": "black",
-            "lineHeight": 1.2,
-            "letterSpacing": 0,
-            "backgroundEnabled": false,
-            "backgroundColor": "#7ED321",
-            "backgroundOpacity": 1,
-            "backgroundCornerRadius": 0.5,
-            "backgroundPadding": 0.5
-          }
-        ],
-        "width": "auto",
-        "height": "auto",
-        "background": "white",
-        "bleed": 0,
-        "duration": 5000
-      }
-    ],
-    "unit": "px",
-    "dpi": 72
-  };
+                      "dataSource": "article_field",
+                      "articleIndex": null
+                    },
+                    "actionValue": "",
+                    "prefixValue": "",
+                    "sufixValue": "",
+                    "substringRange": "",
+                    "color": "rgba(255,255,255,1)",
+                    "actionId": "3XXnu-0"
+                  }
+                ],
+                "isToHideElement": false,
+                "ruleName": "q1",
+                "ruleId": "rule_1689924757325",
+                "elementId": "9cPSF89Ge5",
+                "isToApplyFactFilters": false,
+                "isToApplyActionFilters": true,
+                "factFilters": [],
+                "actionFilters": [
+                  {
+                    "filterId": "aeevek9",
+                    "articleIndex": null,
+                    "dataSource": "article_field",
+                    "path": "importFields['stopDate']",
+                    "articleField": {
+                      "name": "stopDate",
+                      "parent": "importFields",
+                      "subTitle": "importFields",
+                      "dataType": 4,
+                      "dbPath": "importFields.stopDate"
+                    },
+                    "function": "Format Date (DD Month)"
+                  }
+                ]
+              }
+            ]
+          },
+          "visible": true,
+          "selectable": true,
+          "removable": true,
+          "alwaysOnTop": false,
+          "showInExport": true,
+          "x": 320,
+          "y": 320,
+          "width": 640,
+          "height": 193,
+          "rotation": 0,
+          "animations": [],
+          "blurEnabled": false,
+          "blurRadius": 10,
+          "brightnessEnabled": false,
+          "brightness": 0,
+          "sepiaEnabled": false,
+          "grayscaleEnabled": false,
+          "shadowEnabled": false,
+          "shadowBlur": 5,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "shadowColor": "black",
+          "shadowOpacity": 1,
+          "draggable": true,
+          "resizable": true,
+          "contentEditable": true,
+          "styleEditable": true,
+          "text": "Test Summer - template count",
+          "placeholder": "",
+          "fontSize": 80,
+          "fontFamily": "Roboto",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "textDecoration": "",
+          "fill": "black",
+          "align": "center",
+          "verticalAlign": "middle",
+          "strokeWidth": 0,
+          "stroke": "black",
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "backgroundEnabled": false,
+          "backgroundColor": "#7ED321",
+          "backgroundOpacity": 1,
+          "backgroundCornerRadius": 0.5,
+          "backgroundPadding": 0.5
+        }
+      ],
+      "width": "auto",
+      "height": "auto",
+      "background": "white",
+      "bleed": 0,
+      "duration": 5000
+    }
+  ],
+  "unit": "px",
+  "dpi": 72
+};
 
 var articleJson = [
    
@@ -297,7 +304,7 @@ var scenario = {
 var tags = ['Tag1', 'Tag2', 'Macelleria'];
 
 export const runPreviewtest = () => {
-  validateElementRules(previewJson, articleJson, tags, "vip","Europe/Rome")
+  validateElementRules(previewJson, articleJson, tags, "vip","Europe/Rome", null,"it")
     .then((resultJson) => {
       console.log(resultJson);
     })
