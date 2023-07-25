@@ -1,6 +1,6 @@
 {
   "name": "react-ts",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "private": true,
   "dependencies": {
     "@types/react": "^18.2.15",

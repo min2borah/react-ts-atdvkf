@@ -103,18 +103,20 @@ export const containSubstring = (factValue, val) => {
 
 export const getDate_DD_Month = (dateStr, timezone, locale = null) => {
   if (timezone == undefined || timezone == null) {
-    timezone = moment.tz.guess();;
+    timezone = moment.tz.guess();
   }
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
   if (mdate.isValid()) {
-    let lang = navigator.language || navigator.userLanguage; 
+    let lang = 'it';
+    if (navigator != undefined || navigator != null) {
+      lang = navigator.language || navigator.userLanguage;
+    }
     if (locale) {
       lang = locale;
     }
-    let lng = lang.split("-")[0];
+    let lng = lang.split('-')[0];
     let dt = mdate.locale(lng).format('DD MMMM');
-    console.log(".................",dt);
     return dt;
   } else {
     return dateStr;
