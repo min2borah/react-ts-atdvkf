@@ -21,7 +21,7 @@ async function validateRules(
   locale
 ) {
   const engine = new Engine();
-  if(timezone == undefined || timezone == null){
+  if (timezone == undefined || timezone == null) {
     timezone = moment.tz.guess();
   }
 
@@ -193,16 +193,24 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_EQUAL_DATE, (factValue, jsonValue) => {
-    let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return d1.isSame(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_NOT_EQUAL_DATE, (factValue, jsonValue) => {
-    let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return !d1.isSame(d2, 'day');
@@ -211,8 +219,12 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_DATE,
     (factValue, jsonValue) => {
-      let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isSameOrAfter(d2, 'day');
@@ -221,8 +233,12 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_THAN_DATE,
     (factValue, jsonValue) => {
-      let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isAfter(d2, 'day');
@@ -230,16 +246,24 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_LESS_EQUAL_DATE, (factValue, jsonValue) => {
-    let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return d1.isSameOrBefore(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_LESS_THAN_DATE, (factValue, jsonValue) => {
-    let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return d1.isBefore(d2, 'day');
@@ -249,7 +273,9 @@ async function validateRules(
     var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
     let sDate = utils.convertUTCToLocalDate(split[0]);
     let eDate = utils.convertUTCToLocalDate(split[1]);
-    let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     return d1.isBetween(sDate, eDate, 'day', '[]');
   });
@@ -260,7 +286,9 @@ async function validateRules(
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
-      let d1Str = moment(factValue).utc().format(constants.DATE_FORMAT);
+      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       return !d1.isBetween(sDate, eDate, 'day', '[]');
     }
@@ -271,7 +299,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isSame(d2, 'day');
@@ -283,7 +313,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return !d1.isSame(d2, 'day');
@@ -295,7 +327,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isSameOrAfter(d2, 'day');
@@ -307,7 +341,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isAfter(d2, 'day');
@@ -319,7 +355,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isSameOrBefore(d2, 'day');
@@ -331,7 +369,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.DATE_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isBefore(d2, 'day');
@@ -365,8 +405,12 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_EQUAL_TIME, (factValue, jsonValue) => {
-    let d1Str = moment(factValue).utc().format(constants.TIME_FORMAT);
-    let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
     let d1 = moment(d1Str, constants.TIME_FORMAT);
     let d2 = moment(d2Str, constants.TIME_FORMAT);
     return d1.isSame(d2);
@@ -377,7 +421,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
       return d1.isSame(d2);
@@ -385,8 +431,12 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_LESS_EQUAL_TIME, (factValue, jsonValue) => {
-    let d1Str = moment(factValue).utc().format(constants.TIME_FORMAT);
-    let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
     let d1 = moment(d1Str, constants.TIME_FORMAT);
     let d2 = moment(d2Str, constants.TIME_FORMAT);
     return d1.isBefore(d2);
@@ -395,8 +445,12 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_TIME,
     (factValue, jsonValue) => {
-      let d1Str = moment(factValue).utc().format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
+      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.TIME_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
       return d1.isAfter(d2);
@@ -408,7 +462,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
       return d1.isBefore(d2);
@@ -420,7 +476,9 @@ async function validateRules(
     (factValue, jsonValue) => {
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue).utc().format(constants.TIME_FORMAT);
+      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.TIME_FORMAT);
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
       return d1.isAfter(d2);
