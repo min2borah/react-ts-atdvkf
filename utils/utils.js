@@ -101,22 +101,26 @@ export const containSubstring = (factValue, val) => {
   );
 };
 
-export const getDate_DD_Month = (dateStr, timezone, locale = null) => {
+export const getFormattedDate = (dateStr, timezone, locale, format) => {
   if (timezone == undefined || timezone == null) {
     timezone = moment.tz.guess();
   }
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
+
   if (mdate.isValid()) {
-    let lang = 'it';
-    if (navigator != undefined || navigator != null) {
-      lang = navigator.language || navigator.userLanguage;
+    let dt = mdate.format(format);
+    if (format == 'DD MMMM') {
+      let lang = 'it';
+      try {
+        lang = navigator.language || navigator.userLanguage;
+      } catch (e) {}
+      if (locale) {
+        lang = locale;
+      }
+      let lng = lang.split('-')[0];
+      dt = mdate.locale(lng).format(format);
     }
-    if (locale) {
-      lang = locale;
-    }
-    let lng = lang.split('-')[0];
-    let dt = mdate.locale(lng).format('DD MMMM');
     return dt;
   } else {
     return dateStr;
@@ -246,9 +250,14 @@ export function processFilters(
           artVal = filterPriceFormatter(artVal);
         }
         break;
-      case Constants.FILTER_DATE_FORMAT:
-        let formatedDate = getDate_DD_Month(artVal, timezone, locale);
-        artVal = formatedDate;
+      case Constants.FILTER_DATE_FORMAT_DD_Month:
+        let formatedlocaleDate = getFormattedDate(
+          artVal,
+          timezone,
+          locale,
+          'DD MMMM'
+        );
+        artVal = formatedlocaleDate;
         break;
       case Constants.FILTER_INTEGER_PART:
         artVal = filterIntegerPart(artVal);
@@ -262,6 +271,15 @@ export function processFilters(
       case Constants.FILTER_DECIMAL_PART_3_DIGIT:
         artVal = filterDecimalPart(artVal, true);
         break;
+    }
+    if (Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1) {
+      let formatedDate = getFormattedDate(
+        artVal,
+        timezone,
+        locale,
+        selectedFilter
+      );
+      artVal = formatedDate;
     }
     let filterPathFinal = getLocaliazedPath(
       articleData,

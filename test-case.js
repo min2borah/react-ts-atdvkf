@@ -201,7 +201,7 @@ var articleJson = [
       category3: 'ROSSI',
       updateDate: '2023-07-17T00:00:00Z',
       startDate: null,
-      stopDate: '2023-07-17T18:15:14.719Z',
+      stopDate: '30-07-2023',
       available: 0,
       status: 3,
       visible: 7,

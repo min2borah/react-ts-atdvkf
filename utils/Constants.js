@@ -68,7 +68,7 @@ export const OPR_CUSTOM_TAG_NOT_CONTAIN = 'NotContainCustomTag';
 
 export const FILTER_INVALID_ZEROS = 'Insignificant Zeros';
 export const FILTER_PRICE_FORMAT = 'Format currency (€)';
-export const FILTER_DATE_FORMAT = 'Format Date (DD Month)';
+export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)'; //Deprecated from version 1.5.9, kept to support previous templates
 export const FILTER_INTEGER_PART = 'Take Integer Part';
 export const FILTER_DECIMAL_PART = 'Take Decimal Part'; //Deprecated from version 1.4.25, kept to support previous templates
 export const FILTER_DECIMAL_PART_2_DIGIT = 'Take Decimal Part (2 Digits)';
@@ -88,7 +88,6 @@ export const DATA_SOURCE_FIELDS_TIME = 'current_time';
 export const DATA_SOURCE_FIELDS_DEVICE_TAG = 'device_tag';
 export const DATA_SOURCE_FIELDS_CUSTOM_TAG = 'custom_tag';
 
-
 export const DataSchemaDataType = Object.freeze({
   ALFA: 1,
   NUMERIC: 2,
@@ -99,20 +98,35 @@ export const DataSchemaDataType = Object.freeze({
   TIME: 7,
 });
 
-export const SUPPORTED_DATE_FORMATS = [
+export const MOMENT_DEFAULT_DATE_FORMATS = [
   moment.ISO_8601,
   moment.RFC_2822,
   moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
   moment.HTML5_FMT.DATETIME_LOCAL_MS,
   moment.HTML5_FMT.DATETIME_LOCAL,
+];
+export const CUSTOM_DATE_FORMATS = [
+  'DD MMMM',
   'DD',
   'MM',
   'YYYY',
   'DD-MM',
+  'DD-MM-YY',
   'DD-MM-YYYY',
-  'MM-DD-YYYY',
-  'YYYY-DD-MM',
-  'YYYY-MM-DD',
+  'DD/MM',
+  'DD/MM/YY',
   'DD/MM/YYYY',
+  'MM-DD',
+  'MM/DD',
+  'MM/DD/YY',
+  'MM-DD-YYYY',
+  'MM/DD/YYYY',
+  'YYYY-DD-MM',
   'YYYY/DD/MM',
+  'YYYY-MM-DD',
+  'YYYY/MM/DD',
+];
+export const SUPPORTED_DATE_FORMATS = [
+  ...MOMENT_DEFAULT_DATE_FORMATS,
+  ...CUSTOM_DATE_FORMATS,
 ];
