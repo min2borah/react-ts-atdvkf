@@ -2,6 +2,7 @@ import moment from 'moment';
 
 export const RULE_FACT_ARTICLE = 'article-fact';
 export const RULE_FACT_TEMPLATE = 'template-fact';
+export const RULE_FACT_USER_DATA = 'user-data-fact';
 
 export const RULE_ACTION_PLAIN_TEXT = 'Plain Text';
 export const RULE_ACTION_ARTICLE_VALUE = 'Article Value';
@@ -20,13 +21,14 @@ export const RuleEngineDefaultOperators = {
   ARRAY_CONTAINS: 'cus_contains',
   ARRAY_DOES_NOT_CONTAIN: 'cus_doesNotContain',
   ARRAY_IN: 'cus_in',
-  ARRAY_NOT_IN: 'cus_notIn',
+  ARRAY_NOT_IN: 'cus_notIn'
 };
 export const OPR_LENGTH_GREATER_EQUAL = 'Length >=';
 export const OPR_LENGTH_SMALLER_EQUAL = 'Length <=';
 export const OPR_LENGTH_EQUAL = 'Length ===';
 export const OPR_LENGTH_NOT_EQUAL = 'Length !==';
 export const OPR_IS_EMPTY = 'isEmpty';
+export const OPR_IS_NOT_EMPTY = 'isNotEmpty';
 export const OPR_IS_IN_BETWEEN = 'inBetween';
 export const OPR_NOT_IN_BETWEEN = 'notInBetween';
 export const OPR_CONTAIN_SUBSTRING = 'constainString';
@@ -41,6 +43,7 @@ export const OPR_IN_BETWEEN_DATE = 'inBetweenDate';
 export const OPR_NOT_IN_BETWEEN_DATE = 'notInBetweenDate';
 export const OPR_EQUAL_DATE = 'equalToDate';
 export const OPR_NOT_EQUAL_DATE = 'notEqualToDate';
+
 
 export const OPR_GREATER_EQUAL_CURRENT_DATE = 'greaterThanInclusiveCurrentDate';
 export const OPR_GREATER_THAN_CURRENT_DATE = 'greaterThanCurrentDate';
@@ -68,7 +71,7 @@ export const OPR_CUSTOM_TAG_NOT_CONTAIN = 'NotContainCustomTag';
 
 export const FILTER_INVALID_ZEROS = 'Insignificant Zeros';
 export const FILTER_PRICE_FORMAT = 'Format currency (€)';
-export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)'; //Deprecated from version 1.5.9, kept to support previous templates
+export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)';//Deprecated from version 1.5.9, kept to support previous templates
 export const FILTER_INTEGER_PART = 'Take Integer Part';
 export const FILTER_DECIMAL_PART = 'Take Decimal Part'; //Deprecated from version 1.4.25, kept to support previous templates
 export const FILTER_DECIMAL_PART_2_DIGIT = 'Take Decimal Part (2 Digits)';
@@ -87,6 +90,8 @@ export const DATA_SOURCE_FIELDS_DATE = 'current_date';
 export const DATA_SOURCE_FIELDS_TIME = 'current_time';
 export const DATA_SOURCE_FIELDS_DEVICE_TAG = 'device_tag';
 export const DATA_SOURCE_FIELDS_CUSTOM_TAG = 'custom_tag';
+export const DATA_SOURCE_USER_DATA = 'user_data';
+
 
 export const DataSchemaDataType = Object.freeze({
   ALFA: 1,
@@ -103,7 +108,7 @@ export const MOMENT_DEFAULT_DATE_FORMATS = [
   moment.RFC_2822,
   moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
   moment.HTML5_FMT.DATETIME_LOCAL_MS,
-  moment.HTML5_FMT.DATETIME_LOCAL,
+  moment.HTML5_FMT.DATETIME_LOCAL
 ];
 export const CUSTOM_DATE_FORMATS = [
   'DD MMMM',
@@ -126,7 +131,4 @@ export const CUSTOM_DATE_FORMATS = [
   'YYYY-MM-DD',
   'YYYY/MM/DD',
 ];
-export const SUPPORTED_DATE_FORMATS = [
-  ...MOMENT_DEFAULT_DATE_FORMATS,
-  ...CUSTOM_DATE_FORMATS,
-];
+export const SUPPORTED_DATE_FORMATS = [...MOMENT_DEFAULT_DATE_FORMATS, ...CUSTOM_DATE_FORMATS];

@@ -41,6 +41,14 @@ async function validateRules(
   });
 
   engine.addFact(
+    constants.RULE_FACT_USER_DATA,
+    async function (params, almanac) {
+      let userData = await almanac.factValue('userData');
+      return userData;
+    }
+  );
+
+  engine.addFact(
     constants.RULE_FACT_TEMPLATE,
     async function (params, almanac) {
       return await almanac.factValue('template');
@@ -175,6 +183,10 @@ async function validateRules(
 
   engine.addOperator(constants.OPR_IS_EMPTY, (factValue, jsonValue) => {
     return utils.isEmpty(factValue);
+  });
+
+  engine.addOperator(constants.OPR_IS_NOT_EMPTY, (factValue, jsonValue) => {
+    return !utils.isEmpty(factValue);
   });
 
   engine.addOperator(constants.OPR_IS_IN_BETWEEN, (factValue, jsonValue) => {
@@ -880,7 +892,8 @@ export function validatePageRules(
   tag,
   deviceType,
   timezone,
-  customTags
+  customTags,
+  userData
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -913,7 +926,7 @@ export function validatePageRules(
     customObject.pages.push(pageObj);
   });
 
-  const fact = { article: article, template: customObject };
+  const fact = { article: article, template: customObject, userData: userData };
 
   return new Promise((resolve, reject) => {
     previewJson.pages.forEach((page, pageIndex) => {
@@ -936,7 +949,8 @@ export function validatePageRules(
           deviceType,
           isMultipleArticleCanvas,
           timezone,
-          customTags
+          customTags,
+          userData
         ).then((result) => {
           RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -969,7 +983,8 @@ export function validateGroupRules(
   deviceType,
   timezone,
   customTags,
-  locale
+  locale,
+  userData
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1029,7 +1044,7 @@ export function validateGroupRules(
     customObject.pages.push(pageObj);
   });
 
-  const fact = { article: article, template: customObject };
+  const fact = { article: article, template: customObject, userData: userData };
 
   return new Promise((resolve, reject) => {
     previewJson.pages.forEach((page, pageIndex) => {
@@ -1085,7 +1100,8 @@ export function validateElementRules(
   deviceType,
   timezone,
   customTags,
-  locale
+  locale,
+  userData
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1108,7 +1124,7 @@ export function validateElementRules(
     customObject.pages.push(pageObj);
   });
 
-  const fact = { article: article, template: customObject };
+  const fact = { article: article, template: customObject, userData: userData };
 
   const ruleOnSuccess = (event, almanac) => {
     const outEvent = event.params;

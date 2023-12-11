@@ -6,27 +6,27 @@ import {
 } from './rule-engine.js';
 
 var previewJson = {
-  width: 1024,
-  height: 768,
+  width: 1280,
+  height: 720,
   fonts: [],
   pages: [
     {
-      id: 'TnCU0f48zL',
+      id: 'xv7eMkx96J',
       children: [
         {
-          id: 'ND_09IxrKk',
+          id: '9Ug1uRL-JY',
           type: 'text',
           name: '',
           opacity: 1,
           custom: {
-            dataSource: 'article_field',
+            articleIndex: 1,
             articleField: {
-              name: 'stopDate',
+              name: 'itemDescription1',
               parent: 'importFields',
               subTitle: 'importFields',
-              dataType: 4,
+              dataType: 1,
             },
-            filters: ['Format Date (DD Month)'],
+            dataSource: 'article_field',
             rules: [
               {
                 ruleConditions: {
@@ -34,19 +34,47 @@ var previewJson = {
                     all: [
                       {
                         fact: 'article-fact',
-                        operator: 'notEqualToDate',
-                        value: '2023-07-25T00:00:00.000Z',
-                        path: "$.importFields['stopDate']",
+                        operator: 'cus_greaterThan',
+                        value: {
+                          fact: 'user-data-fact',
+                          path: '$.Calorie',
+                          articleField: {
+                            name: 'Calorie',
+                            type: 'number',
+                            Description: 'Description 1',
+                            Value: 'this will be user input',
+                            Operators: ['>=', '==', '<='],
+                            dataType: 3,
+                          },
+                        },
+                        path: "$.importFields['stock']",
                         dataSource: 'article_field',
                         articleField: {
-                          name: 'stopDate',
+                          name: 'stock',
                           parent: 'importFields',
                           subTitle: 'importFields',
-                          dataType: 4,
-                          dbPath: 'importFields.stopDate',
+                          dataType: 3,
+                          aliasName: 'stock',
+                          dbPath: 'importFields.stock',
                         },
-                        articleIndex: null,
-                        conditionId: '7vd-ege',
+                        articleIndex: 1,
+                        conditionId: 'ZnmImTRFhOFZDyFF9O9NQ',
+                      },
+                      {
+                        fact: 'user-data-fact',
+                        operator: 'cus_equal',
+                        value: true,
+                        path: "$.allergens['uova']",
+                        dataSource: 'user_data',
+                        articleField: {
+                          name: 'uova',
+                          parent: 'Allergens',
+                          subTitle: 'Allergens',
+                          dataType: 5,
+                          dbPath: 'allergens.uova',
+                        },
+                        articleIndex: 1,
+                        conditionId: 'cJn-jwHdPBZVl9is_Dojz',
                       },
                     ],
                   },
@@ -56,51 +84,31 @@ var previewJson = {
                 },
                 ruleActions: [
                   {
-                    elementField: 'text',
-                    actionType: 'Article Value',
+                    elementField: '',
+                    actionType: 'Plain Text',
                     actionField: {
-                      path: "importFields['stopDate']",
-                      articleField: {
-                        name: 'stopDate',
-                        parent: 'importFields',
-                        subTitle: 'importFields',
-                        dataType: 4,
-                        dbPath: 'importFields.stopDate',
-                      },
+                      path: '',
+                      articleField: '',
                       dataSource: 'article_field',
-                      articleIndex: null,
+                      articleIndex: 1,
                     },
                     actionValue: '',
                     prefixValue: '',
                     sufixValue: '',
                     substringRange: '',
                     color: 'rgba(255,255,255,1)',
-                    actionId: 'ViKNbGv',
+                    actionId: 'y9mmHYCKXrtNY6Kk5oTJL',
+                    articleIndex: 1,
                   },
                 ],
-                isToHideElement: false,
-                ruleName: 't',
-                ruleId: 'rule_1690269457944',
-                elementId: 'ND_09IxrKk',
+                isToHideElement: true,
+                ruleName: 'test',
+                ruleId: 'rule_1702282210596',
+                elementId: '9Ug1uRL-JY',
                 isToApplyFactFilters: false,
-                isToApplyActionFilters: true,
+                isToApplyActionFilters: false,
                 factFilters: [],
-                actionFilters: [
-                  {
-                    filterId: 'qqjH111',
-                    articleIndex: null,
-                    dataSource: 'article_field',
-                    path: "importFields['stopDate']",
-                    articleField: {
-                      name: 'stopDate',
-                      parent: 'importFields',
-                      subTitle: 'importFields',
-                      dataType: 4,
-                      dbPath: 'importFields.stopDate',
-                    },
-                    function: 'Format Date (DD Month)',
-                  },
-                ],
+                actionFilters: [],
               },
             ],
           },
@@ -109,10 +117,10 @@ var previewJson = {
           removable: true,
           alwaysOnTop: false,
           showInExport: true,
-          x: 256,
-          y: 321.5,
-          width: 512,
-          height: 151,
+          x: 45.47058822529444,
+          y: 86.61764705882271,
+          width: 612,
+          height: 220.52941176470583,
           rotation: 0,
           animations: [],
           blurEnabled: false,
@@ -131,9 +139,9 @@ var previewJson = {
           resizable: true,
           contentEditable: true,
           styleEditable: true,
-          text: 'CIAO',
+          text: 'Item1',
           placeholder: '',
-          fontSize: 45,
+          fontSize: 32,
           fontFamily: 'Roboto',
           fontStyle: 'normal',
           fontWeight: 'normal',
@@ -154,11 +162,10 @@ var previewJson = {
       ],
       width: 'auto',
       height: 'auto',
-      background: 'white',
+      background: 'rgb(0,0,0,0)',
       bleed: 0,
       custom: {
         pageType: 'DYNAMIC',
-        eslPageIndex: 1,
       },
       duration: 5000,
     },
@@ -302,17 +309,24 @@ var scenario = {
   lastUpdateDate: '04/13/2023 11:58:34',
 };
 
+var userData = {
+  Calorie: 230,
+  Allergens: ['pesce', 'soia'],
+  Theme: true,
+};
+
 var tags = ['Tag1', 'Tag2', 'Macelleria'];
 
 export const runPreviewtest = () => {
-  validateElementRules(
+  validatePageRules(
     previewJson,
     articleJson,
     tags,
     'vip',
     'Europe/Rome',
     null,
-    'it'
+    'it',
+    userData
   )
     .then((resultJson) => {
       console.log(resultJson);

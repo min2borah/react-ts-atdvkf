@@ -22,7 +22,7 @@ export function is_a_price(str) {
 }
 
 export function isEmptyValue(val) {
-  if (!val) {
+  if (val === undefined || val === null) {
     return true;
   } else if (typeof val === 'string' && val.trim() === '') {
     return true;
@@ -306,7 +306,8 @@ export function getArticleFieldValue(
   dataSource,
   articleField,
   articleIndex,
-  isMultipleArticleCanvas
+  isMultipleArticleCanvas,
+  userData
 ) {
   let updatedArticleJson = getValidArticle(
     articleJson,
@@ -326,7 +327,7 @@ export function getArticleFieldValue(
       isMultipleArticleCanvas
     );
     try {
-      let val = getProp(articleJson, path);
+      let val = getProp(updatedArticleJson, path);
       return val;
     } catch (error) {
       return null;
@@ -346,13 +347,29 @@ export function getArticleFieldValue(
         isMultipleArticleCanvas
       );
       try {
-        let val = getProp(articleJson, path);
+        let val = getProp(updatedArticleJson, path);
         return val;
       } catch (error) {
         return null;
       }
     }
+  } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
+    let path = getLocaliazedPath(
+      null,
+      dataSource,
+      articleField,
+      null,
+      null,
+      null
+    );
+    try {
+      let val = getProp(userData, path);
+      return val;
+    } catch (error) {
+      return null;
+    }
   }
+
   return '';
 }
 
@@ -412,6 +429,8 @@ export function getLocaliazedPath(
       );
   } else if (dataSource === Constants.DATA_SOURCE_ARTICLE_COUNT) {
     path = `.pages[${pageIndex}].articleCount`;
+  } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
+    path = getDataFieldPath(articleField, dataSource, null);
   }
   return path;
 }
@@ -456,6 +475,11 @@ function getPimDataPath(parent, name, locale) {
   return path;
 }
 
+function getUserDataPath(parent, name) {
+  let path = parent + "['" + name + "']";
+  return path;
+}
+
 export function getDataFieldPath(articleField, dataSource, locale) {
   if (!isEmpty(articleField['parent']) && !isEmpty(articleField['name'])) {
     let parent = camelize(articleField['parent']);
@@ -469,6 +493,8 @@ export function getDataFieldPath(articleField, dataSource, locale) {
       }
     } else if (dataSource === Constants.DATA_SOURCE_PIM) {
       path = getPimDataPath(parent, name, locale);
+    } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
+      path = getUserDataPath(parent, name, locale);
     }
     return path;
   } else if (
@@ -478,7 +504,13 @@ export function getDataFieldPath(articleField, dataSource, locale) {
   ) {
     let name = camelize(articleField['name']);
     return getPimDataPath(null, name, locale);
-  } else {
+  } else if (
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
+  ) {
+    return articleField['name'];
+  }
+  {
     return articleField;
   }
 }
