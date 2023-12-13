@@ -37,9 +37,9 @@ var previewJson = {
                         operator: 'cus_greaterThan',
                         value: {
                           fact: 'user-data-fact',
-                          path: '$.Calorie',
+                          path: '$.calorie',
                           articleField: {
-                            name: 'Calorie',
+                            name: 'calorie',
                             type: 'number',
                             Description: 'Description 1',
                             Value: 'this will be user input',
@@ -68,8 +68,8 @@ var previewJson = {
                         dataSource: 'user_data',
                         articleField: {
                           name: 'uova',
-                          parent: 'Allergens',
-                          subTitle: 'Allergens',
+                          parent: 'allergens',
+                          subTitle: 'allergens',
                           dataType: 5,
                           dbPath: 'allergens.uova',
                         },
@@ -196,7 +196,7 @@ var articleJson = [
       itemDescription1: 'CALAFORTE MAREMMA DOC FRES75CL',
       itemDescription2: '',
       note: '',
-      stock: null,
+      stock: 6,
       reorderLevel: null,
       itemsOrdered: null,
       unitMeasure: 'L',
@@ -310,9 +310,9 @@ var scenario = {
 };
 
 var userData = {
-  Calorie: 230,
-  Allergens: ['pesce', 'soia'],
-  Theme: true,
+  calorie: 230,
+  allergens: { pesce: true, soia: true },
+  theme: true,
 };
 
 var tags = ['Tag1', 'Tag2', 'Macelleria'];
@@ -325,11 +325,26 @@ export const runPreviewtest = () => {
     'vip',
     'Europe/Rome',
     null,
-    'it',
     userData
   )
-    .then((resultJson) => {
-      console.log(resultJson);
+    .then((pageJson) => {
+      console.log('page result... ', pageJson);
+      validateElementRules(
+        pageJson,
+        articleJson,
+        tags,
+        'vip',
+        'Europe/Rome',
+        null,
+        'it',
+        userData
+      )
+        .then((elemJson) => {
+          console.log('element result... ', elemJson);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
     .catch((err) => {
       console.log(err);
