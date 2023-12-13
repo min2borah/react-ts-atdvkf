@@ -428,7 +428,7 @@ export function getLocaliazedPath(
         updatedArticleJson
       );
   } else if (dataSource === Constants.DATA_SOURCE_ARTICLE_COUNT) {
-    path = `.pages[${pageIndex}].articleCount`;
+    path = `pages[${pageIndex}].articleCount`;
   } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
     path = getDataFieldPath(articleField, dataSource, null);
   }

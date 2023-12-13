@@ -196,7 +196,7 @@ var articleJson = [
       itemDescription1: 'CALAFORTE MAREMMA DOC FRES75CL',
       itemDescription2: '',
       note: '',
-      stock: 6,
+      stock: 470,
       reorderLevel: null,
       itemsOrdered: null,
       unitMeasure: 'L',
@@ -311,7 +311,7 @@ var scenario = {
 
 var userData = {
   calorie: 230,
-  allergens: { pesce: true, soia: true },
+  allergens: { pesce: true, soia: true, uova: true },
   theme: true,
 };
 

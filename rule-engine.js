@@ -696,7 +696,7 @@ function convertPathToCamelcase(
     isMultipleArticleCanvas
   );
   if (localizedPath) {
-    actionField.path = '$' + localizedPath;
+    actionField.path = '$.' + localizedPath;
   }
 }
 
