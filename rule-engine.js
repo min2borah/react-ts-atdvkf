@@ -698,6 +698,22 @@ function convertPathToCamelcase(
   if (localizedPath) {
     actionField.path = '$.' + localizedPath;
   }
+  if (
+    actionField.value.dataSource &&
+    actionField.value.dataSource !== constants.DATA_SOURCE_USER_DATA
+  ) {
+    var valueLocalizedPath = utils.getLocaliazedPath(
+      article,
+      actionField.value.dataSource,
+      actionField.value.articleField,
+      pageIndex,
+      actionField.value.articleIndex,
+      isMultipleArticleCanvas
+    );
+    if (valueLocalizedPath) {
+      actionField.value.path = '$.' + valueLocalizedPath;
+    }
+  }
 }
 
 function performActionsOnElement(
