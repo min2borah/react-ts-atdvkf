@@ -140,8 +140,10 @@ export function filterInsignificentZeros(priceText) {
   if (spltArr.length > 1) {
     replcTxt = spltArr[0].replace('.', '') + '.' + spltArr[1];
   }
-  const rxInsignificant = /^[\s0]+|(?<=\..*)[\s0.]+$|\.0+$|\.$/gm;
-  var filteredText = replcTxt.replace(rxInsignificant, '');
+  const rxInsignificant = /^[\s0]+|(\..*)[\s0.]+$|\.0+$|\.$/gm;
+  var filteredText = replcTxt.replace(rxInsignificant, (match, group) => {
+    return group ? match : '';
+  });
   var convertTxt = filteredText; //.replace('.',',')
   if (convertTxt.charAt(0) === ',') {
     convertTxt = '0' + convertTxt;
@@ -327,7 +329,7 @@ export function getArticleFieldValue(
       isMultipleArticleCanvas
     );
     try {
-      let val = getProp(updatedArticleJson, path);
+      let val = getProp(articleJson, path);
       return val;
     } catch (error) {
       return null;
@@ -347,7 +349,7 @@ export function getArticleFieldValue(
         isMultipleArticleCanvas
       );
       try {
-        let val = getProp(updatedArticleJson, path);
+        let val = getProp(articleJson, path);
         return val;
       } catch (error) {
         return null;
@@ -508,7 +510,8 @@ export function getDataFieldPath(articleField, dataSource, locale) {
     !isEmpty(articleField['name']) &&
     isEmpty(articleField['parent'])
   ) {
-    return articleField['name'];
+    let name = camelize(articleField['name']);
+    return name;
   }
   {
     return articleField;
