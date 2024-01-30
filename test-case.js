@@ -6,148 +6,136 @@ import {
 } from './rule-engine.js';
 
 var previewJson = {
-  width: 1280,
-  height: 720,
-  fonts: [],
-  pages: [
+  "width": 1280,
+  "height": 720,
+  "fonts": [],
+  "pages": [
     {
-      id: 'Qv-a7LjUU0',
-      children: [
+      "id": "Qv-a7LjUU0",
+      "children": [
         {
-          id: 'icm0fqECqT',
-          type: 'text',
-          name: '',
-          opacity: 1,
-          custom: {
-            rules: [
+          "id": "icm0fqECqT",
+          "type": "text",
+          "name": "",
+          "opacity": 1,
+          "custom": {
+            "rules": [
               {
-                ruleConditions: {
-                  conditions: {
-                    all: [
+                "ruleConditions": {
+                  "conditions": {
+                    "all": [
                       {
-                        fact: 'article-fact',
-                        operator: 'cus_equal',
-                        value: {
-                          fact: 'article-fact',
-                          path: "$.importFields['visible']",
-                          articleField: {
-                            name: 'visible',
-                            parent: 'importFields',
-                            subTitle: 'importFields',
-                            dataType: 2,
-                            aliasName: 'visible',
-                            dbPath: 'importFields.visible',
-                          },
-                          dataSource: 'article_field',
+                        "fact": "article-fact",
+                        "operator": "Length ===",
+                        "value": "30",
+                        "path": "$.importFields['itemDescription1']",
+                        "dataSource": "article_field",
+                        "articleField": {
+                          "name": "itemDescription1",
+                          "parent": "importFields",
+                          "subTitle": "importFields",
+                          "dataType": 1,
+                          "aliasName": "itemDescription1",
+                          "dbPath": "importFields.itemDescription1"
                         },
-                        path: "$.importFields['visible']",
-                        dataSource: 'article_field',
-                        articleField: {
-                          name: 'visible',
-                          parent: 'importFields',
-                          subTitle: 'importFields',
-                          dataType: 2,
-                          aliasName: 'visible',
-                          dbPath: 'importFields.visible',
-                        },
-                        articleIndex: null,
-                        conditionId: 'ddHh3vuKsbyleo4Lv7VWv',
-                      },
-                    ],
+                        "articleIndex": null,
+                        "conditionId": "dTnDzIL37DNkG5C7O4NFt"
+                      }
+                    ]
                   },
-                  event: {
-                    type: 'true',
-                  },
+                  "event": {
+                    "type": "true"
+                  }
                 },
-                ruleActions: [
+                "ruleActions": [
                   {
-                    elementField: '',
-                    actionType: 'Plain Text',
-                    actionField: {
-                      path: '',
-                      articleField: '',
-                      dataSource: 'article_field',
-                      articleIndex: null,
+                    "elementField": "",
+                    "actionType": "Plain Text",
+                    "actionField": {
+                      "path": "",
+                      "articleField": "",
+                      "dataSource": "article_field",
+                      "articleIndex": null
                     },
-                    actionValue: '',
-                    prefixValue: '',
-                    sufixValue: '',
-                    substringRange: '',
-                    color: 'rgba(255,255,255,1)',
-                    actionId: '3kMxyE0y0ZnA6L-otq2yZ',
-                  },
+                    "actionValue": "",
+                    "prefixValue": "",
+                    "sufixValue": "",
+                    "substringRange": "",
+                    "color": "rgba(255,255,255,1)",
+                    "actionId": "2s85o9vpWxmMKjtKq1UWr"
+                  }
                 ],
-                isToHideElement: true,
-                ruleName: 'e',
-                ruleId: 'rule_1706120740207',
-                elementId: 'icm0fqECqT',
-                isToApplyFactFilters: false,
-                isToApplyActionFilters: false,
-                factFilters: [],
-                actionFilters: [],
-              },
-            ],
+                "isToHideElement": true,
+                "ruleName": "t",
+                "ruleId": "rule_1706605019094",
+                "elementId": "icm0fqECqT",
+                "isToApplyFactFilters": false,
+                "isToApplyActionFilters": false,
+                "factFilters": [],
+                "actionFilters": []
+              }
+            ]
           },
-          visible: true,
-          selectable: true,
-          removable: true,
-          alwaysOnTop: false,
-          showInExport: true,
-          x: 320,
-          y: 320,
-          width: 640,
-          height: 97,
-          rotation: 0,
-          animations: [],
-          blurEnabled: false,
-          blurRadius: 10,
-          brightnessEnabled: false,
-          brightness: 0,
-          sepiaEnabled: false,
-          grayscaleEnabled: false,
-          shadowEnabled: false,
-          shadowBlur: 5,
-          shadowOffsetX: 0,
-          shadowOffsetY: 0,
-          shadowColor: 'black',
-          shadowOpacity: 1,
-          draggable: true,
-          resizable: true,
-          contentEditable: true,
-          styleEditable: true,
-          text: 'Body text',
-          placeholder: '',
-          fontSize: 80,
-          fontFamily: 'Roboto',
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          textDecoration: '',
-          fill: 'black',
-          align: 'center',
-          verticalAlign: 'middle',
-          strokeWidth: 0,
-          stroke: 'black',
-          lineHeight: 1.2,
-          letterSpacing: 0,
-          backgroundEnabled: false,
-          backgroundColor: '#7ED321',
-          backgroundOpacity: 1,
-          backgroundCornerRadius: 0.5,
-          backgroundPadding: 0.5,
-        },
+          "visible": true,
+          "selectable": true,
+          "removable": true,
+          "alwaysOnTop": false,
+          "showInExport": true,
+          "x": 320,
+          "y": 320,
+          "width": 640,
+          "height": 97,
+          "rotation": 0,
+          "animations": [],
+          "blurEnabled": false,
+          "blurRadius": 10,
+          "brightnessEnabled": false,
+          "brightness": 0,
+          "sepiaEnabled": false,
+          "grayscaleEnabled": false,
+          "shadowEnabled": false,
+          "shadowBlur": 5,
+          "shadowOffsetX": 0,
+          "shadowOffsetY": 0,
+          "shadowColor": "black",
+          "shadowOpacity": 1,
+          "draggable": true,
+          "resizable": true,
+          "contentEditable": true,
+          "styleEditable": true,
+          "text": "Body text",
+          "placeholder": "",
+          "fontSize": 80,
+          "fontFamily": "Roboto",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "textDecoration": "",
+          "fill": "black",
+          "align": "center",
+          "verticalAlign": "middle",
+          "strokeWidth": 0,
+          "stroke": "black",
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "backgroundEnabled": false,
+          "backgroundColor": "#7ED321",
+          "backgroundOpacity": 1,
+          "backgroundCornerRadius": 0.5,
+          "backgroundPadding": 0.5
+        }
       ],
-      width: 'auto',
-      height: 'auto',
-      background: 'white',
-      bleed: 0,
-      custom: {
-        pageType: 'DYNAMIC',
+      "width": "auto",
+      "height": "auto",
+      "background": "white",
+      "bleed": 0,
+      "custom": {
+        "pageType": "DYNAMIC"
       },
-      duration: 5000,
-    },
+      "duration": 5000
+    }
   ],
-  unit: 'px',
-  dpi: 72,
+  "unit": "px",
+  "dpi": 72
 };
 
 var articleJson = [
