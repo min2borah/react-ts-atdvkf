@@ -105,6 +105,7 @@ async function validateRules(
     }
   );
 
+  //ARRAY_IN -- fact must be included in value (an array)
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_IN,
     (factValue, jsonValue) => {
@@ -113,6 +114,7 @@ async function validateRules(
     }
   );
 
+  //ARRAY_NOT_IN -- fact must be included in value (an array)
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_NOT_IN,
     (factValue, jsonValue) => {
@@ -121,20 +123,22 @@ async function validateRules(
     }
   );
 
+  //ARRAY_CONTAINS -- fact (an array) must include value
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_CONTAINS,
     (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue[0]);
+      var valu = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
       return factValue.indexOf(valu) > -1;
     }
   );
 
+  //ARRAY_DOES_NOT_CONTAIN -- fact (an array) must not include value
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_DOES_NOT_CONTAIN,
     (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue[0]);
+      var valu = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
       return factValue.indexOf(valu) === -1;
     }
   );
@@ -142,11 +146,13 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LENGTH_SMALLER_EQUAL,
     (factValue, jsonValue) => {
-      if (!utils.is_a_number(jsonValue)) return false;
+      let valu = !utils.is_a_number(jsonValue)
+        ? jsonValue?.toString().length
+        : parseInt(jsonValue);
       if (utils.isEmpty(factValue)) {
-        return 0 <= parseInt(jsonValue);
+        return 0 <= valu;
       } else {
-        return factValue?.toString().length <= parseInt(jsonValue);
+        return factValue?.toString().length <= valu;
       }
     }
   );
@@ -154,30 +160,36 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LENGTH_GREATER_EQUAL,
     (factValue, jsonValue) => {
-      if (!utils.is_a_number(jsonValue)) return false;
+      let valu = !utils.is_a_number(jsonValue)
+        ? jsonValue?.toString().length
+        : parseInt(jsonValue);
       if (utils.isEmpty(factValue)) {
-        return 0 >= parseInt(jsonValue);
+        return 0 >= valu;
       } else {
-        return factValue?.toString().length >= parseInt(jsonValue);
+        return factValue?.toString().length >= valu;
       }
     }
   );
 
   engine.addOperator(constants.OPR_LENGTH_EQUAL, (factValue, jsonValue) => {
-    if (!utils.is_a_number(jsonValue)) return false;
+    let valu = !utils.is_a_number(jsonValue)
+      ? jsonValue?.toString().length
+      : parseInt(jsonValue);
     if (utils.isEmpty(factValue)) {
-      return 0 === parseInt(jsonValue);
+      return 0 === valu;
     } else {
-      return factValue?.toString().length === parseInt(jsonValue);
+      return factValue?.toString().length === valu;
     }
   });
 
   engine.addOperator(constants.OPR_LENGTH_NOT_EQUAL, (factValue, jsonValue) => {
-    if (!utils.is_a_number(jsonValue)) return false;
+    let valu = !utils.is_a_number(jsonValue)
+      ? jsonValue?.toString().length
+      : parseInt(jsonValue);
     if (utils.isEmpty(factValue)) {
-      return 0 !== parseInt(jsonValue);
+      return 0 !== valu;
     } else {
-      return factValue?.toString().length !== parseInt(jsonValue);
+      return factValue?.toString().length !== valu;
     }
   });
 
@@ -698,20 +710,23 @@ function convertPathToCamelcase(
   if (localizedPath) {
     actionField.path = '$.' + localizedPath;
   }
-  if (
-    actionField.value.dataSource &&
-    actionField.value.dataSource !== constants.DATA_SOURCE_USER_DATA
-  ) {
-    var valueLocalizedPath = utils.getLocaliazedPath(
-      article,
-      actionField.value.dataSource,
-      actionField.value.articleField,
-      pageIndex,
-      actionField.value.articleIndex,
-      isMultipleArticleCanvas
-    );
-    if (valueLocalizedPath) {
-      actionField.value.path = '$.' + valueLocalizedPath;
+  if (actionField.articleFieldComparisonValue) {
+    actionField.value = actionField.articleFieldComparisonValue;
+    if (
+      actionField.articleFieldComparisonValue.dataSource !==
+      constants.DATA_SOURCE_USER_DATA
+    ) {
+      var valueLocalizedPath = utils.getLocaliazedPath(
+        article,
+        actionField.articleFieldComparisonValue.dataSource,
+        actionField.articleFieldComparisonValue.articleField,
+        pageIndex,
+        actionField.articleIndex,
+        isMultipleArticleCanvas
+      );
+      if (valueLocalizedPath) {
+        actionField.value.path = '$.' + valueLocalizedPath;
+      }
     }
   }
 }
