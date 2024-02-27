@@ -217,6 +217,7 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_EQUAL_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
       .utc()
       .format(constants.DATE_FORMAT);
@@ -229,6 +230,7 @@ async function validateRules(
   });
 
   engine.addOperator(constants.OPR_NOT_EQUAL_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
       .utc()
       .format(constants.DATE_FORMAT);
@@ -243,6 +245,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_DATE,
     (factValue, jsonValue) => {
+      if (!factValue || !jsonValue) return false;
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
         .utc()
         .format(constants.DATE_FORMAT);
@@ -254,9 +257,11 @@ async function validateRules(
       return d1.isSameOrAfter(d2, 'day');
     }
   );
+
   engine.addOperator(
     constants.OPR_GREATER_THAN_DATE,
     (factValue, jsonValue) => {
+      if (!factValue || !jsonValue) return false;
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
         .utc()
         .format(constants.DATE_FORMAT);
@@ -270,6 +275,7 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_LESS_EQUAL_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
       .utc()
       .format(constants.DATE_FORMAT);
@@ -282,6 +288,7 @@ async function validateRules(
   });
 
   engine.addOperator(constants.OPR_LESS_THAN_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
       .utc()
       .format(constants.DATE_FORMAT);
@@ -294,7 +301,9 @@ async function validateRules(
   });
 
   engine.addOperator(constants.OPR_IN_BETWEEN_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    if (!split[0] || !split[1]) return false;
     let sDate = utils.convertUTCToLocalDate(split[0]);
     let eDate = utils.convertUTCToLocalDate(split[1]);
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
@@ -307,7 +316,9 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_NOT_IN_BETWEEN_DATE,
     (factValue, jsonValue) => {
+      if (!factValue || !jsonValue) return false;
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+      if (!split[0] || !split[1]) return false;
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
@@ -321,6 +332,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -335,6 +347,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_NOT_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -349,6 +362,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -363,6 +377,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_THAN_CURRENT_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -377,6 +392,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_EQUAL_CURRENT_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -391,6 +407,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_THAN_CURRENT_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -405,6 +422,9 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_CURRENT_DATE_IN_BETWEEN_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
+      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+      if (!split[0] || !split[1]) return false;
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
@@ -418,6 +438,9 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
+      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+      if (!split[0] || !split[1]) return false;
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
@@ -429,6 +452,7 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_EQUAL_TIME, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
       .utc()
       .format(constants.TIME_FORMAT);
@@ -443,6 +467,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -455,6 +480,7 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_LESS_EQUAL_TIME, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
     let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
       .utc()
       .format(constants.TIME_FORMAT);
@@ -469,6 +495,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_TIME,
     (factValue, jsonValue) => {
+      if (!factValue || !jsonValue) return false;
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
         .utc()
         .format(constants.TIME_FORMAT);
@@ -484,6 +511,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LESS_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
@@ -498,6 +526,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_CURRENT_TIME,
     (factValue, jsonValue) => {
+      if (!jsonValue) return false;
       const today = moment().tz(timezone).format();
       let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
       let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
