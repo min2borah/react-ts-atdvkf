@@ -105,6 +105,7 @@ export const getFormattedDate = (dateStr, timezone, locale, format) => {
   if (timezone == undefined || timezone == null) {
     timezone = moment.tz.guess();
   }
+  if (!dateStr) return dateStr;
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
 
@@ -144,7 +145,7 @@ export function filterInsignificentZeros(priceText) {
   var filteredText = replcTxt.replace(rxInsignificant, (match, group) => {
     return group ? match : '';
   });
-  var convertTxt = filteredText; //.replace('.',',')
+  var convertTxt = filteredText.trim(); //.replace('.',',')
   if (convertTxt.charAt(0) === ',') {
     convertTxt = '0' + convertTxt;
   }
@@ -164,9 +165,10 @@ export function filterPriceFormatter(priceText) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+  if (!priceText) return priceText;
   var price = formatter.format(parseFloat(priceText));
-  price = price.replace('€', '');
-  return price;
+  price = price?.replace('€', '');
+  return price?.trim();
 }
 
 export function filterIntegerPart(value) {
