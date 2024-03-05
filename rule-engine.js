@@ -18,7 +18,9 @@ async function validateRules(
   isMultipleArticleCanvas,
   timezone,
   customTags,
-  locale
+  locale,
+  userData,
+  companyTags
 ) {
   const engine = new Engine();
   if (timezone == undefined || timezone == null) {
@@ -547,6 +549,24 @@ async function validateRules(
   });
 
   engine.addOperator(
+    constants.OPR_COMPANY_TAG_CONTAIN,
+    (factValue, jsonValue) => {
+      return companyTags && companyTags.indexOf(jsonValue) !== -1;
+    }
+  );
+
+  engine.addOperator(
+    constants.OPR_COMPANY_TAG_NOT_CONTAIN,
+    (factValue, jsonValue) => {
+      return (
+        companyTags == undefined ||
+        companyTags == null ||
+        companyTags?.indexOf(jsonValue) === -1
+      );
+    }
+  );
+
+  engine.addOperator(
     constants.OPR_CUSTOM_TAG_CONTAIN,
     (factValue, jsonValue) => {
       return customTags && customTags.indexOf(jsonValue) !== -1;
@@ -611,7 +631,9 @@ async function validateRules(
           ruleObj.conditions.all = ruleObj.conditions.all.filter(
             (x) =>
               x.operator !== constants.OPR_TAG_CONTAIN &&
-              x.operator !== constants.OPR_TAG_NOT_CONTAIN
+              x.operator !== constants.OPR_TAG_NOT_CONTAIN &&
+              x.operator !== constants.OPR_COMPANY_TAG_CONTAIN &&
+              x.operator !== constants.OPR_COMPANY_TAG_NOT_CONTAIN
           );
         }
         ruleObj.conditions.all.forEach((actionField) => {
@@ -631,7 +653,9 @@ async function validateRules(
           ruleObj.conditions.any = ruleObj.conditions.any.filter(
             (x) =>
               x.operator !== constants.OPR_TAG_CONTAIN &&
-              x.operator !== constants.OPR_TAG_NOT_CONTAIN
+              x.operator !== constants.OPR_TAG_NOT_CONTAIN &&
+              x.operator !== constants.OPR_COMPANY_TAG_CONTAIN &&
+              x.operator !== constants.OPR_COMPANY_TAG_NOT_CONTAIN
           );
         }
         ruleObj.conditions.any.forEach((actionField) => {
@@ -953,7 +977,9 @@ export function validatePageRules(
   deviceType,
   timezone,
   customTags,
-  userData
+  locale,
+  userData,
+  companyTags
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1010,7 +1036,9 @@ export function validatePageRules(
           isMultipleArticleCanvas,
           timezone,
           customTags,
-          userData
+          locale,
+          userData,
+          companyTags
         ).then((result) => {
           RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -1044,7 +1072,8 @@ export function validateGroupRules(
   timezone,
   customTags,
   locale,
-  userData
+  userData,
+  companyTags
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1129,7 +1158,9 @@ export function validateGroupRules(
             isMultipleArticleCanvas,
             timezone,
             customTags,
-            locale
+            locale,
+            userData,
+            companyTags
           ).then((result) => {
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
               RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -1161,7 +1192,8 @@ export function validateElementRules(
   timezone,
   customTags,
   locale,
-  userData
+  userData,
+  companyTags
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1258,7 +1290,9 @@ export function validateElementRules(
             isMultipleArticleCanvas,
             timezone,
             customTags,
-            locale
+            locale,
+            null,
+            companyTags
           ).then((result) => {
             if (result.events.length === 0) {
               performDefaultActions(result, isMultipleArticleCanvas);
@@ -1289,7 +1323,13 @@ export function validateElementRules(
   });
 }
 
-export function validateScenarioRules(scenarioJson, tag, deviceType, timezone) {
+export function validateScenarioRules(
+  scenarioJson,
+  tag,
+  deviceType,
+  timezone,
+  companyTags
+) {
   const ruleOnSuccess = (event, almanac) => {
     // perform on rule success
   };
@@ -1315,7 +1355,11 @@ export function validateScenarioRules(scenarioJson, tag, deviceType, timezone) {
         scenarioJson.scenarioUniqueCode,
         tag,
         deviceType,
-        timezone
+        timezone,
+        null, //customTags
+        null, //locale
+        null, //userData
+        companyTags
       ).then((result) => {
         if (result.events.length > 0) {
           isAllRuleSucceed = true;
