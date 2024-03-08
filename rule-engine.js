@@ -699,7 +699,9 @@ function convertJsonValueToFactValueType(jsonValue, factValue) {
       break;
 
     case 'number':
-      value = Number(jsonValue);
+      if (jsonValue === 'true') value = 1;
+      else if (jsonValue === 'false') value = 0;
+      else value = Number(jsonValue);
       break;
 
     case 'boolean':

@@ -105,6 +105,8 @@ export const DataSchemaDataType = Object.freeze({
 });
 
 export const MOMENT_DEFAULT_DATE_FORMATS = [
+  moment.ISO_8601,
+  moment.RFC_2822,
   moment.defaultFormat,
   moment.defaultFormatUtc,
   moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
