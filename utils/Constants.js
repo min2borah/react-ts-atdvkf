@@ -11,6 +11,8 @@ export const RULE_ACTION_SUBSTRING = 'Substring';
 export const RULE_TYPE_ALL = 'all';
 export const RULE_TYPES_ANY = 'any';
 export const RSERVER_ELEMENT_FIELDS = ['id', 'type', 'locked', 'custom'];
+export const MULTI_DATE_SEPARATOR = '#,#';
+
 export const RuleEngineDefaultOperators = {
   EQUAL: 'cus_equal',
   NOT_EQUAL: 'cus_notEqual',
@@ -23,6 +25,7 @@ export const RuleEngineDefaultOperators = {
   ARRAY_IN: 'cus_in',
   ARRAY_NOT_IN: 'cus_notIn',
 };
+
 export const OPR_LENGTH_GREATER_EQUAL = 'Length >=';
 export const OPR_LENGTH_SMALLER_EQUAL = 'Length <=';
 export const OPR_LENGTH_EQUAL = 'Length ===';
@@ -32,8 +35,6 @@ export const OPR_IS_NOT_EMPTY = 'isNotEmpty';
 export const OPR_IS_IN_BETWEEN = 'inBetween';
 export const OPR_NOT_IN_BETWEEN = 'notInBetween';
 export const OPR_CONTAIN_SUBSTRING = 'constainString';
-
-export const MULTI_DATE_SEPARATOR = '#,#';
 
 export const OPR_GREATER_EQUAL_DATE = 'greaterThanInclusiveDate';
 export const OPR_GREATER_THAN_DATE = 'greaterThanDate';
@@ -70,6 +71,12 @@ export const OPR_CUSTOM_TAG_NOT_CONTAIN = 'NotContainCustomTag';
 export const OPR_COMPANY_TAG_CONTAIN = 'CompanyTag';
 export const OPR_COMPANY_TAG_NOT_CONTAIN = 'CompanyTagNotContain';
 
+export const OPR_ARRAY_CONTAINS_SUB_ARRAY = 'ArrayContainsSubArray';
+export const OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY = 'ArrayNotContainsSubArray';
+export const OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY = 'ArrayContainsAnyOfSubArray';
+export const OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY =
+  'ArrayNotContainsAnyOfSubArray';
+
 export const FILTER_INVALID_ZEROS = 'Insignificant Zeros';
 export const FILTER_PRICE_FORMAT = 'Format currency (€)';
 export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)'; //Deprecated from version 1.5.9, kept to support previous templates
@@ -102,6 +109,8 @@ export const DataSchemaDataType = Object.freeze({
   BIT: 5,
   DATETIME: 6,
   TIME: 7,
+  ARRAY: 11,
+  FILE: 12,
 });
 
 export const MOMENT_DEFAULT_DATE_FORMATS = [
@@ -113,6 +122,7 @@ export const MOMENT_DEFAULT_DATE_FORMATS = [
   moment.HTML5_FMT.DATETIME_LOCAL_MS,
   moment.HTML5_FMT.DATETIME_LOCAL,
 ];
+
 export const CUSTOM_DATE_FORMATS = [
   'DD MMMM',
   'DD',

@@ -61,49 +61,49 @@ async function validateRules(
   engine.addOperator(
     constants.RuleEngineDefaultOperators.EQUAL,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue);
-      return factValue === valu;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue);
+      return factValue === value;
     }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.NOT_EQUAL,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue);
+      var value = convertJsonValueToFactValueType(jsonValue, factValue);
 
-      return factValue !== valu;
+      return factValue !== value;
     }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.GREATER_THAN,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue);
-      return factValue > valu;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue);
+      return factValue > value;
     }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.GREATER_THAN_EQUAL,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue);
-      return factValue >= valu;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue);
+      return factValue >= value;
     }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.LESS_THAN,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue);
-      return factValue < valu;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue);
+      return factValue < value;
     }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.LESS_THAN_EQUAL,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue);
-      return factValue <= valu;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue);
+      return factValue <= value;
     }
   );
 
@@ -111,8 +111,8 @@ async function validateRules(
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_IN,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueTypeArray(jsonValue, factValue);
-      return valu.indexOf(factValue) > -1;
+      var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue);
+      return Array.isArray(value) && value.indexOf(factValue) > -1;
     }
   );
 
@@ -120,8 +120,8 @@ async function validateRules(
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_NOT_IN,
     (factValue, jsonValue) => {
-      var valu = convertJsonValueToFactValueTypeArray(jsonValue, factValue);
-      return valu.indexOf(factValue) === -1;
+      var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue);
+      return Array.isArray(value) && value.indexOf(factValue) === -1;
     }
   );
 
@@ -130,8 +130,8 @@ async function validateRules(
     constants.RuleEngineDefaultOperators.ARRAY_CONTAINS,
     (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
-      return factValue.indexOf(valu) > -1;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
+      return factValue.indexOf(value) > -1;
     }
   );
 
@@ -140,21 +140,60 @@ async function validateRules(
     constants.RuleEngineDefaultOperators.ARRAY_DOES_NOT_CONTAIN,
     (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
-      var valu = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
-      return factValue.indexOf(valu) === -1;
+      var value = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
+      return factValue.indexOf(value) === -1;
+    }
+  );
+
+  //ARRAY_CONTAINS_SUB_ARRAY -- fact (an array) must include value (an array)
+  engine.addOperator(
+    constants.OPR_ARRAY_CONTAINS_SUB_ARRAY,
+    (factValue, jsonValue) => {
+      if (!Array.isArray(factValue)) return false;
+      var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
+      return utils.arrayContainsSubarray(factValue, value);
+    }
+  );
+
+  //ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY -- fact (an array) must not include value (an array)
+  engine.addOperator(
+    constants.OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY,
+    (factValue, jsonValue) => {
+      if (!Array.isArray(factValue)) return false;
+      var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
+      return !utils.arrayContainsSubarray(factValue, value);
+    }
+  );
+  //ARRAY_CONTAINS_SUB_ARRAY -- fact (an array) must include any element value (an array)
+  engine.addOperator(
+    constants.OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY,
+    (factValue, jsonValue) => {
+      if (!Array.isArray(factValue)) return false;
+      var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
+      return utils.arrayContainsAnyElementOfSubarray(factValue, value);
+    }
+  );
+
+  //ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY -- fact (an array) must not include any element value (an array)
+  engine.addOperator(
+    constants.OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY,
+    (factValue, jsonValue) => {
+      if (!Array.isArray(factValue)) return false;
+      var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
+      return !utils.arrayContainsAnyElementOfSubarray(factValue, value);
     }
   );
 
   engine.addOperator(
     constants.OPR_LENGTH_SMALLER_EQUAL,
     (factValue, jsonValue) => {
-      let valu = !utils.is_a_number(jsonValue)
+      let value = !utils.is_a_number(jsonValue)
         ? jsonValue?.toString().length
         : parseInt(jsonValue);
       if (utils.isEmpty(factValue)) {
-        return 0 <= valu;
+        return 0 <= value;
       } else {
-        return factValue?.toString().length <= valu;
+        return factValue?.toString().length <= value;
       }
     }
   );
@@ -162,36 +201,36 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LENGTH_GREATER_EQUAL,
     (factValue, jsonValue) => {
-      let valu = !utils.is_a_number(jsonValue)
+      let value = !utils.is_a_number(jsonValue)
         ? jsonValue?.toString().length
         : parseInt(jsonValue);
       if (utils.isEmpty(factValue)) {
-        return 0 >= valu;
+        return 0 >= value;
       } else {
-        return factValue?.toString().length >= valu;
+        return factValue?.toString().length >= value;
       }
     }
   );
 
   engine.addOperator(constants.OPR_LENGTH_EQUAL, (factValue, jsonValue) => {
-    let valu = !utils.is_a_number(jsonValue)
+    let value = !utils.is_a_number(jsonValue)
       ? jsonValue?.toString().length
       : parseInt(jsonValue);
     if (utils.isEmpty(factValue)) {
-      return 0 === valu;
+      return 0 === value;
     } else {
-      return factValue?.toString().length === valu;
+      return factValue?.toString().length === value;
     }
   });
 
   engine.addOperator(constants.OPR_LENGTH_NOT_EQUAL, (factValue, jsonValue) => {
-    let valu = !utils.is_a_number(jsonValue)
+    let value = !utils.is_a_number(jsonValue)
       ? jsonValue?.toString().length
       : parseInt(jsonValue);
     if (utils.isEmpty(factValue)) {
-      return 0 !== valu;
+      return 0 !== value;
     } else {
-      return factValue?.toString().length !== valu;
+      return factValue?.toString().length !== value;
     }
   });
 
@@ -717,35 +756,36 @@ function convertJsonValueToFactValueType(jsonValue, factValue) {
 }
 
 function convertJsonValueToFactValueTypeArray(jsonValue, factValue) {
-  var valu = [];
+  if (typeof jsonValue !== 'string') return jsonValue;
+  var value = [];
   const splArr = jsonValue.split(',');
   const objType = typeof factValue;
   switch (objType) {
     case 'string':
       splArr.forEach((element) => {
-        valu.push(String(element).trim());
+        value.push(String(element).trim());
       });
       break;
 
     case 'number':
       splArr.forEach((element) => {
-        valu.push(Number(element));
+        value.push(Number(element));
       });
       break;
 
     case 'boolean':
       splArr.forEach((element) => {
-        if (element === 'true') valu.push(true);
-        else if (element === 'false') valu.push(false);
-        else if (element === '1') valu.push(true);
-        else if (element === '0') valu.push(true);
-        else valu.push(element);
+        if (element === 'true') value.push(true);
+        else if (element === 'false') value.push(false);
+        else if (element === '1') value.push(true);
+        else if (element === '0') value.push(false);
+        else value.push(element);
       });
       break;
     default:
       break;
   }
-  return valu;
+  return value;
 }
 
 function convertPathToCamelcase(
@@ -846,13 +886,13 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
     case constants.RULE_ACTION_PLAIN_TEXT:
       var val = action.actionValue;
       if (
-        action.elementField == 'code' &&
+        action.elementField === 'code' &&
         (elem.type === 'barcode_placeholder' ||
           elem.type === 'qrcode_placeholder')
       ) {
         elem['custom']['codeValue'] = `${val}`;
       } else if (
-        action.elementField == 'codeType' &&
+        action.elementField === 'codeType' &&
         elem.type === 'barcode_placeholder'
       ) {
         elem['custom']['codeType'] = `${val}`;
@@ -866,7 +906,7 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
           }
         }
         elem[action.elementField] =
-          action.elementField == 'text' ? val.toString() : val;
+          action.elementField === 'text' ? val.toString() : val;
       }
       break;
     case constants.RULE_ACTION_ARTICLE_VALUE:
@@ -878,14 +918,14 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
         );
         if (artVal != undefined && artVal != null) {
           if (
-            (elem.type == 'image' || elem.type == 'custom_image') &&
-            action.elementField == 'src' &&
+            (elem.type === 'image' || elem.type === 'custom_image') &&
+            action.elementField === 'src' &&
             artVal != ''
           ) {
             elem[action.elementField] = artVal;
             elem['custom']['dataSource'] = action['actionField']['dataSource'];
           } else if (
-            action.elementField == 'code' &&
+            action.elementField === 'code' &&
             (elem.type === 'barcode_placeholder' ||
               elem.type === 'qrcode_placeholder')
           ) {
@@ -916,14 +956,14 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
         });
         if (artVal != undefined && artVal != null) {
           if (
-            (elem.type == 'image' || elem.type == 'custom_image') &&
-            action.elementField == 'src' &&
+            (elem.type === 'image' || elem.type === 'custom_image') &&
+            action.elementField === 'src' &&
             artVal != ''
           ) {
             elem[action.elementField] = artVal;
             elem['custom']['dataSource'] = action['actionField']['dataSource'];
           } else if (
-            action.elementField == 'code' &&
+            action.elementField === 'code' &&
             (elem.type === 'barcode_placeholder' ||
               elem.type === 'qrcode_placeholder')
           ) {
@@ -954,14 +994,14 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
               : str.substring(rangeArr[0]);
           let preSufStr = action.prefixValue + substr + action.sufixValue;
           if (
-            action.elementField == 'code' &&
+            action.elementField === 'code' &&
             (elem.type === 'barcode_placeholder' ||
               elem.type === 'qrcode_placeholder')
           ) {
             elem['custom']['codeValue'] = `${preSufStr}`;
           } else {
             elem[action.elementField] =
-              action.elementField == 'text' ? preSufStr.toString() : preSufStr;
+              action.elementField === 'text' ? preSufStr.toString() : preSufStr;
           }
         }
       } catch (err) {

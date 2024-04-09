@@ -42,7 +42,7 @@ function isContains(str1, str2) {
 
 export const isInBetween = (factValue, value) => {
   if (factValue && value) {
-    const arrValues = value.trim().split(',');
+    const arrValues = value.toString().trim().split(',');
     if (arrValues && arrValues.length > 1 && is_a_number(factValue)) {
       const v1 = arrValues[0].trim();
       const v2 = arrValues[1].trim();
@@ -58,7 +58,8 @@ export const isInBetween = (factValue, value) => {
 };
 
 export const substringRange = (range) => {
-  const arrValues = range.trim().split(',');
+  if (!range) return [0];
+  const arrValues = range.toString().trim().split(',');
   if (arrValues && arrValues.length === 1) {
     const v1 = arrValues[0].trim();
     let val = is_a_number(v1) ? parseInt(v1) : 0;
@@ -80,7 +81,7 @@ export const substringRange = (range) => {
 
 export const notInBetween = (factValue, value) => {
   if (factValue && value) {
-    const arrValues = value.trim().split(',');
+    const arrValues = value.toString().trim().split(',');
     if (arrValues && arrValues.length > 1 && is_a_number(factValue)) {
       const v1 = arrValues[0].trim();
       const v2 = arrValues[1].trim();
@@ -145,7 +146,7 @@ export function filterInsignificentZeros(priceText) {
   var filteredText = replcTxt.replace(rxInsignificant, (match, group) => {
     return group ? match : '';
   });
-  var convertTxt = filteredText.trim(); //.replace('.',',')
+  var convertTxt = filteredText.toString().trim(); //.replace('.',',')
   if (convertTxt.charAt(0) === ',') {
     convertTxt = '0' + convertTxt;
   }
@@ -340,7 +341,7 @@ export function getArticleFieldValue(
     if (
       updatedArticleJson.externalData &&
       updatedArticleJson.externalData['PIM'] &&
-      updatedArticleJson.externalData['PIM'].data
+      updatedArticleJson.externalData['PIM'].dataLanguage
     ) {
       let path = getLocaliazedPath(
         updatedArticleJson,
@@ -471,10 +472,14 @@ function getImportDataPath(parent, name) {
 }
 
 function getPimDataPath(parent, name, locale) {
-  var pimExternalData = "externalData['PIM']['data']['" + locale + "']['data']";
-  let path = pimExternalData + "['" + parent + "']" + "['" + name + "']";
+  var pimExternalData =
+    "externalData['PIM']['dataLanguage']['" +
+    locale +
+    "']['DataClassDictionary']";
+  let path =
+    pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
   if (!parent) {
-    path = pimExternalData + "['" + name + "']";
+    path = pimExternalData + "['data']" + "['" + name + "']";
   }
   return path;
 }
@@ -538,7 +543,7 @@ export function getPimDataPrimaryLocale(articleJson) {
   if (
     articleJson.externalData &&
     articleJson.externalData['PIM'] &&
-    articleJson.externalData['PIM'].data
+    articleJson.externalData['PIM'].dataLanguage
   ) {
     let localeKeys = Object.keys(articleJson.externalData.PIM.data);
     localeKeys.forEach((key, index) => {
@@ -630,4 +635,32 @@ export function convertUTCToLocalDate(date) {
   date = new Date(date);
   date = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
   return date;
+}
+
+export function arrayContainsSubarray(arr, subarr) {
+  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  const arrSet = new Set(arr);
+  const subarrSet = new Set(subarr);
+  for (const elem of subarrSet) {
+    if (!arrSet.has(elem)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function arrayContainsAnyElementOfSubarray(arr, subarr) {
+  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  let greaterSizeArray = arr.length > subarr.length ? arr : subarr;
+  let smallerSizeArray = arr.length < subarr.length ? arr : subarr;
+  if (arr.length == subarr.length) {
+    greaterSizeArray = arr;
+    smallerSizeArray = subarr;
+  }
+  for (const elem of smallerSizeArray) {
+    if (greaterSizeArray.includes(elem)) {
+      return true;
+    }
+  }
+  return false;
 }
