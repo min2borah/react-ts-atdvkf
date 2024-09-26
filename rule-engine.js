@@ -20,10 +20,11 @@ async function validateRules(
   customTags,
   locale,
   userData,
-  companyTags
+  companyTags,
+  deviceData
 ) {
   const engine = new Engine();
-  if (timezone == undefined || timezone == null) {
+  if(timezone == undefined || timezone == null){
     timezone = moment.tz.guess();
   }
 
@@ -42,13 +43,15 @@ async function validateRules(
     return article;
   });
 
-  engine.addFact(
-    constants.RULE_FACT_USER_DATA,
-    async function (params, almanac) {
-      let userData = await almanac.factValue('userData');
-      return userData;
-    }
-  );
+  engine.addFact(constants.RULE_FACT_USER_DATA, async function (params, almanac) {
+    let userData = await almanac.factValue('userData');
+    return userData;
+  });
+
+  engine.addFact(constants.RULE_FACT_DEVICE_DATA, async function (params, almanac) {
+    let deviceData = await almanac.factValue('deviceData');
+    return deviceData;
+  });
 
   engine.addFact(
     constants.RULE_FACT_TEMPLATE,
@@ -146,50 +149,40 @@ async function validateRules(
   );
 
   //ARRAY_CONTAINS_SUB_ARRAY -- fact (an array) must include value (an array)
-  engine.addOperator(
-    constants.OPR_ARRAY_CONTAINS_SUB_ARRAY,
-    (factValue, jsonValue) => {
+  engine.addOperator(constants.OPR_ARRAY_CONTAINS_SUB_ARRAY, (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return utils.arrayContainsSubarray(factValue, value);
     }
   );
-
+  
   //ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY -- fact (an array) must not include value (an array)
-  engine.addOperator(
-    constants.OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY,
-    (factValue, jsonValue) => {
+  engine.addOperator(constants.OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY, (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return !utils.arrayContainsSubarray(factValue, value);
     }
-  );
+  );  
   //ARRAY_CONTAINS_SUB_ARRAY -- fact (an array) must include any element value (an array)
-  engine.addOperator(
-    constants.OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY,
-    (factValue, jsonValue) => {
+  engine.addOperator(constants.OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY, (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return utils.arrayContainsAnyElementOfSubarray(factValue, value);
     }
   );
-
+  
   //ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY -- fact (an array) must not include any element value (an array)
-  engine.addOperator(
-    constants.OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY,
-    (factValue, jsonValue) => {
+  engine.addOperator(constants.OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY, (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return !utils.arrayContainsAnyElementOfSubarray(factValue, value);
     }
-  );
+  );  
 
   engine.addOperator(
     constants.OPR_LENGTH_SMALLER_EQUAL,
     (factValue, jsonValue) => {
-      let value = !utils.is_a_number(jsonValue)
-        ? jsonValue?.toString().length
-        : parseInt(jsonValue);
+      let value = !utils.is_a_number(jsonValue) ? jsonValue?.toString().length : parseInt(jsonValue);
       if (utils.isEmpty(factValue)) {
         return 0 <= value;
       } else {
@@ -201,9 +194,7 @@ async function validateRules(
   engine.addOperator(
     constants.OPR_LENGTH_GREATER_EQUAL,
     (factValue, jsonValue) => {
-      let value = !utils.is_a_number(jsonValue)
-        ? jsonValue?.toString().length
-        : parseInt(jsonValue);
+      let value = !utils.is_a_number(jsonValue) ? jsonValue?.toString().length : parseInt(jsonValue);
       if (utils.isEmpty(factValue)) {
         return 0 >= value;
       } else {
@@ -213,9 +204,7 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_LENGTH_EQUAL, (factValue, jsonValue) => {
-    let value = !utils.is_a_number(jsonValue)
-      ? jsonValue?.toString().length
-      : parseInt(jsonValue);
+    let value = !utils.is_a_number(jsonValue) ? jsonValue?.toString().length : parseInt(jsonValue);
     if (utils.isEmpty(factValue)) {
       return 0 === value;
     } else {
@@ -224,9 +213,7 @@ async function validateRules(
   });
 
   engine.addOperator(constants.OPR_LENGTH_NOT_EQUAL, (factValue, jsonValue) => {
-    let value = !utils.is_a_number(jsonValue)
-      ? jsonValue?.toString().length
-      : parseInt(jsonValue);
+    let value = !utils.is_a_number(jsonValue) ? jsonValue?.toString().length : parseInt(jsonValue);
     if (utils.isEmpty(factValue)) {
       return 0 !== value;
     } else {
@@ -258,326 +245,223 @@ async function validateRules(
   );
 
   engine.addOperator(constants.OPR_EQUAL_DATE, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return d1.isSame(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_NOT_EQUAL_DATE, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return !d1.isSame(d2, 'day');
   });
 
-  engine.addOperator(
-    constants.OPR_GREATER_EQUAL_DATE,
-    (factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrAfter(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_GREATER_EQUAL_DATE,(factValue, jsonValue) => {
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isSameOrAfter(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_GREATER_THAN_DATE,
-    (factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isAfter(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_GREATER_THAN_DATE,(factValue, jsonValue) => {
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isAfter(d2, 'day');
+  });
 
   engine.addOperator(constants.OPR_LESS_EQUAL_DATE, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return d1.isSameOrBefore(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_LESS_THAN_DATE, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
-    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     let d2 = moment(d2Str, constants.DATE_FORMAT);
     return d1.isBefore(d2, 'day');
   });
 
   engine.addOperator(constants.OPR_IN_BETWEEN_DATE, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
+    if(!factValue || !jsonValue) return false;
     var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-    if (!split[0] || !split[1]) return false;
+    if(!split[0] || !split[1]) return false;
     let sDate = utils.convertUTCToLocalDate(split[0]);
     let eDate = utils.convertUTCToLocalDate(split[1]);
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.DATE_FORMAT);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
     let d1 = moment(d1Str, constants.DATE_FORMAT);
     return d1.isBetween(sDate, eDate, 'day', '[]');
   });
 
-  engine.addOperator(
-    constants.OPR_NOT_IN_BETWEEN_DATE,
-    (factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-      if (!split[0] || !split[1]) return false;
-      let sDate = utils.convertUTCToLocalDate(split[0]);
-      let eDate = utils.convertUTCToLocalDate(split[1]);
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return !d1.isBetween(sDate, eDate, 'day', '[]');
-    }
-  );
+  engine.addOperator(constants.OPR_NOT_IN_BETWEEN_DATE,(factValue, jsonValue) => {
+    if(!factValue || !jsonValue) return false;
+    var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    if(!split[0] || !split[1]) return false;
+    let sDate = utils.convertUTCToLocalDate(split[0]);
+    let eDate = utils.convertUTCToLocalDate(split[1]);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    return !d1.isBetween(sDate, eDate, 'day', '[]');
+  });
 
-  engine.addOperator(
-    constants.OPR_EQUAL_CURRENT_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSame(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_EQUAL_CURRENT_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isSame(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_NOT_EQUAL_CURRENT_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return !d1.isSame(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_NOT_EQUAL_CURRENT_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return !d1.isSame(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_GREATER_EQUAL_CURRENT_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrAfter(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_GREATER_EQUAL_CURRENT_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isSameOrAfter(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_GREATER_THAN_CURRENT_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isAfter(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_GREATER_THAN_CURRENT_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isAfter(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_LESS_EQUAL_CURRENT_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrBefore(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_LESS_EQUAL_CURRENT_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isSameOrBefore(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_LESS_THAN_CURRENT_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isBefore(d2, 'day');
-    }
-  );
+  engine.addOperator(constants.OPR_LESS_THAN_CURRENT_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isBefore(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_CURRENT_DATE_IN_BETWEEN_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-      if (!split[0] || !split[1]) return false;
-      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-      let sDate = utils.convertUTCToLocalDate(split[0]);
-      let eDate = utils.convertUTCToLocalDate(split[1]);
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return d1.isBetween(sDate, eDate, 'day', '[]');
-    }
-  );
+  engine.addOperator(constants.OPR_CURRENT_DATE_IN_BETWEEN_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    if(!split[0] || !split[1]) return false;
+    var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    let sDate = utils.convertUTCToLocalDate(split[0]);
+    let eDate = utils.convertUTCToLocalDate(split[1]);
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    return d1.isBetween(sDate, eDate, 'day', '[]');
+  });
 
-  engine.addOperator(
-    constants.OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-      if (!split[0] || !split[1]) return false;
-      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-      let sDate = utils.convertUTCToLocalDate(split[0]);
-      let eDate = utils.convertUTCToLocalDate(split[1]);
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return !d1.isBetween(sDate, eDate, 'day', '[]');
-    }
-  );
+  engine.addOperator(constants.OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    if(!split[0] || !split[1]) return false;
+    var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    let sDate = utils.convertUTCToLocalDate(split[0]);
+    let eDate = utils.convertUTCToLocalDate(split[1]);
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    return !d1.isBetween(sDate, eDate, 'day', '[]');
+  });
 
   engine.addOperator(constants.OPR_EQUAL_TIME, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.TIME_FORMAT);
-    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.TIME_FORMAT);
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
     let d1 = moment(d1Str, constants.TIME_FORMAT);
     let d2 = moment(d2Str, constants.TIME_FORMAT);
     return d1.isSame(d2);
   });
 
-  engine.addOperator(
-    constants.OPR_EQUAL_CURRENT_TIME,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d1 = moment(d1Str, constants.TIME_FORMAT);
-      let d2 = moment(d2Str, constants.TIME_FORMAT);
-      return d1.isSame(d2);
-    }
-  );
+  engine.addOperator(constants.OPR_EQUAL_CURRENT_TIME,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d1 = moment(d1Str, constants.TIME_FORMAT);
+    let d2 = moment(d2Str, constants.TIME_FORMAT);
+    return d1.isSame(d2);
+  });
 
   engine.addOperator(constants.OPR_LESS_EQUAL_TIME, (factValue, jsonValue) => {
-    if (!factValue || !jsonValue) return false;
-    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.TIME_FORMAT);
-    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-      .utc()
-      .format(constants.TIME_FORMAT);
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
     let d1 = moment(d1Str, constants.TIME_FORMAT);
     let d2 = moment(d2Str, constants.TIME_FORMAT);
     return d1.isBefore(d2);
   });
 
-  engine.addOperator(
-    constants.OPR_GREATER_EQUAL_TIME,
-    (factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d1 = moment(d1Str, constants.TIME_FORMAT);
-      let d2 = moment(d2Str, constants.TIME_FORMAT);
-      return d1.isAfter(d2);
-    }
-  );
+  engine.addOperator(constants.OPR_GREATER_EQUAL_TIME,(factValue, jsonValue) => {
+    if(!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d1 = moment(d1Str, constants.TIME_FORMAT);
+    let d2 = moment(d2Str, constants.TIME_FORMAT);
+    return d1.isAfter(d2);
+  });
 
-  engine.addOperator(
-    constants.OPR_LESS_EQUAL_CURRENT_TIME,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d1 = moment(d1Str, constants.TIME_FORMAT);
-      let d2 = moment(d2Str, constants.TIME_FORMAT);
-      return d1.isBefore(d2);
-    }
-  );
+  engine.addOperator(constants.OPR_LESS_EQUAL_CURRENT_TIME,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d1 = moment(d1Str, constants.TIME_FORMAT);
+    let d2 = moment(d2Str, constants.TIME_FORMAT);
+    return d1.isBefore(d2);
+  });
 
-  engine.addOperator(
-    constants.OPR_GREATER_EQUAL_CURRENT_TIME,
-    (factValue, jsonValue) => {
-      if (!jsonValue) return false;
-      const today = moment().tz(timezone).format();
-      let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d1 = moment(d1Str, constants.TIME_FORMAT);
-      let d2 = moment(d2Str, constants.TIME_FORMAT);
-      return d1.isAfter(d2);
-    }
-  );
+  engine.addOperator(constants.OPR_GREATER_EQUAL_CURRENT_TIME,(factValue, jsonValue) => {
+    if(!jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS).utc().format(constants.TIME_FORMAT);
+    let d1 = moment(d1Str, constants.TIME_FORMAT);
+    let d2 = moment(d2Str, constants.TIME_FORMAT);
+    return d1.isAfter(d2);
+  });
 
   engine.addOperator(constants.OPR_TAG_CONTAIN, (factValue, jsonValue) => {
     return tags && tags.indexOf(jsonValue) !== -1;
@@ -587,23 +471,13 @@ async function validateRules(
     return tags == undefined || tags == null || tags?.indexOf(jsonValue) === -1;
   });
 
-  engine.addOperator(
-    constants.OPR_COMPANY_TAG_CONTAIN,
-    (factValue, jsonValue) => {
-      return companyTags && companyTags.indexOf(jsonValue) !== -1;
-    }
-  );
+  engine.addOperator(constants.OPR_COMPANY_TAG_CONTAIN, (factValue, jsonValue) => {
+    return companyTags && companyTags.indexOf(jsonValue) !== -1;
+  });
 
-  engine.addOperator(
-    constants.OPR_COMPANY_TAG_NOT_CONTAIN,
-    (factValue, jsonValue) => {
-      return (
-        companyTags == undefined ||
-        companyTags == null ||
-        companyTags?.indexOf(jsonValue) === -1
-      );
-    }
-  );
+  engine.addOperator(constants.OPR_COMPANY_TAG_NOT_CONTAIN, (factValue, jsonValue) => {
+    return companyTags == undefined || companyTags == null || companyTags?.indexOf(jsonValue) === -1;
+  });
 
   engine.addOperator(
     constants.OPR_CUSTOM_TAG_CONTAIN,
@@ -643,15 +517,19 @@ async function validateRules(
       const type = Object.keys(conditions)[0];
       var rls = conditions[type];
       rls.forEach((fcts, idx) => {
-        if (!fcts.params) {
-          fcts.params = {};
+        if (fcts) {  // Ensure fcts is defined
+          if (!fcts.params) {
+            fcts.params = {};
+          }
+          fcts.params.filters = [...rule.factFilters];
+          fcts.params.isToApplyFactFilters = true;
         }
-        fcts.params.filters = [...rule.factFilters];
-        fcts.params.isToApplyFactFilters = true;
       });
     }
     outEvent.isMultipleArticleCanvas = isMultipleArticleCanvas;
-    ruleObj.event.params = outEvent;
+    if(ruleObj.event){
+      ruleObj.event.params = outEvent;
+    }
     ruleObj.onSuccess = ruleOnSuccess;
     ruleObj.onFailure = ruleOnFailure;
     ruleObj.priority = indx + 1;
@@ -756,7 +634,7 @@ function convertJsonValueToFactValueType(jsonValue, factValue) {
 }
 
 function convertJsonValueToFactValueTypeArray(jsonValue, factValue) {
-  if (typeof jsonValue !== 'string') return jsonValue;
+  if(typeof jsonValue !== 'string') return jsonValue;
   var value = [];
   const splArr = jsonValue.split(',');
   const objType = typeof factValue;
@@ -805,12 +683,10 @@ function convertPathToCamelcase(
   if (localizedPath) {
     actionField.path = '$.' + localizedPath;
   }
-  if (actionField.articleFieldComparisonValue) {
+  if(actionField.articleFieldComparisonValue){
     actionField.value = actionField.articleFieldComparisonValue;
-    if (
-      actionField.articleFieldComparisonValue.dataSource !==
-      constants.DATA_SOURCE_USER_DATA
-    ) {
+    //to support multiple article field comparison , rules specifically created for mongodb backend
+    if(actionField.articleFieldComparisonValue.dataSource !== constants.DATA_SOURCE_USER_DATA && actionField.articleFieldComparisonValue.dataSource !== constants.DATA_SOURCE_DEVICE_DATA){
       var valueLocalizedPath = utils.getLocaliazedPath(
         article,
         actionField.articleFieldComparisonValue.dataSource,
@@ -822,7 +698,7 @@ function convertPathToCamelcase(
       if (valueLocalizedPath) {
         actionField.value.path = '$.' + valueLocalizedPath;
       }
-    }
+    }    
   }
 }
 
@@ -831,7 +707,9 @@ function performActionsOnElement(
   elem,
   ruleActions,
   article,
-  isMultipleArticleCanvas
+  isMultipleArticleCanvas,
+  userData,
+  deviceData
 ) {
   if (isToHide) {
     elem.isHide = true;
@@ -860,20 +738,22 @@ function performActionsOnElement(
       ) {
         elem.custom[action.elementField] = action.actionValue;
       } else {
-        setArticleFieldValue(action, elem, article, isMultipleArticleCanvas);
+        setArticleFieldValue(action, elem, article, isMultipleArticleCanvas,userData,deviceData);
       }
     });
   }
 }
 
-function evaluateArticleValue(action, article, isMultipleArticleCanvas) {
+function evaluateArticleValue(action, article, isMultipleArticleCanvas, userData, deviceData) {
   try {
     var value = utils.getArticleFieldValue(
       article,
       action.actionField.dataSource,
       action.actionField.articleField,
       action.actionField.articleIndex,
-      isMultipleArticleCanvas
+      isMultipleArticleCanvas,
+      userData,
+      deviceData
     );
     return value;
   } catch (err) {
@@ -881,7 +761,7 @@ function evaluateArticleValue(action, article, isMultipleArticleCanvas) {
   }
 }
 
-function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
+function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas,userData,deviceData) {
   switch (action.actionType) {
     case constants.RULE_ACTION_PLAIN_TEXT:
       var val = action.actionValue;
@@ -914,7 +794,9 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
         var artVal = evaluateArticleValue(
           action,
           article,
-          isMultipleArticleCanvas
+          isMultipleArticleCanvas,
+          userData,
+          deviceData
         );
         if (artVal != undefined && artVal != null) {
           if (
@@ -947,7 +829,9 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
           let mulartVal = evaluateArticleValue(
             mulAction,
             article,
-            isMultipleArticleCanvas
+            isMultipleArticleCanvas,
+            userData,
+            deviceData
           );
           artVal = artVal + mulartVal;
           if (idx !== action.multiValueActions.length - 1) {
@@ -984,7 +868,9 @@ function setArticleFieldValue(action, elem, article, isMultipleArticleCanvas) {
         var artVal = evaluateArticleValue(
           action,
           article,
-          isMultipleArticleCanvas
+          isMultipleArticleCanvas,
+          userData,
+          deviceData
         );
         if (artVal != undefined && artVal != null) {
           let str = artVal.toString().trim();
@@ -1021,7 +907,8 @@ export function validatePageRules(
   customTags,
   locale,
   userData,
-  companyTags
+  companyTags,
+  deviceData
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1054,7 +941,7 @@ export function validatePageRules(
     customObject.pages.push(pageObj);
   });
 
-  const fact = { article: article, template: customObject, userData: userData };
+  const fact = { article: article, template: customObject, userData: userData , deviceData: deviceData};
 
   return new Promise((resolve, reject) => {
     previewJson.pages.forEach((page, pageIndex) => {
@@ -1080,7 +967,8 @@ export function validatePageRules(
           customTags,
           locale,
           userData,
-          companyTags
+          companyTags,
+          deviceData
         ).then((result) => {
           RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
             RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
@@ -1115,7 +1003,8 @@ export function validateGroupRules(
   customTags,
   locale,
   userData,
-  companyTags
+  companyTags,
+  deviceData
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1147,7 +1036,9 @@ export function validateGroupRules(
               elmn,
               outEvent.ruleActions,
               filteredArticleData,
-              outEvent.isMultipleArticleCanvas
+              outEvent.isMultipleArticleCanvas,
+              userData,
+              deviceData
             );
             break;
           }
@@ -1175,7 +1066,7 @@ export function validateGroupRules(
     customObject.pages.push(pageObj);
   });
 
-  const fact = { article: article, template: customObject, userData: userData };
+  const fact = { article: article, template: customObject, userData: userData, deviceData: deviceData };
 
   return new Promise((resolve, reject) => {
     previewJson.pages.forEach((page, pageIndex) => {
@@ -1202,13 +1093,12 @@ export function validateGroupRules(
             customTags,
             locale,
             userData,
-            companyTags
+            companyTags,
+            deviceData
           ).then((result) => {
-            RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT =
-              RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
+            RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT = RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT + 1;
             if (
-              RULE_GLOBLE_VALUES.RULE_REQUEST_COUNT ===
-              RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT
+              RULE_GLOBLE_VALUES.RULE_REQUEST_COUNT === RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT
             ) {
               // return only after all rules specified in preview json are validated
               resolve(pototnoObj);
@@ -1218,8 +1108,7 @@ export function validateGroupRules(
       }
     });
     if (
-      RULE_GLOBLE_VALUES.RULE_REQUEST_COUNT ===
-      RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT
+      RULE_GLOBLE_VALUES.RULE_REQUEST_COUNT === RULE_GLOBLE_VALUES.RULE_RESPONSE_COUNT
     ) {
       resolve(pototnoObj);
     }
@@ -1235,7 +1124,8 @@ export function validateElementRules(
   customTags,
   locale,
   userData,
-  companyTags
+  companyTags,
+  deviceData
 ) {
   var RULE_GLOBLE_VALUES = {
     RULE_REQUEST_COUNT: 0,
@@ -1258,7 +1148,7 @@ export function validateElementRules(
     customObject.pages.push(pageObj);
   });
 
-  const fact = { article: article, template: customObject, userData: userData };
+  const fact = { article: article, template: customObject, userData: userData, deviceData : deviceData };
 
   const ruleOnSuccess = (event, almanac) => {
     const outEvent = event.params;
@@ -1282,7 +1172,9 @@ export function validateElementRules(
       elem,
       outEvent.ruleActions,
       filteredArticleData,
-      outEvent.isMultipleArticleCanvas
+      outEvent.isMultipleArticleCanvas,
+      userData,
+      deviceData
     );
   };
 
@@ -1299,7 +1191,9 @@ export function validateElementRules(
         elem,
         elem.custom.defaultAction.actions,
         article,
-        isMultipleArticleCanvas
+        isMultipleArticleCanvas,
+        userData,
+        deviceData
       );
     }
   }
@@ -1365,13 +1259,7 @@ export function validateElementRules(
   });
 }
 
-export function validateScenarioRules(
-  scenarioJson,
-  tag,
-  deviceType,
-  timezone,
-  companyTags
-) {
+export function validateScenarioRules(scenarioJson, tag, deviceType, timezone,companyTags) {
   const ruleOnSuccess = (event, almanac) => {
     // perform on rule success
   };
@@ -1398,10 +1286,11 @@ export function validateScenarioRules(
         tag,
         deviceType,
         timezone,
-        null, //customTags
-        null, //locale
-        null, //userData
-        companyTags
+        null,//customTags
+        null,//locale
+        null,//userData
+        companyTags,
+        null,//deviceData
       ).then((result) => {
         if (result.events.length > 0) {
           isAllRuleSucceed = true;

@@ -58,7 +58,7 @@ export const isInBetween = (factValue, value) => {
 };
 
 export const substringRange = (range) => {
-  if (!range) return [0];
+  if(!range) return [0];
   const arrValues = range.toString().trim().split(',');
   if (arrValues && arrValues.length === 1) {
     const v1 = arrValues[0].trim();
@@ -102,27 +102,27 @@ export const containSubstring = (factValue, val) => {
   );
 };
 
-export const getFormattedDate = (dateStr, timezone, locale, format) => {
+export const getFormattedDate = (dateStr,  timezone, locale, format) => {
   if (timezone == undefined || timezone == null) {
     timezone = moment.tz.guess();
   }
-  if (!dateStr) return dateStr;
+  if(!dateStr) return dateStr;
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
-
-  if (mdate.isValid()) {
+  
+  if (mdate.isValid() ) {
     let dt = mdate.format(format);
-    if (format == 'DD MMMM') {
+    if(format == "DD MMMM"){
       let lang = 'it';
-      try {
+      try{
         lang = navigator.language || navigator.userLanguage;
-      } catch (e) {}
+      }catch(e){}
       if (locale) {
         lang = locale;
       }
       let lng = lang.split('-')[0];
       dt = mdate.locale(lng).format(format);
-    }
+    }    
     return dt;
   } else {
     return dateStr;
@@ -144,7 +144,7 @@ export function filterInsignificentZeros(priceText) {
   }
   const rxInsignificant = /^[\s0]+|(\..*)[\s0.]+$|\.0+$|\.$/gm;
   var filteredText = replcTxt.replace(rxInsignificant, (match, group) => {
-    return group ? match : '';
+      return group ? match : '';
   });
   var convertTxt = filteredText.toString().trim(); //.replace('.',',')
   if (convertTxt.charAt(0) === ',') {
@@ -166,7 +166,7 @@ export function filterPriceFormatter(priceText) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  if (!priceText) return priceText;
+  if(!priceText) return priceText;
   var price = formatter.format(parseFloat(priceText));
   price = price?.replace('€', '');
   return price?.trim();
@@ -256,12 +256,7 @@ export function processFilters(
         }
         break;
       case Constants.FILTER_DATE_FORMAT_DD_Month:
-        let formatedlocaleDate = getFormattedDate(
-          artVal,
-          timezone,
-          locale,
-          'DD MMMM'
-        );
+        let formatedlocaleDate = getFormattedDate(artVal, timezone, locale, "DD MMMM");
         artVal = formatedlocaleDate;
         break;
       case Constants.FILTER_INTEGER_PART:
@@ -277,13 +272,8 @@ export function processFilters(
         artVal = filterDecimalPart(artVal, true);
         break;
     }
-    if (Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1) {
-      let formatedDate = getFormattedDate(
-        artVal,
-        timezone,
-        locale,
-        selectedFilter
-      );
+    if(Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1){
+      let formatedDate = getFormattedDate(artVal, timezone, locale, selectedFilter);
       artVal = formatedDate;
     }
     let filterPathFinal = getLocaliazedPath(
@@ -312,16 +302,21 @@ export function getArticleFieldValue(
   articleField,
   articleIndex,
   isMultipleArticleCanvas,
-  userData
+  userData,
+  deviceData
 ) {
   let updatedArticleJson = getValidArticle(
     articleJson,
     articleIndex,
     isMultipleArticleCanvas
   );
-  if (updatedArticleJson === null || updatedArticleJson === undefined) {
-    return null;
+  //Article can be null when we are extracting value from userdata and device data
+  if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD || dataSource === Constants.DATA_SOURCE_PIM){
+    if (updatedArticleJson === null || updatedArticleJson === undefined) {
+      return null;
+    }
   }
+ 
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
     let path = getLocaliazedPath(
       updatedArticleJson,
@@ -369,6 +364,21 @@ export function getArticleFieldValue(
     );
     try {
       let val = getProp(userData, path);
+      return val;
+    } catch (error) {
+      return null;
+    }
+  }else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
+    let path = getLocaliazedPath(
+      null,
+      dataSource,
+      articleField,
+      null,
+      null,
+      null
+    );
+    try {
+      let val = getProp(deviceData, path);
       return val;
     } catch (error) {
       return null;
@@ -436,6 +446,8 @@ export function getLocaliazedPath(
     path = `pages[${pageIndex}].articleCount`;
   } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
     path = getDataFieldPath(articleField, dataSource, null);
+  } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
+    path = getDataFieldPath(articleField, dataSource, null);
   }
   return path;
 }
@@ -472,12 +484,8 @@ function getImportDataPath(parent, name) {
 }
 
 function getPimDataPath(parent, name, locale) {
-  var pimExternalData =
-    "externalData['PIM']['dataLanguage']['" +
-    locale +
-    "']['DataClassDictionary']";
-  let path =
-    pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
+  var pimExternalData = "externalData['PIM']['dataLanguage']['" + locale + "']['DataClassDictionary']";
+  let path = pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
   if (!parent) {
     path = pimExternalData + "['data']" + "['" + name + "']";
   }
@@ -504,6 +512,8 @@ export function getDataFieldPath(articleField, dataSource, locale) {
       path = getPimDataPath(parent, name, locale);
     } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
       path = getUserDataPath(parent, name, locale);
+    } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
+      path = camelize(articleField['name']);
     }
     return path;
   } else if (
@@ -519,15 +529,14 @@ export function getDataFieldPath(articleField, dataSource, locale) {
   ) {
     let name = camelize(articleField['name']);
     return name;
-  }
-  {
+  } {
     return articleField;
   }
 }
 
 export function getInstoreFieldPrimaryLocale(articleJson) {
   let finalKey = 'it-IT';
-  if (articleJson.instoreFields) {
+  if (articleJson && articleJson.instoreFields) {
     let localeKeys = Object.keys(articleJson.instoreFields);
     localeKeys.forEach((key, index) => {
       if (articleJson.instoreFields[key]['isPrimary']) {
@@ -638,29 +647,29 @@ export function convertUTCToLocalDate(date) {
 }
 
 export function arrayContainsSubarray(arr, subarr) {
-  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  if(!Array.isArray(arr) || !Array.isArray(subarr)) return false;
   const arrSet = new Set(arr);
-  const subarrSet = new Set(subarr);
+  const subarrSet = new Set(subarr);  
   for (const elem of subarrSet) {
-    if (!arrSet.has(elem)) {
-      return false;
-    }
-  }
+      if (!arrSet.has(elem)) {
+          return false;
+      }
+  }  
   return true;
 }
 
 export function arrayContainsAnyElementOfSubarray(arr, subarr) {
-  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  if(!Array.isArray(arr) || !Array.isArray(subarr)) return false;
   let greaterSizeArray = arr.length > subarr.length ? arr : subarr;
   let smallerSizeArray = arr.length < subarr.length ? arr : subarr;
-  if (arr.length == subarr.length) {
+  if(arr.length == subarr.length){
     greaterSizeArray = arr;
     smallerSizeArray = subarr;
   }
   for (const elem of smallerSizeArray) {
-    if (greaterSizeArray.includes(elem)) {
-      return true;
-    }
+      if (greaterSizeArray.includes(elem)) {
+          return true;
+      }
   }
   return false;
 }
