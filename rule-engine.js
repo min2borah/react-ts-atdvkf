@@ -44,21 +44,16 @@ async function validateRules(
   });
 
   engine.addFact(constants.RULE_FACT_USER_DATA, async function (params, almanac) {
-    let userData = await almanac.factValue('userData');
-    return userData;
+    return await almanac.factValue('userData');
   });
 
   engine.addFact(constants.RULE_FACT_DEVICE_DATA, async function (params, almanac) {
-    let deviceData = await almanac.factValue('deviceData');
-    return deviceData;
+    return await almanac.factValue('deviceData');
   });
 
-  engine.addFact(
-    constants.RULE_FACT_TEMPLATE,
-    async function (params, almanac) {
+  engine.addFact(constants.RULE_FACT_TEMPLATE, async function (params, almanac) {
       return await almanac.factValue('template');
-    }
-  );
+  });
 
   //custom operators
   engine.addOperator(

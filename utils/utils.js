@@ -511,24 +511,20 @@ export function getDataFieldPath(articleField, dataSource, locale) {
     } else if (dataSource === Constants.DATA_SOURCE_PIM) {
       path = getPimDataPath(parent, name, locale);
     } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
-      path = getUserDataPath(parent, name, locale);
+       /**Do not apply camel case to user data */
+      path = getUserDataPath(articleField['parent'], articleField['name'], locale);
     } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
       path = camelize(articleField['name']);
     }
     return path;
-  } else if (
-    dataSource === Constants.DATA_SOURCE_PIM &&
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
+  } else if (dataSource === Constants.DATA_SOURCE_PIM && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
     let name = camelize(articleField['name']);
     return getPimDataPath(null, name, locale);
-  } else if (
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
-    let name = camelize(articleField['name']);
-    return name;
+  } else if (dataSource === Constants.DATA_SOURCE_USER_DATA && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
+    /**Do not apply camel case to user data */
+    return articleField['name'];
+  }else if (!isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
+    return camelize(articleField['name']);
   } {
     return articleField;
   }
