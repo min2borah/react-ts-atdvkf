@@ -57,23 +57,40 @@ export const isInBetween = (factValue, value) => {
   return false;
 };
 
-export const substringRange = (range) => {
-  if(!range) return [0];
-  const arrValues = range.toString().trim().split(',');
+export const ifRangeOverlap = (factValue, value) => {
+  if (!factValue || !value) return false;
+
+  const [factStart, factEnd] = factValue.split(',').map(Number);
+  const [jsonStart, jsonEnd] = value.split(',').map(Number);
+
+  if (
+    is_a_number(factStart) &&
+    is_a_number(factEnd) &&
+    is_a_number(jsonStart) &&
+    is_a_number(jsonEnd)
+  ) {
+    return factStart <= jsonEnd && factEnd >= jsonStart;
+  }
+
+  return false;
+};
+
+export const substringRange = (range, artValLength) => {
+  if (!range) return [0];
+  let str = range.toString().trim();
+  str = str.replace(/\blength\b/gi, artValLength || 0);
+  str = str.replace(/[\[\]\(\)]/g, '');
+  const arrValues = str.split(',');
   if (arrValues && arrValues.length === 1) {
     const v1 = arrValues[0].trim();
-    let val = is_a_number(v1) ? parseInt(v1) : 0;
+    let val = evaluateExpression(v1);
     return [val];
   } else if (arrValues && arrValues.length === 2) {
     const v1 = arrValues[0].trim();
     const v2 = arrValues[1].trim();
-    if (!is_a_number(v1)) {
-      return [0];
-    }
-    if (!is_a_number(v2)) {
-      return [parseInt(v1)];
-    }
-    return [parseInt(v1), parseInt(v2)];
+    let val1 = evaluateExpression(v1);
+    let val2 = evaluateExpression(v2);
+    return [val1, val2];
   } else {
     return [0];
   }
@@ -102,27 +119,27 @@ export const containSubstring = (factValue, val) => {
   );
 };
 
-export const getFormattedDate = (dateStr,  timezone, locale, format) => {
+export const getFormattedDate = (dateStr, timezone, locale, format) => {
   if (timezone == undefined || timezone == null) {
     timezone = moment.tz.guess();
   }
-  if(!dateStr) return dateStr;
+  if (!dateStr) return dateStr;
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
-  
-  if (mdate.isValid() ) {
+
+  if (mdate.isValid()) {
     let dt = mdate.format(format);
-    if(format == "DD MMMM"){
+    if (format == 'DD MMMM') {
       let lang = 'it';
-      try{
+      try {
         lang = navigator.language || navigator.userLanguage;
-      }catch(e){}
+      } catch (e) {}
       if (locale) {
         lang = locale;
       }
       let lng = lang.split('-')[0];
       dt = mdate.locale(lng).format(format);
-    }    
+    }
     return dt;
   } else {
     return dateStr;
@@ -144,7 +161,7 @@ export function filterInsignificentZeros(priceText) {
   }
   const rxInsignificant = /^[\s0]+|(\..*)[\s0.]+$|\.0+$|\.$/gm;
   var filteredText = replcTxt.replace(rxInsignificant, (match, group) => {
-      return group ? match : '';
+    return group ? match : '';
   });
   var convertTxt = filteredText.toString().trim(); //.replace('.',',')
   if (convertTxt.charAt(0) === ',') {
@@ -166,7 +183,7 @@ export function filterPriceFormatter(priceText) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  if(!priceText) return priceText;
+  if (!priceText) return priceText;
   var price = formatter.format(parseFloat(priceText));
   price = price?.replace('€', '');
   return price?.trim();
@@ -256,7 +273,12 @@ export function processFilters(
         }
         break;
       case Constants.FILTER_DATE_FORMAT_DD_Month:
-        let formatedlocaleDate = getFormattedDate(artVal, timezone, locale, "DD MMMM");
+        let formatedlocaleDate = getFormattedDate(
+          artVal,
+          timezone,
+          locale,
+          'DD MMMM'
+        );
         artVal = formatedlocaleDate;
         break;
       case Constants.FILTER_INTEGER_PART:
@@ -272,8 +294,13 @@ export function processFilters(
         artVal = filterDecimalPart(artVal, true);
         break;
     }
-    if(Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1){
-      let formatedDate = getFormattedDate(artVal, timezone, locale, selectedFilter);
+    if (Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1) {
+      let formatedDate = getFormattedDate(
+        artVal,
+        timezone,
+        locale,
+        selectedFilter
+      );
       artVal = formatedDate;
     }
     let filterPathFinal = getLocaliazedPath(
@@ -303,7 +330,8 @@ export function getArticleFieldValue(
   articleIndex,
   isMultipleArticleCanvas,
   userData,
-  deviceData
+  deviceData,
+  eslFieldData
 ) {
   let updatedArticleJson = getValidArticle(
     articleJson,
@@ -311,12 +339,15 @@ export function getArticleFieldValue(
     isMultipleArticleCanvas
   );
   //Article can be null when we are extracting value from userdata and device data
-  if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD || dataSource === Constants.DATA_SOURCE_PIM){
+  if (
+    dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD ||
+    dataSource === Constants.DATA_SOURCE_PIM
+  ) {
     if (updatedArticleJson === null || updatedArticleJson === undefined) {
       return null;
     }
   }
- 
+
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
     let path = getLocaliazedPath(
       updatedArticleJson,
@@ -368,7 +399,7 @@ export function getArticleFieldValue(
     } catch (error) {
       return null;
     }
-  }else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
+  } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
     let path = getLocaliazedPath(
       null,
       dataSource,
@@ -379,6 +410,21 @@ export function getArticleFieldValue(
     );
     try {
       let val = getProp(deviceData, path);
+      return val;
+    } catch (error) {
+      return null;
+    }
+  } else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
+    let path = getLocaliazedPath(
+      null,
+      dataSource,
+      articleField,
+      null,
+      null,
+      null
+    );
+    try {
+      let val = getProp(eslFieldData, path);
       return val;
     } catch (error) {
       return null;
@@ -448,6 +494,12 @@ export function getLocaliazedPath(
     path = getDataFieldPath(articleField, dataSource, null);
   } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
     path = getDataFieldPath(articleField, dataSource, null);
+  } else if (dataSource === Constants.DATA_SOURCE_CAMERA_DATA) {
+    path = getDataFieldPath(articleField, dataSource, null);
+  } else if (dataSource === Constants.DATA_SOURCE_NEXMO_DATA) {
+    path = getDataFieldPath(articleField, dataSource, null);
+  } else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
+    path = getDataFieldPath(articleField, dataSource, null);
   }
   return path;
 }
@@ -484,8 +536,12 @@ function getImportDataPath(parent, name) {
 }
 
 function getPimDataPath(parent, name, locale) {
-  var pimExternalData = "externalData['PIM']['dataLanguage']['" + locale + "']['DataClassDictionary']";
-  let path = pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
+  var pimExternalData =
+    "externalData['PIM']['dataLanguage']['" +
+    locale +
+    "']['DataClassDictionary']";
+  let path =
+    pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
   if (!parent) {
     path = pimExternalData + "['data']" + "['" + name + "']";
   }
@@ -493,6 +549,11 @@ function getPimDataPath(parent, name, locale) {
 }
 
 function getUserDataPath(parent, name) {
+  let path = parent + "['" + name + "']";
+  return path;
+}
+
+function getEventDataPath(parent, name) {
   let path = parent + "['" + name + "']";
   return path;
 }
@@ -511,21 +572,63 @@ export function getDataFieldPath(articleField, dataSource, locale) {
     } else if (dataSource === Constants.DATA_SOURCE_PIM) {
       path = getPimDataPath(parent, name, locale);
     } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
-       /**Do not apply camel case to user data */
-      path = getUserDataPath(articleField['parent'], articleField['name'], locale);
+      /**Do not apply camel case to user data */
+      path = getUserDataPath(
+        articleField['parent'],
+        articleField['name'],
+        locale
+      );
     } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
+      path = camelize(articleField['name']);
+    } else if (dataSource === Constants.DATA_SOURCE_CAMERA_DATA) {
+      path = getEventDataPath(
+        articleField['parent'],
+        articleField['name'],
+        locale
+      );
+    } else if (dataSource === Constants.DATA_SOURCE_NEXMO_DATA) {
+      path = getEventDataPath(
+        articleField['parent'],
+        articleField['name'],
+        locale
+      );
+    } else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
       path = camelize(articleField['name']);
     }
     return path;
-  } else if (dataSource === Constants.DATA_SOURCE_PIM && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
+  } else if (
+    dataSource === Constants.DATA_SOURCE_PIM &&
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
+  ) {
     let name = camelize(articleField['name']);
     return getPimDataPath(null, name, locale);
-  } else if (dataSource === Constants.DATA_SOURCE_USER_DATA && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
+  } else if (
+    dataSource === Constants.DATA_SOURCE_USER_DATA &&
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
+  ) {
     /**Do not apply camel case to user data */
     return articleField['name'];
-  }else if (!isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
+  } else if (
+    dataSource === Constants.DATA_SOURCE_CAMERA_DATA &&
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
+  ) {
+    return articleField['name'];
+  } else if (
+    dataSource === Constants.DATA_SOURCE_NEXMO_DATA &&
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
+  ) {
+    return articleField['name'];
+  } else if (
+    !isEmpty(articleField['name']) &&
+    isEmpty(articleField['parent'])
+  ) {
     return camelize(articleField['name']);
-  } {
+  }
+  {
     return articleField;
   }
 }
@@ -594,7 +697,7 @@ function getProp(obj, prop) {
   });
 
   return propArr.reduce(function (prev, curr) {
-    return prev ? prev[curr] : undefined;
+    return prev !== null && prev !== undefined ? prev[curr] : undefined;
   }, obj || self);
 }
 
@@ -612,10 +715,13 @@ function setToValue(obj, value, path) {
   for (let i = 0; i < pathArr.length - 1; i++) {
     if (pathArr[i]) {
       // Skip empty string
+      if (objRef === null || objRef === undefined) return; // Stop if broken path
       objRef = objRef[pathArr[i]];
     }
   }
-  objRef[pathArr[pathArr.length - 1]] = value;
+  if (objRef !== null && objRef !== undefined) {
+    objRef[pathArr[pathArr.length - 1]] = value;
+  }
 }
 
 function getValidArticle(articleJson, articleIndex, isMultipleArticleCanvas) {
@@ -643,29 +749,38 @@ export function convertUTCToLocalDate(date) {
 }
 
 export function arrayContainsSubarray(arr, subarr) {
-  if(!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
   const arrSet = new Set(arr);
-  const subarrSet = new Set(subarr);  
+  const subarrSet = new Set(subarr);
   for (const elem of subarrSet) {
-      if (!arrSet.has(elem)) {
-          return false;
-      }
-  }  
+    if (!arrSet.has(elem)) {
+      return false;
+    }
+  }
   return true;
 }
 
 export function arrayContainsAnyElementOfSubarray(arr, subarr) {
-  if(!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
   let greaterSizeArray = arr.length > subarr.length ? arr : subarr;
   let smallerSizeArray = arr.length < subarr.length ? arr : subarr;
-  if(arr.length == subarr.length){
+  if (arr.length == subarr.length) {
     greaterSizeArray = arr;
     smallerSizeArray = subarr;
   }
   for (const elem of smallerSizeArray) {
-      if (greaterSizeArray.includes(elem)) {
-          return true;
-      }
+    if (greaterSizeArray.includes(elem)) {
+      return true;
+    }
   }
   return false;
+}
+
+function evaluateExpression(expr) {
+  try {
+    return Function('"use strict"; return (' + expr + ')')();
+  } catch (e) {
+    console.warn('Invalid expression:', expr);
+    return null;
+  }
 }

@@ -4,6 +4,9 @@ export const RULE_FACT_ARTICLE = 'article-fact';
 export const RULE_FACT_TEMPLATE = 'template-fact';
 export const RULE_FACT_USER_DATA = 'user-data-fact';
 export const RULE_FACT_DEVICE_DATA = 'device-data-fact';
+export const RULE_FACT_CAMERA_DATA = 'camera-data-fact';
+export const RULE_FACT_NEXMO_DATA = 'nexmo-data-fact';
+export const RULE_FACT_ESL_FIELD_DATA = 'esl-field-data-fact';
 
 export const RULE_ACTION_PLAIN_TEXT = 'Plain Text';
 export const RULE_ACTION_ARTICLE_VALUE = 'Article Value';
@@ -24,7 +27,7 @@ export const RuleEngineDefaultOperators = {
   ARRAY_CONTAINS: 'cus_contains',
   ARRAY_DOES_NOT_CONTAIN: 'cus_doesNotContain',
   ARRAY_IN: 'cus_in',
-  ARRAY_NOT_IN: 'cus_notIn'
+  ARRAY_NOT_IN: 'cus_notIn',
 };
 
 export const OPR_LENGTH_GREATER_EQUAL = 'Length >=';
@@ -36,6 +39,7 @@ export const OPR_IS_NOT_EMPTY = 'isNotEmpty';
 export const OPR_IS_IN_BETWEEN = 'inBetween';
 export const OPR_NOT_IN_BETWEEN = 'notInBetween';
 export const OPR_CONTAIN_SUBSTRING = 'constainString';
+export const OPR_IS_RANGE_OVERLAP = 'rangesOverlap';
 
 export const OPR_GREATER_EQUAL_DATE = 'greaterThanInclusiveDate';
 export const OPR_GREATER_THAN_DATE = 'greaterThanDate';
@@ -46,12 +50,18 @@ export const OPR_NOT_IN_BETWEEN_DATE = 'notInBetweenDate';
 export const OPR_EQUAL_DATE = 'equalToDate';
 export const OPR_NOT_EQUAL_DATE = 'notEqualToDate';
 
+export const OPR_IN_BETWEEN_WEEKDAY = 'inBetweenWeekday';
+export const OPR_NOT_IN_BETWEEN_WEEKDAY = 'notInBetweenWeekday';
+export const OPR_EQUAL_WEEKDAY = 'equalWeekday';
+export const OPR_NOT_EQUAL_WEEKDAY = 'notEqualToWeekday';
+
 export const OPR_GREATER_EQUAL_CURRENT_DATE = 'greaterThanInclusiveCurrentDate';
 export const OPR_GREATER_THAN_CURRENT_DATE = 'greaterThanCurrentDate';
 export const OPR_LESS_EQUAL_CURRENT_DATE = 'lessThanInclusiveCurrentDate';
 export const OPR_LESS_THAN_CURRENT_DATE = 'lessThanCurrentDate';
 export const OPR_CURRENT_DATE_IN_BETWEEN_DATE = 'currentDateInBetweenDate';
-export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE = 'currentDateNotInBetweenDate';
+export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE =
+  'currentDateNotInBetweenDate';
 export const OPR_EQUAL_CURRENT_DATE = 'equalToCurrentDate';
 export const OPR_NOT_EQUAL_CURRENT_DATE = 'notEqualToCurrentDate';
 
@@ -74,11 +84,12 @@ export const OPR_COMPANY_TAG_NOT_CONTAIN = 'CompanyTagNotContain';
 export const OPR_ARRAY_CONTAINS_SUB_ARRAY = 'ArrayContainsSubArray';
 export const OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY = 'ArrayNotContainsSubArray';
 export const OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY = 'ArrayContainsAnyOfSubArray';
-export const OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY = 'ArrayNotContainsAnyOfSubArray';
+export const OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY =
+  'ArrayNotContainsAnyOfSubArray';
 
 export const FILTER_INVALID_ZEROS = 'Insignificant Zeros';
 export const FILTER_PRICE_FORMAT = 'Format currency (€)';
-export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)';//Deprecated from version 1.5.9, kept to support previous templates
+export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)'; //Deprecated from version 1.5.9, kept to support previous templates
 export const FILTER_INTEGER_PART = 'Take Integer Part';
 export const FILTER_DECIMAL_PART = 'Take Decimal Part'; //Deprecated from version 1.4.25, kept to support previous templates
 export const FILTER_DECIMAL_PART_2_DIGIT = 'Take Decimal Part (2 Digits)';
@@ -93,6 +104,7 @@ export const DATA_SOURCE_TAGS = 'tags';
 export const DATA_SOURCE_ARTICLE_COUNT = 'article_count';
 export const DATA_SOURCE_FIELDS_IMPORTS = 'importFields';
 export const DATA_SOURCE_FIELDS_INSTORE = 'instoreFields';
+export const DATA_SOURCE_FIELDS_DAY = 'current_day';
 export const DATA_SOURCE_FIELDS_DATE = 'current_date';
 export const DATA_SOURCE_FIELDS_TIME = 'current_time';
 export const DATA_SOURCE_FIELDS_DEVICE_TAG = 'device_tag';
@@ -100,6 +112,9 @@ export const DATA_SOURCE_FIELDS_CUSTOM_TAG = 'custom_tag';
 export const DATA_SOURCE_FIELDS_COMPANY_TAG = 'company_tag';
 export const DATA_SOURCE_USER_DATA = 'user_data';
 export const DATA_SOURCE_DEVICE_DATA = 'device_data';
+export const DATA_SOURCE_CAMERA_DATA = 'camera_data';
+export const DATA_SOURCE_NEXMO_DATA = 'nexmo_data';
+export const DATA_SOURCE_ESL_FIELD_DATA = 'esl_field_data';
 
 export const DataSchemaDataType = Object.freeze({
   ALFA: 1,
@@ -109,8 +124,9 @@ export const DataSchemaDataType = Object.freeze({
   BIT: 5,
   DATETIME: 6,
   TIME: 7,
-  ARRAY:11,
-  FILE:12
+  ARRAY: 11,
+  FILE: 12,
+  RANGE: 13,
 });
 
 export const MOMENT_DEFAULT_DATE_FORMATS = [
@@ -120,7 +136,7 @@ export const MOMENT_DEFAULT_DATE_FORMATS = [
   moment.defaultFormatUtc,
   moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
   moment.HTML5_FMT.DATETIME_LOCAL_MS,
-  moment.HTML5_FMT.DATETIME_LOCAL
+  moment.HTML5_FMT.DATETIME_LOCAL,
 ];
 
 export const CUSTOM_DATE_FORMATS = [
@@ -144,4 +160,7 @@ export const CUSTOM_DATE_FORMATS = [
   'YYYY-MM-DD',
   'YYYY/MM/DD',
 ];
-export const SUPPORTED_DATE_FORMATS = [...MOMENT_DEFAULT_DATE_FORMATS, ...CUSTOM_DATE_FORMATS];
+export const SUPPORTED_DATE_FORMATS = [
+  ...MOMENT_DEFAULT_DATE_FORMATS,
+  ...CUSTOM_DATE_FORMATS,
+];
