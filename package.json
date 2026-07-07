@@ -1,6 +1,6 @@
 {
   "name": "rule-validation",
-  "version": "3.5.1",
+  "version": "3.6.2",
   "private": true,
   "dependencies": {
     "@types/react": "^18.2.59",

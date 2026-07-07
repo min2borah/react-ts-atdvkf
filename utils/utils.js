@@ -41,7 +41,7 @@ function isContains(str1, str2) {
 }
 
 export const isInBetween = (factValue, value) => {
-  if (factValue && value) {
+  if (factValue != undefined && factValue != null && value) {
     const arrValues = value.toString().trim().split(',');
     if (arrValues && arrValues.length > 1 && is_a_number(factValue)) {
       const v1 = arrValues[0].trim();
@@ -97,7 +97,7 @@ export const substringRange = (range, artValLength) => {
 };
 
 export const notInBetween = (factValue, value) => {
-  if (factValue && value) {
+  if (factValue != undefined && factValue != null && value) {
     const arrValues = value.toString().trim().split(',');
     if (arrValues && arrValues.length > 1 && is_a_number(factValue)) {
       const v1 = arrValues[0].trim();
@@ -105,8 +105,8 @@ export const notInBetween = (factValue, value) => {
       return (
         is_a_number(v1) &&
         is_a_number(v2) &&
-        (parseFloat(v1) >= parseFloat(factValue) ||
-          parseFloat(v2) <= parseFloat(factValue))
+        (parseFloat(v1) > parseFloat(factValue) ||
+          parseFloat(v2) < parseFloat(factValue))
       );
     }
   }

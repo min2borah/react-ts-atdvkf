@@ -54,6 +54,8 @@ export const OPR_IN_BETWEEN_WEEKDAY = 'inBetweenWeekday';
 export const OPR_NOT_IN_BETWEEN_WEEKDAY = 'notInBetweenWeekday';
 export const OPR_EQUAL_WEEKDAY = 'equalWeekday';
 export const OPR_NOT_EQUAL_WEEKDAY = 'notEqualToWeekday';
+export const OPR_IN_WEEKDAYS = 'inWeekdays';
+export const OPR_NOT_IN_WEEKDAYS = 'notInWeekdays';
 
 export const OPR_GREATER_EQUAL_CURRENT_DATE = 'greaterThanInclusiveCurrentDate';
 export const OPR_GREATER_THAN_CURRENT_DATE = 'greaterThanCurrentDate';
@@ -127,6 +129,7 @@ export const DataSchemaDataType = Object.freeze({
   ARRAY: 11,
   FILE: 12,
   RANGE: 13,
+  WEEKDAY: 14,
 });
 
 export const MOMENT_DEFAULT_DATE_FORMATS = [

@@ -24,15 +24,6 @@ async function validateRules(
   deviceData,
   eslFieldData
 ) {
-  const safeOperator = (fn) => (factValue, jsonValue) => {
-    try {
-      if (factValue == null || jsonValue == null) return false;
-      return fn(factValue, jsonValue);
-    } catch (err) {
-      return false;
-    }
-  };
-
   const engine = new Engine([], {
     allowUndefinedFacts: true,
   });
@@ -101,133 +92,133 @@ async function validateRules(
   //custom operators
   engine.addOperator(
     constants.RuleEngineDefaultOperators.EQUAL,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueType(jsonValue, factValue);
       return factValue === value;
-    })
+    }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.NOT_EQUAL,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueType(jsonValue, factValue);
       return factValue !== value;
-    })
+    }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.GREATER_THAN,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueType(jsonValue, factValue);
       return factValue > value;
-    })
+    }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.GREATER_THAN_EQUAL,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueType(jsonValue, factValue);
       return factValue >= value;
-    })
+    }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.LESS_THAN,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueType(jsonValue, factValue);
       return factValue < value;
-    })
+    }
   );
 
   engine.addOperator(
     constants.RuleEngineDefaultOperators.LESS_THAN_EQUAL,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueType(jsonValue, factValue);
       return factValue <= value;
-    })
+    }
   );
 
   //ARRAY_IN -- fact must be included in value (an array)
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_IN,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue);
       return Array.isArray(value) && value.indexOf(factValue) > -1;
-    })
+    }
   );
 
   //ARRAY_NOT_IN -- fact must be included in value (an array)
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_NOT_IN,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue);
       return Array.isArray(value) && value.indexOf(factValue) === -1;
-    })
+    }
   );
 
   //ARRAY_CONTAINS -- fact (an array) must include value
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_CONTAINS,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
       return factValue.indexOf(value) > -1;
-    })
+    }
   );
 
   //ARRAY_DOES_NOT_CONTAIN -- fact (an array) must not include value
   engine.addOperator(
     constants.RuleEngineDefaultOperators.ARRAY_DOES_NOT_CONTAIN,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueType(jsonValue, factValue[0]); //convert value type to the type of items in array
       return factValue.indexOf(value) === -1;
-    })
+    }
   );
 
   //ARRAY_CONTAINS_SUB_ARRAY -- fact (an array) must include value (an array)
   engine.addOperator(
     constants.OPR_ARRAY_CONTAINS_SUB_ARRAY,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return utils.arrayContainsSubarray(factValue, value);
-    })
+    }
   );
 
   //ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY -- fact (an array) must not include value (an array)
   engine.addOperator(
     constants.OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return !utils.arrayContainsSubarray(factValue, value);
-    })
+    }
   );
 
   //ARRAY_CONTAINS_SUB_ARRAY -- fact (an array) must include any element value (an array)
   engine.addOperator(
     constants.OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return utils.arrayContainsAnyElementOfSubarray(factValue, value);
-    })
+    }
   );
 
   //ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY -- fact (an array) must not include any element value (an array)
   engine.addOperator(
     constants.OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!Array.isArray(factValue)) return false;
       var value = convertJsonValueToFactValueTypeArray(jsonValue, factValue[0]); //convert value type to the type of items in array
       return !utils.arrayContainsAnyElementOfSubarray(factValue, value);
-    })
+    }
   );
 
   engine.addOperator(
     constants.OPR_LENGTH_SMALLER_EQUAL,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       let value = !utils.is_a_number(jsonValue)
         ? jsonValue?.toString().length
         : parseInt(jsonValue);
@@ -236,12 +227,12 @@ async function validateRules(
       } else {
         return factValue?.toString().length <= value;
       }
-    })
+    }
   );
 
   engine.addOperator(
     constants.OPR_LENGTH_GREATER_EQUAL,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       let value = !utils.is_a_number(jsonValue)
         ? jsonValue?.toString().length
         : parseInt(jsonValue);
@@ -250,36 +241,30 @@ async function validateRules(
       } else {
         return factValue?.toString().length >= value;
       }
-    })
+    }
   );
 
-  engine.addOperator(
-    constants.OPR_LENGTH_EQUAL,
-    safeOperator((factValue, jsonValue) => {
-      let value = !utils.is_a_number(jsonValue)
-        ? jsonValue?.toString().length
-        : parseInt(jsonValue);
-      if (utils.isEmpty(factValue)) {
-        return 0 === value;
-      } else {
-        return factValue?.toString().length === value;
-      }
-    })
-  );
+  engine.addOperator(constants.OPR_LENGTH_EQUAL, (factValue, jsonValue) => {
+    let value = !utils.is_a_number(jsonValue)
+      ? jsonValue?.toString().length
+      : parseInt(jsonValue);
+    if (utils.isEmpty(factValue)) {
+      return 0 === value;
+    } else {
+      return factValue?.toString().length === value;
+    }
+  });
 
-  engine.addOperator(
-    constants.OPR_LENGTH_NOT_EQUAL,
-    safeOperator((factValue, jsonValue) => {
-      let value = !utils.is_a_number(jsonValue)
-        ? jsonValue?.toString().length
-        : parseInt(jsonValue);
-      if (utils.isEmpty(factValue)) {
-        return 0 !== value;
-      } else {
-        return factValue?.toString().length !== value;
-      }
-    })
-  );
+  engine.addOperator(constants.OPR_LENGTH_NOT_EQUAL, (factValue, jsonValue) => {
+    let value = !utils.is_a_number(jsonValue)
+      ? jsonValue?.toString().length
+      : parseInt(jsonValue);
+    if (utils.isEmpty(factValue)) {
+      return 0 !== value;
+    } else {
+      return factValue?.toString().length !== value;
+    }
+  });
 
   engine.addOperator(constants.OPR_IS_EMPTY, (factValue, jsonValue) => {
     return utils.isEmpty(factValue);
@@ -289,69 +274,54 @@ async function validateRules(
     return !utils.isEmpty(factValue);
   });
 
-  engine.addOperator(
-    constants.OPR_IS_RANGE_OVERLAP,
-    safeOperator((factValue, jsonValue) => {
-      return utils.ifRangeOverlap(factValue, jsonValue);
-    })
-  );
+  engine.addOperator(constants.OPR_IS_RANGE_OVERLAP, (factValue, jsonValue) => {
+    return utils.ifRangeOverlap(factValue, jsonValue);
+  });
 
-  engine.addOperator(
-    constants.OPR_IS_IN_BETWEEN,
-    safeOperator((factValue, jsonValue) => {
-      return utils.isInBetween(factValue, jsonValue);
-    })
-  );
+  engine.addOperator(constants.OPR_IS_IN_BETWEEN, (factValue, jsonValue) => {
+    return utils.isInBetween(factValue, jsonValue);
+  });
 
-  engine.addOperator(
-    constants.OPR_NOT_IN_BETWEEN,
-    safeOperator((factValue, jsonValue) => {
-      return utils.notInBetween(factValue, jsonValue);
-    })
-  );
+  engine.addOperator(constants.OPR_NOT_IN_BETWEEN, (factValue, jsonValue) => {
+    return utils.notInBetween(factValue, jsonValue);
+  });
 
   engine.addOperator(
     constants.OPR_CONTAIN_SUBSTRING,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       return utils.containSubstring(factValue, jsonValue);
-    })
+    }
   );
 
-  engine.addOperator(
-    constants.OPR_EQUAL_DATE,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSame(d2, 'day');
-    })
-  );
+  engine.addOperator(constants.OPR_EQUAL_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isSame(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_NOT_EQUAL_DATE,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return !d1.isSame(d2, 'day');
-    })
-  );
+  engine.addOperator(constants.OPR_NOT_EQUAL_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return !d1.isSame(d2, 'day');
+  });
 
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_DATE,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!factValue || !jsonValue) return false;
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
         .utc()
@@ -362,12 +332,12 @@ async function validateRules(
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isSameOrAfter(d2, 'day');
-    })
+    }
   );
 
   engine.addOperator(
     constants.OPR_GREATER_THAN_DATE,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!factValue || !jsonValue) return false;
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
         .utc()
@@ -378,60 +348,51 @@ async function validateRules(
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       let d2 = moment(d2Str, constants.DATE_FORMAT);
       return d1.isAfter(d2, 'day');
-    })
+    }
   );
 
-  engine.addOperator(
-    constants.OPR_LESS_EQUAL_DATE,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isSameOrBefore(d2, 'day');
-    })
-  );
+  engine.addOperator(constants.OPR_LESS_EQUAL_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isSameOrBefore(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_LESS_THAN_DATE,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      let d2 = moment(d2Str, constants.DATE_FORMAT);
-      return d1.isBefore(d2, 'day');
-    })
-  );
+  engine.addOperator(constants.OPR_LESS_THAN_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    return d1.isBefore(d2, 'day');
+  });
 
-  engine.addOperator(
-    constants.OPR_IN_BETWEEN_DATE,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
-      if (!split[0] || !split[1]) return false;
-      let sDate = utils.convertUTCToLocalDate(split[0]);
-      let eDate = utils.convertUTCToLocalDate(split[1]);
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.DATE_FORMAT);
-      let d1 = moment(d1Str, constants.DATE_FORMAT);
-      return d1.isBetween(sDate, eDate, 'day', '[]');
-    })
-  );
+  engine.addOperator(constants.OPR_IN_BETWEEN_DATE, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
+    if (!split[0] || !split[1]) return false;
+    let sDate = utils.convertUTCToLocalDate(split[0]);
+    let eDate = utils.convertUTCToLocalDate(split[1]);
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    return d1.isBetween(sDate, eDate, 'day', '[]');
+  });
 
   engine.addOperator(
     constants.OPR_NOT_IN_BETWEEN_DATE,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!factValue || !jsonValue) return false;
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       if (!split[0] || !split[1]) return false;
@@ -442,7 +403,7 @@ async function validateRules(
         .format(constants.DATE_FORMAT);
       let d1 = moment(d1Str, constants.DATE_FORMAT);
       return !d1.isBetween(sDate, eDate, 'day', '[]');
-    })
+    }
   );
 
   engine.addOperator(
@@ -557,6 +518,7 @@ async function validateRules(
       if (!jsonValue) return false;
       var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       if (!split[0] || !split[1]) return false;
+      var split = jsonValue.split(constants.MULTI_DATE_SEPARATOR);
       let sDate = utils.convertUTCToLocalDate(split[0]);
       let eDate = utils.convertUTCToLocalDate(split[1]);
       const today = moment().tz(timezone).format();
@@ -566,21 +528,18 @@ async function validateRules(
     }
   );
 
-  engine.addOperator(
-    constants.OPR_EQUAL_TIME,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d1 = moment(d1Str, constants.TIME_FORMAT);
-      let d2 = moment(d2Str, constants.TIME_FORMAT);
-      return d1.isSame(d2);
-    })
-  );
+  engine.addOperator(constants.OPR_EQUAL_TIME, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
+    let d1 = moment(d1Str, constants.TIME_FORMAT);
+    let d2 = moment(d2Str, constants.TIME_FORMAT);
+    return d1.isSame(d2);
+  });
 
   engine.addOperator(
     constants.OPR_EQUAL_CURRENT_TIME,
@@ -597,25 +556,22 @@ async function validateRules(
     }
   );
 
-  engine.addOperator(
-    constants.OPR_LESS_EQUAL_TIME,
-    safeOperator((factValue, jsonValue) => {
-      if (!factValue || !jsonValue) return false;
-      let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
-        .utc()
-        .format(constants.TIME_FORMAT);
-      let d1 = moment(d1Str, constants.TIME_FORMAT);
-      let d2 = moment(d2Str, constants.TIME_FORMAT);
-      return d1.isBefore(d2);
-    })
-  );
+  engine.addOperator(constants.OPR_LESS_EQUAL_TIME, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
+    let d2Str = moment(jsonValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.TIME_FORMAT);
+    let d1 = moment(d1Str, constants.TIME_FORMAT);
+    let d2 = moment(d2Str, constants.TIME_FORMAT);
+    return d1.isBefore(d2);
+  });
 
   engine.addOperator(
     constants.OPR_GREATER_EQUAL_TIME,
-    safeOperator((factValue, jsonValue) => {
+    (factValue, jsonValue) => {
       if (!factValue || !jsonValue) return false;
       let d1Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
         .utc()
@@ -626,7 +582,7 @@ async function validateRules(
       let d1 = moment(d1Str, constants.TIME_FORMAT);
       let d2 = moment(d2Str, constants.TIME_FORMAT);
       return d1.isAfter(d2);
-    })
+    }
   );
 
   engine.addOperator(
@@ -751,6 +707,20 @@ async function validateRules(
       return !(dayValue >= startDay && dayValue <= endDay);
     }
   );
+
+  engine.addOperator(constants.OPR_IN_WEEKDAYS, (factValue, jsonValue) => {
+    const today = moment().tz(timezone);
+    const dayValue = today.day(); //0-6 (Sun-Sat)
+    var value = convertJsonValueToFactValueTypeArray(jsonValue, dayValue);
+    return Array.isArray(value) && value.indexOf(dayValue) > -1;
+  });
+
+  engine.addOperator(constants.OPR_NOT_IN_WEEKDAYS, (factValue, jsonValue) => {
+    const today = moment().tz(timezone);
+    const dayValue = today.day(); //0-6 (Sun-Sat)
+    var value = convertJsonValueToFactValueTypeArray(jsonValue, dayValue);
+    return !(Array.isArray(value) && value.indexOf(dayValue) > -1);
+  });
 
   const convertToRuleEngineObject = (rule, indx) => {
     var ruleObj = { ...rule.ruleConditions };
