@@ -67,6 +67,13 @@ export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE =
 export const OPR_EQUAL_CURRENT_DATE = 'equalToCurrentDate';
 export const OPR_NOT_EQUAL_CURRENT_DATE = 'notEqualToCurrentDate';
 
+export const OPR_EQUAL_DAYS = 'equalToDays';
+export const OPR_NOT_EQUAL_DAYS = 'notEqualToDays';
+export const OPR_GREATER_EQUAL_DAYS = 'greaterThanInclusiveDays';
+export const OPR_GREATER_THAN_DAYS = 'greaterThanDays';
+export const OPR_LESS_EQUAL_DAYS = 'lessThanInclusiveDays';
+export const OPR_LESS_THAN_DAYS = 'lessThanDays';
+
 export const TIME_FORMAT = 'HH:mm:ss';
 export const DATE_FORMAT = 'DD:MM:YYYY';
 export const OPR_EQUAL_TIME = 'equalToTime';

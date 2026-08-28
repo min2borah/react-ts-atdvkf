@@ -496,6 +496,90 @@ async function validateRules(
     }
   );
 
+  engine.addOperator(constants.OPR_EQUAL_DAYS, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    let daysDiff = d1.diff(d2, 'day');
+    return daysDiff == parseInt(jsonValue);
+  });
+
+  engine.addOperator(constants.OPR_NOT_EQUAL_DAYS, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    let daysDiff = d1.diff(d2, 'day');
+    return daysDiff != parseInt(jsonValue);
+  });
+
+  engine.addOperator(
+    constants.OPR_GREATER_EQUAL_DAYS,
+    (factValue, jsonValue) => {
+      if (!factValue || !jsonValue) return false;
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+      let d2Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
+      let d1 = moment(d1Str, constants.DATE_FORMAT);
+      let d2 = moment(d2Str, constants.DATE_FORMAT);
+      let daysDiff = d1.diff(d2, 'day');
+      return daysDiff >= parseInt(jsonValue);
+    }
+  );
+
+  engine.addOperator(
+    constants.OPR_GREATER_THAN_DAYS,
+    (factValue, jsonValue) => {
+      if (!factValue || !jsonValue) return false;
+      const today = moment().tz(timezone).format();
+      let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+      let d2Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+        .utc()
+        .format(constants.DATE_FORMAT);
+      let d1 = moment(d1Str, constants.DATE_FORMAT);
+      let d2 = moment(d2Str, constants.DATE_FORMAT);
+      let daysDiff = d1.diff(d2, 'day');
+      return daysDiff > parseInt(jsonValue);
+    }
+  );
+
+  engine.addOperator(constants.OPR_LESS_EQUAL_DAYS, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    let daysDiff = d1.diff(d2, 'day');
+    return daysDiff <= parseInt(jsonValue);
+  });
+
+  engine.addOperator(constants.OPR_LESS_THAN_DAYS, (factValue, jsonValue) => {
+    if (!factValue || !jsonValue) return false;
+    const today = moment().tz(timezone).format();
+    let d1Str = moment.tz(today, timezone).format(constants.DATE_FORMAT);
+    let d2Str = moment(factValue, constants.SUPPORTED_DATE_FORMATS)
+      .utc()
+      .format(constants.DATE_FORMAT);
+    let d1 = moment(d1Str, constants.DATE_FORMAT);
+    let d2 = moment(d2Str, constants.DATE_FORMAT);
+    let daysDiff = d1.diff(d2, 'day');
+    return daysDiff < parseInt(jsonValue);
+  });
+
   engine.addOperator(
     constants.OPR_CURRENT_DATE_IN_BETWEEN_DATE,
     (factValue, jsonValue) => {
