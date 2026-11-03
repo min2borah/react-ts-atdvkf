@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './style.css';
-import { runPreviewtest, runScenariotest } from './test-case.js';
+import { runPreviewtest, runScenariotest } from './case.js';
 import * as utils from './utils/utils.js';
 
 export default function App() {
