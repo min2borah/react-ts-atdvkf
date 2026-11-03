@@ -27,7 +27,7 @@ export const RuleEngineDefaultOperators = {
   ARRAY_CONTAINS: 'cus_contains',
   ARRAY_DOES_NOT_CONTAIN: 'cus_doesNotContain',
   ARRAY_IN: 'cus_in',
-  ARRAY_NOT_IN: 'cus_notIn',
+  ARRAY_NOT_IN: 'cus_notIn'
 };
 
 export const OPR_LENGTH_GREATER_EQUAL = 'Length >=';
@@ -62,8 +62,7 @@ export const OPR_GREATER_THAN_CURRENT_DATE = 'greaterThanCurrentDate';
 export const OPR_LESS_EQUAL_CURRENT_DATE = 'lessThanInclusiveCurrentDate';
 export const OPR_LESS_THAN_CURRENT_DATE = 'lessThanCurrentDate';
 export const OPR_CURRENT_DATE_IN_BETWEEN_DATE = 'currentDateInBetweenDate';
-export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE =
-  'currentDateNotInBetweenDate';
+export const OPR_CURRENT_DATE_NOT_IN_BETWEEN_DATE = 'currentDateNotInBetweenDate';
 export const OPR_EQUAL_CURRENT_DATE = 'equalToCurrentDate';
 export const OPR_NOT_EQUAL_CURRENT_DATE = 'notEqualToCurrentDate';
 
@@ -93,12 +92,11 @@ export const OPR_COMPANY_TAG_NOT_CONTAIN = 'CompanyTagNotContain';
 export const OPR_ARRAY_CONTAINS_SUB_ARRAY = 'ArrayContainsSubArray';
 export const OPR_ARRAY_DOES_NOT_CONTAINS_SUB_ARRAY = 'ArrayNotContainsSubArray';
 export const OPR_ARRAY_CONTAINS_ANY_OF_SUB_ARRAY = 'ArrayContainsAnyOfSubArray';
-export const OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY =
-  'ArrayNotContainsAnyOfSubArray';
+export const OPR_ARRAY_DOES_NOT_CONTAINS_ANY_OF_SUB_ARRAY = 'ArrayNotContainsAnyOfSubArray';
 
 export const FILTER_INVALID_ZEROS = 'Insignificant Zeros';
 export const FILTER_PRICE_FORMAT = 'Format currency (€)';
-export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)'; //Deprecated from version 1.5.9, kept to support previous templates
+export const FILTER_DATE_FORMAT_DD_Month = 'Format Date (DD Month)';//Deprecated from version 1.5.9, kept to support previous templates
 export const FILTER_INTEGER_PART = 'Take Integer Part';
 export const FILTER_DECIMAL_PART = 'Take Decimal Part'; //Deprecated from version 1.4.25, kept to support previous templates
 export const FILTER_DECIMAL_PART_2_DIGIT = 'Take Decimal Part (2 Digits)';
@@ -133,10 +131,10 @@ export const DataSchemaDataType = Object.freeze({
   BIT: 5,
   DATETIME: 6,
   TIME: 7,
-  ARRAY: 11,
-  FILE: 12,
-  RANGE: 13,
-  WEEKDAY: 14,
+  ARRAY:11,
+  FILE:12,
+  RANGE:13,
+  WEEKDAY:14
 });
 
 export const MOMENT_DEFAULT_DATE_FORMATS = [
@@ -146,7 +144,7 @@ export const MOMENT_DEFAULT_DATE_FORMATS = [
   moment.defaultFormatUtc,
   moment.HTML5_FMT.DATETIME_LOCAL_SECONDS,
   moment.HTML5_FMT.DATETIME_LOCAL_MS,
-  moment.HTML5_FMT.DATETIME_LOCAL,
+  moment.HTML5_FMT.DATETIME_LOCAL
 ];
 
 export const CUSTOM_DATE_FORMATS = [
@@ -170,7 +168,12 @@ export const CUSTOM_DATE_FORMATS = [
   'YYYY-MM-DD',
   'YYYY/MM/DD',
 ];
-export const SUPPORTED_DATE_FORMATS = [
-  ...MOMENT_DEFAULT_DATE_FORMATS,
-  ...CUSTOM_DATE_FORMATS,
-];
+export const SUPPORTED_DATE_FORMATS = [...MOMENT_DEFAULT_DATE_FORMATS, ...CUSTOM_DATE_FORMATS];
+
+// create one time to recycle memory and optimize cpu
+export const PRICE_FORMATTER = new Intl.NumberFormat('it-IT', {
+  style: 'currency',
+  currency: 'EUR',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});

@@ -5,9 +5,9 @@ import * as utils from './utils/utils.js';
 
 export default function App() {
   let runed = false;
-   
+
   React.useEffect(() => {
-    if(!runed){
+    if (!runed) {
       runed = true;
       runPreviewtest();
       // runScenariotest();

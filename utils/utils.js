@@ -76,10 +76,10 @@ export const ifRangeOverlap = (factValue, value) => {
 };
 
 export const substringRange = (range, artValLength) => {
-  if (!range) return [0];
+  if(!range) return [0];
   let str = range.toString().trim();
   str = str.replace(/\blength\b/gi, artValLength || 0);
-  str = str.replace(/[\[\]\(\)]/g, '');
+  str = str.replace(/[\[\]]/g, '');
   const arrValues = str.split(',');
   if (arrValues && arrValues.length === 1) {
     const v1 = arrValues[0].trim();
@@ -119,27 +119,27 @@ export const containSubstring = (factValue, val) => {
   );
 };
 
-export const getFormattedDate = (dateStr, timezone, locale, format) => {
+export const getFormattedDate = (dateStr,  timezone, locale, format) => {
   if (timezone == undefined || timezone == null) {
     timezone = moment.tz.guess();
   }
-  if (!dateStr) return dateStr;
+  if(!dateStr) return dateStr;
   let mdate = moment.tz(dateStr, Constants.SUPPORTED_DATE_FORMATS, timezone);
   if (!mdate.isValid()) mdate = moment(new Date(dateStr));
-
-  if (mdate.isValid()) {
+  
+  if (mdate.isValid() ) {
     let dt = mdate.format(format);
-    if (format == 'DD MMMM') {
+    if(format == "DD MMMM"){
       let lang = 'it';
-      try {
+      try{
         lang = navigator.language || navigator.userLanguage;
-      } catch (e) {}
+      }catch(e){}
       if (locale) {
         lang = locale;
       }
       let lng = lang.split('-')[0];
       dt = mdate.locale(lng).format(format);
-    }
+    }    
     return dt;
   } else {
     return dateStr;
@@ -161,7 +161,7 @@ export function filterInsignificentZeros(priceText) {
   }
   const rxInsignificant = /^[\s0]+|(\..*)[\s0.]+$|\.0+$|\.$/gm;
   var filteredText = replcTxt.replace(rxInsignificant, (match, group) => {
-    return group ? match : '';
+      return group ? match : '';
   });
   var convertTxt = filteredText.toString().trim(); //.replace('.',',')
   if (convertTxt.charAt(0) === ',') {
@@ -177,14 +177,8 @@ export function filterInsignificentZeros(priceText) {
 }
 
 export function filterPriceFormatter(priceText) {
-  var formatter = new Intl.NumberFormat('it-IT', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  if (!priceText) return priceText;
-  var price = formatter.format(parseFloat(priceText));
+  if(!priceText) return priceText;
+  var price = Constants.PRICE_FORMATTER.format(parseFloat(priceText));
   price = price?.replace('€', '');
   return price?.trim();
 }
@@ -239,8 +233,8 @@ export function processFilters(
         if (vl) {
           artVal = vl;
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_error) {
+        // Missing optional source fields are treated as empty values.
       }
     }
     if (filter.dataSource === Constants.DATA_SOURCE_PIM) {
@@ -255,8 +249,8 @@ export function processFilters(
         if (vl) {
           artVal = vl;
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_error) {
+        // Missing optional source fields are treated as empty values.
       }
     }
     const selectedFilter = filter.function;
@@ -273,12 +267,7 @@ export function processFilters(
         }
         break;
       case Constants.FILTER_DATE_FORMAT_DD_Month:
-        let formatedlocaleDate = getFormattedDate(
-          artVal,
-          timezone,
-          locale,
-          'DD MMMM'
-        );
+        let formatedlocaleDate = getFormattedDate(artVal, timezone, locale, "DD MMMM");
         artVal = formatedlocaleDate;
         break;
       case Constants.FILTER_INTEGER_PART:
@@ -294,13 +283,8 @@ export function processFilters(
         artVal = filterDecimalPart(artVal, true);
         break;
     }
-    if (Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1) {
-      let formatedDate = getFormattedDate(
-        artVal,
-        timezone,
-        locale,
-        selectedFilter
-      );
+    if(Constants.CUSTOM_DATE_FORMATS.indexOf(selectedFilter) !== -1){
+      let formatedDate = getFormattedDate(artVal, timezone, locale, selectedFilter);
       artVal = formatedDate;
     }
     let filterPathFinal = getLocaliazedPath(
@@ -313,10 +297,9 @@ export function processFilters(
     );
 
     try {
-      // eval("article." + `${filterPathFinal}` + " = " + `${artVal}`);
       setToValue(article, artVal, filterPathFinal);
-    } catch (e) {
-      console.log(e);
+    } catch (_error) {
+      // Invalid or unsafe filter paths are ignored.
     }
   });
 
@@ -339,15 +322,12 @@ export function getArticleFieldValue(
     isMultipleArticleCanvas
   );
   //Article can be null when we are extracting value from userdata and device data
-  if (
-    dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD ||
-    dataSource === Constants.DATA_SOURCE_PIM
-  ) {
+  if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD || dataSource === Constants.DATA_SOURCE_PIM){
     if (updatedArticleJson === null || updatedArticleJson === undefined) {
       return null;
     }
   }
-
+ 
   if (dataSource === Constants.DATA_SOURCE_ARTICLE_FIELD) {
     let path = getLocaliazedPath(
       updatedArticleJson,
@@ -399,7 +379,7 @@ export function getArticleFieldValue(
     } catch (error) {
       return null;
     }
-  } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
+  }else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
     let path = getLocaliazedPath(
       null,
       dataSource,
@@ -414,7 +394,7 @@ export function getArticleFieldValue(
     } catch (error) {
       return null;
     }
-  } else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
+  }else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
     let path = getLocaliazedPath(
       null,
       dataSource,
@@ -498,7 +478,7 @@ export function getLocaliazedPath(
     path = getDataFieldPath(articleField, dataSource, null);
   } else if (dataSource === Constants.DATA_SOURCE_NEXMO_DATA) {
     path = getDataFieldPath(articleField, dataSource, null);
-  } else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
+  }else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
     path = getDataFieldPath(articleField, dataSource, null);
   }
   return path;
@@ -536,12 +516,8 @@ function getImportDataPath(parent, name) {
 }
 
 function getPimDataPath(parent, name, locale) {
-  var pimExternalData =
-    "externalData['PIM']['dataLanguage']['" +
-    locale +
-    "']['DataClassDictionary']";
-  let path =
-    pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
+  var pimExternalData = "externalData['PIM']['dataLanguage']['" + locale + "']['DataClassDictionary']";
+  let path = pimExternalData + "['" + parent + "']" + "['data']" + "['" + name + "']";
   if (!parent) {
     path = pimExternalData + "['data']" + "['" + name + "']";
   }
@@ -572,63 +548,31 @@ export function getDataFieldPath(articleField, dataSource, locale) {
     } else if (dataSource === Constants.DATA_SOURCE_PIM) {
       path = getPimDataPath(parent, name, locale);
     } else if (dataSource === Constants.DATA_SOURCE_USER_DATA) {
-      /**Do not apply camel case to user data */
-      path = getUserDataPath(
-        articleField['parent'],
-        articleField['name'],
-        locale
-      );
+       /**Do not apply camel case to user data */
+      path = getUserDataPath(articleField['parent'], articleField['name'], locale);
     } else if (dataSource === Constants.DATA_SOURCE_DEVICE_DATA) {
       path = camelize(articleField['name']);
     } else if (dataSource === Constants.DATA_SOURCE_CAMERA_DATA) {
-      path = getEventDataPath(
-        articleField['parent'],
-        articleField['name'],
-        locale
-      );
+      path = getEventDataPath(articleField['parent'], articleField['name'], locale);
     } else if (dataSource === Constants.DATA_SOURCE_NEXMO_DATA) {
-      path = getEventDataPath(
-        articleField['parent'],
-        articleField['name'],
-        locale
-      );
+      path = getEventDataPath(articleField['parent'], articleField['name'], locale);
     } else if (dataSource === Constants.DATA_SOURCE_ESL_FIELD_DATA) {
       path = camelize(articleField['name']);
     }
     return path;
-  } else if (
-    dataSource === Constants.DATA_SOURCE_PIM &&
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
+  } else if (dataSource === Constants.DATA_SOURCE_PIM && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
     let name = camelize(articleField['name']);
     return getPimDataPath(null, name, locale);
-  } else if (
-    dataSource === Constants.DATA_SOURCE_USER_DATA &&
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
+  } else if (dataSource === Constants.DATA_SOURCE_USER_DATA && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
     /**Do not apply camel case to user data */
     return articleField['name'];
-  } else if (
-    dataSource === Constants.DATA_SOURCE_CAMERA_DATA &&
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
+  } else if (dataSource === Constants.DATA_SOURCE_CAMERA_DATA && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
     return articleField['name'];
-  } else if (
-    dataSource === Constants.DATA_SOURCE_NEXMO_DATA &&
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
+  } else if (dataSource === Constants.DATA_SOURCE_NEXMO_DATA && !isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
     return articleField['name'];
-  } else if (
-    !isEmpty(articleField['name']) &&
-    isEmpty(articleField['parent'])
-  ) {
+  } else if (!isEmpty(articleField['name']) && isEmpty(articleField['parent'])) {
     return camelize(articleField['name']);
-  }
-  {
+  } {
     return articleField;
   }
 }
@@ -697,27 +641,28 @@ function getProp(obj, prop) {
   });
 
   return propArr.reduce(function (prev, curr) {
-    return prev !== null && prev !== undefined ? prev[curr] : undefined;
+    return (prev !== null && prev !== undefined) ? prev[curr] : undefined;
   }, obj || self);
 }
 
 function setToValue(obj, value, path) {
-  if (typeof obj !== 'object') throw 'getProp: obj is not an object';
-  if (typeof path !== 'string') throw 'getProp: prop is not a string';
+  if (obj === null || typeof obj !== 'object') throw new TypeError('setToValue: obj must be an object');
+  if (typeof path !== 'string' || path.length === 0) throw new TypeError('setToValue: path must be a non-empty string');
 
-  // Replace [] notation with dot notation
-  path = path.replace(/\"/g, "'");
-  path = path.replace(/\'\]\[\'/g, '.');
-  let dotpath = path.replace(/\[["'`](.*)["'`]\]/g, '.$1');
-  let pathArr = dotpath.split(/\.|\[|\]/);
+  // Convert bracket notation to path segments, then reject prototype-sensitive keys.
+  const normalized = path.replace(/\"/g, "'").replace(/\'\]\[\'/g, '.');
+  const dotPath = normalized.replace(/\[["'`](.*?)["'`]\]/g, '.$1');
+  const pathArr = dotPath.split(/\.|\[|\]/).filter(Boolean);
+  const forbidden = new Set(['__proto__', 'prototype', 'constructor']);
+  if (pathArr.some((segment) => forbidden.has(segment))) {
+    throw new Error('setToValue: unsafe object path');
+  }
 
   let objRef = obj;
-  for (let i = 0; i < pathArr.length - 1; i++) {
-    if (pathArr[i]) {
-      // Skip empty string
-      if (objRef === null || objRef === undefined) return; // Stop if broken path
-      objRef = objRef[pathArr[i]];
-    }
+  for (let i = 0; i < pathArr.length - 1; i += 1) {
+    const key = pathArr[i];
+    if (objRef === null || objRef === undefined || !Object.prototype.hasOwnProperty.call(objRef, key)) return;
+    objRef = objRef[key];
   }
   if (objRef !== null && objRef !== undefined) {
     objRef[pathArr[pathArr.length - 1]] = value;
@@ -749,38 +694,87 @@ export function convertUTCToLocalDate(date) {
 }
 
 export function arrayContainsSubarray(arr, subarr) {
-  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  if(!Array.isArray(arr) || !Array.isArray(subarr)) return false;
   const arrSet = new Set(arr);
-  const subarrSet = new Set(subarr);
+  const subarrSet = new Set(subarr);  
   for (const elem of subarrSet) {
-    if (!arrSet.has(elem)) {
-      return false;
-    }
-  }
+      if (!arrSet.has(elem)) {
+          return false;
+      }
+  }  
   return true;
 }
 
 export function arrayContainsAnyElementOfSubarray(arr, subarr) {
-  if (!Array.isArray(arr) || !Array.isArray(subarr)) return false;
+  if(!Array.isArray(arr) || !Array.isArray(subarr)) return false;
   let greaterSizeArray = arr.length > subarr.length ? arr : subarr;
   let smallerSizeArray = arr.length < subarr.length ? arr : subarr;
-  if (arr.length == subarr.length) {
+  if(arr.length == subarr.length){
     greaterSizeArray = arr;
     smallerSizeArray = subarr;
   }
   for (const elem of smallerSizeArray) {
-    if (greaterSizeArray.includes(elem)) {
-      return true;
-    }
+      if (greaterSizeArray.includes(elem)) {
+          return true;
+      }
   }
   return false;
 }
 
+
 function evaluateExpression(expr) {
+  // Parse only numeric arithmetic. Never execute template-provided JavaScript.
+  if (typeof expr !== 'string' || expr.trim() === '') return null;
+  const source = expr.replace(/\s+/g, '');
+  const tokens = source.match(/(?:\d+(?:\.\d*)?|\.\d+)|[()+\-*/%]/g);
+  if (!tokens || tokens.join('') !== source) return null;
+
+  let index = 0;
+  const parseExpression = () => {
+    const parsePrimary = () => {
+      const token = tokens[index++];
+      if (token === '(') {
+        const value = parseExpression();
+        if (tokens[index++] !== ')') throw new Error('Missing closing parenthesis');
+        return value;
+      }
+      const number = Number(token);
+      if (!Number.isFinite(number)) throw new Error('Invalid number');
+      return number;
+    };
+    const parseUnary = () => {
+      if (tokens[index] === '+') { index += 1; return parseUnary(); }
+      if (tokens[index] === '-') { index += 1; return -parseUnary(); }
+      return parsePrimary();
+    };
+    const parseTerm = () => {
+      let value = parseUnary();
+      while (['*', '/', '%'].includes(tokens[index])) {
+        const operator = tokens[index++];
+        const right = parseUnary();
+        if ((operator === '/' || operator === '%') && right === 0) throw new Error('Division by zero');
+        if (operator === '*') value *= right;
+        else if (operator === '/') value /= right;
+        else value %= right;
+      }
+      return value;
+    };
+    let value = parseTerm();
+    while (tokens[index] === '+' || tokens[index] === '-') {
+      const operator = tokens[index++];
+      const right = parseTerm();
+      value = operator === '+' ? value + right : value - right;
+    }
+    return value;
+  };
+
   try {
-    return Function('"use strict"; return (' + expr + ')')();
-  } catch (e) {
-    console.warn('Invalid expression:', expr);
+    const result = parseExpression();
+    if (index !== tokens.length || !Number.isFinite(result)) {
+        return null;
+    }
+    return Math.trunc(result);
+  } catch (_error) {
     return null;
   }
 }
