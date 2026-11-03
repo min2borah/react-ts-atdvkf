@@ -10,7 +10,7 @@ export default function App() {
     if (!runed) {
       runed = true;
       runPreviewtest();
-      // runScenariotest();
+      runScenariotest();
     }
   }, []);
   const dateStr = utils.filterDecimalPart('11.01');
